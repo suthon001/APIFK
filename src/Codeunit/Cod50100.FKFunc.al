@@ -31,8 +31,8 @@ codeunit 50030 "FK Func"
         PageControl, PageControlDetail : Record "Page Control Field";
         ReservationEntry: Record "Reservation Entry";
         ltField: Record Field;
-        ltJsonObject, ltResult, ltJsonObjectbuill : JsonObject;
-        ltJsonArray, ltJsonArraybuill : JsonArray;
+        ltJsonObject, ltResult, ltJsonObjectbuill, ltJsonObjectbuillReserve, ltJsonObjectReserve : JsonObject;
+        ltJsonArray, ltJsonArraybuill, ltJsonArrayReserve : JsonArray;
         ltFieldRef: FieldRef;
         ltRecordRef: RecordRef;
         ltText: Text;
@@ -47,6 +47,8 @@ codeunit 50030 "FK Func"
         CLEAR(ltFieldRef);
         CLEAR(ltJsonObject);
         CLEAR(ltJsonObjectbuill);
+        CLEAR(ltJsonArrayReserve);
+        CLEAR(ltJsonObjectReserve);
         ltRecordRef.Open(38);
         ltFieldRef := ltRecordRef.FieldIndex(1);
         ltFieldRef.SetRange(pDocumentType);
@@ -80,6 +82,7 @@ codeunit 50030 "FK Func"
 
             CLEAR(ltJsonArray);
             CLEAR(ltFieldRef);
+            CLEAR(ltJsonObjectbuillReserve);
             ltRecordRef.Open(39);
             ltFieldRef := ltRecordRef.FieldIndex(1);
             ltFieldRef.SetRange(pDocumentType);
@@ -91,7 +94,7 @@ codeunit 50030 "FK Func"
                     PageControl.reset();
                     PageControl.SetCurrentKey(FieldNo);
                     PageControl.SetRange(PageNo, pPageNOSubform);
-                    if PageControl.FindSet() then begin
+                    if PageControl.FindSet() then
                         repeat
                             if ltRecordRef.FieldExist(PageControl.FieldNo) then begin
                                 ltField.GET(PageControl.TableNo, PageControl.FieldNo);
@@ -110,17 +113,23 @@ codeunit 50030 "FK Func"
                                 end;
                             end;
                         until PageControl.Next() = 0;
-                        ltJsonArray.Add(ltJsonObject);
-                    end;
+                    CLEAR(ltJsonObjectReserve);
                     ltFieldRef := ltRecordRef.FieldIndex(3);
                     Evaluate(ltLineNo, ltFieldRef.Value);
                     ReservationEntry.reset();
                     ReservationEntry.SetRange("Source ID", documentNo);
                     ReservationEntry.SetRange("Source Ref. No.", ltLineNo);
-                    if ReservationEntry.FindSet() then
+                    if ReservationEntry.FindSet() then begin
                         repeat
+                            ltJsonObjectReserve.Add('qty', 1);
                         until ReservationEntry.Next() = 0;
+                        ltJsonObjectbuillReserve.Add('reservelines', ltJsonObjectReserve);
+                    end;
+                    ltJsonArray.Add(ltJsonObject);
+
                 until ltRecordRef.next = 0;
+
+
                 ltRecordRef.Close();
             end;
         end;
