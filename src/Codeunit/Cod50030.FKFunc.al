@@ -10,13 +10,14 @@ codeunit 50030 "FK Func"
     /// <returns>Return value of type Text.</returns>
     procedure CreateCustomer(customerlists: BigText): Text;
     var
-        ltJsonObject, ltJsonObjectDetail, ltJsonObject2, JsonObjectSelect : JsonObject;
-        ltJsonToken, ltJsonToken2, ltJsonTokenDetail : JsonToken;
-        ltJsonArray, ltJsonArrayDetail : JsonArray;
+        ltJsonObject, ltJsonObjectDetail, ltJsonObject2 : JsonObject;
+        ltJsonToken, ltJsonToken2 : JsonToken;
+        ltJsonArray: JsonArray;
         ltDateTime: DateTime;
         ltPageName: Text;
         ltNoofAPI: Integer;
     begin
+
         ltPageName := UpperCase('Customer');
         ltNoofAPI := GetNoOfAPI(ltPageName);
         ltDateTime := CurrentDateTime();
@@ -24,22 +25,67 @@ codeunit 50030 "FK Func"
         ltJsonArray := ltJsonToken.AsArray();
         foreach ltJsonToken2 in ltJsonArray do begin
             ltJsonObject2 := ltJsonToken2.AsObject();
-            if not InsertTotableHeader(2, Database::Customer, ltJsonObject2) then
+            if not InsertTotable(2, Database::Customer, ltJsonObject2) then
                 Insertlog(Database::Customer, ltPageName, ltJsonObject2, ltDateTime, GetLastErrorText(), 1, ltNoofAPI)
             else
                 Insertlog(Database::Customer, ltPageName, ltJsonObject2, ltDateTime, '', 0, ltNoofAPI);
-            // ltJsonObject2.SelectToken('$.detail', ltJsonToken2);
-            // ltJsonArrayDetail := ltJsonToken2.AsArray();
-            // foreach ltJsonTokenDetail in ltJsonArrayDetail do begin
-            //     ltJsonObjectDetail := ltJsonTokenDetail.AsObject();
-            //     ERROR(SelectJsonTokenText(ltJsonObjectDetail, '$.nos'));
-            // end;
+
         end;
         exit(ReuturnErrorAPI(ltPageName, ltNoofAPI));
     end;
 
+    procedure CreateItem(itemlists: BigText): Text;
+    var
+        ltJsonObject, ltJsonObjectDetail, ltJsonObject2 : JsonObject;
+        ltJsonToken, ltJsonToken2 : JsonToken;
+        ltJsonArray: JsonArray;
+        ltDateTime: DateTime;
+        ltPageName: Text;
+        ltNoofAPI: Integer;
+    begin
+        ltPageName := UpperCase('Item');
+        ltNoofAPI := GetNoOfAPI(ltPageName);
+        ltDateTime := CurrentDateTime();
+        ltJsonToken.ReadFrom(Format(itemlists).Replace('\', ''));
+        ltJsonArray := ltJsonToken.AsArray();
+        foreach ltJsonToken2 in ltJsonArray do begin
+            ltJsonObject2 := ltJsonToken2.AsObject();
+            if not InsertTotable(1, Database::Item, ltJsonObject2) then
+                Insertlog(Database::Item, ltPageName, ltJsonObject2, ltDateTime, GetLastErrorText(), 1, ltNoofAPI)
+            else
+                Insertlog(Database::Item, ltPageName, ltJsonObject2, ltDateTime, '', 0, ltNoofAPI);
+        end;
+        exit(ReuturnErrorAPI(ltPageName, ltNoofAPI));
+    end;
+
+    procedure CreateVendor(vendorlists: BigText): Text;
+    var
+        ltJsonObject, ltJsonObjectDetail, ltJsonObject2 : JsonObject;
+        ltJsonToken, ltJsonToken2 : JsonToken;
+        ltJsonArray: JsonArray;
+        ltDateTime: DateTime;
+        ltPageName: Text;
+        ltNoofAPI: Integer;
+    begin
+        ltPageName := UpperCase('Vendor');
+        ltNoofAPI := GetNoOfAPI(ltPageName);
+        ltDateTime := CurrentDateTime();
+        ltJsonToken.ReadFrom(Format(vendorlists).Replace('\', ''));
+        ltJsonArray := ltJsonToken.AsArray();
+        foreach ltJsonToken2 in ltJsonArray do begin
+            ltJsonObject2 := ltJsonToken2.AsObject();
+            if not InsertTotable(3, Database::Item, ltJsonObject2) then
+                Insertlog(Database::Vendor, ltPageName, ltJsonObject2, ltDateTime, GetLastErrorText(), 1, ltNoofAPI)
+            else
+                Insertlog(Database::Vendor, ltPageName, ltJsonObject2, ltDateTime, '', 0, ltNoofAPI);
+        end;
+        exit(ReuturnErrorAPI(ltPageName, ltNoofAPI));
+    end;
+
+
+
     [TryFunction]
-    local procedure InsertTotableHeader(pPageName: Option; pTableID: Integer; pJsonObject: JsonObject)
+    local procedure InsertTotable(pPageName: Option; pTableID: Integer; pJsonObject: JsonObject)
     var
         APIMappingHeader: Record "API Setup Header";
         APIMappingLine: Record "API Setup Line";
@@ -78,6 +124,65 @@ codeunit 50030 "FK Func"
             ltRecordRef.Modify(true);
         end;
         ltRecordRef.Close();
+
+        IF APIMappingHeader."Sub Table ID" <> 0 then
+            InsertTotableLine(pJsonObject, APIMappingHeader."Sub Table ID", APIMappingHeader."Page Name", APIMappingHeader."Sub Page No.");
+    end;
+
+    local procedure InsertTotableLine(pJsonObject: JsonObject; subtableID: Integer; pPageID: Integer; pSubPageID: Integer)
+    var
+        ltJsonObject, ltJsonObjectDetail : JsonObject;
+        APIMappingLine: Record "API Setup Line";
+        ltJsonToken: JsonToken;
+        ltJsonArray: JsonArray;
+        ltJsonTokenDetail, ltJsonTokenReserve : JsonToken;
+        ltFieldRef: FieldRef;
+        ltRecordRef: RecordRef;
+        ltField: Record Field;
+    begin
+        if ltJsonObject.SelectToken('$.detail', ltJsonToken) then begin
+            ltJsonArray := ltJsonToken.AsArray();
+            foreach ltJsonTokenDetail in ltJsonArray do begin
+                ltJsonObjectDetail := ltJsonTokenDetail.AsObject();
+                ltRecordRef.Open(subtableID);
+                ltRecordRef.Init();
+                APIMappingLine.reset();
+                APIMappingLine.SetRange("Page Name", pPageID);
+                APIMappingLine.SetRange("Line Type", APIMappingLine."Line Type"::Line);
+                APIMappingLine.SetRange(Include, true);
+                APIMappingLine.SetFilter("Service Name", '<>%1', '');
+                APIMappingLine.SetRange("Is Primary", true);
+                if APIMappingLine.FindSet() then
+                    repeat
+                        ltFieldRef := ltRecordRef.FIELD(APIMappingLine."Field No.");
+                        if UpperCase(format(ltFieldRef.Type)) IN ['CODE', 'TEXT'] then
+                            ltFieldRef.Validate(SelectJsonTokenText(pJsonObject, '$.' + APIMappingLine."Service Name"));
+                        if UpperCase(format(ltFieldRef.Type)) IN ['INTEGER', 'DECIMAL', 'BIGINTEGER'] then
+                            ltFieldRef.validate(SelectJsonTokenInterger(pJsonObject, '$.' + APIMappingLine."Service Name"));
+                    until APIMappingLine.Next() = 0;
+                ltRecordRef.Insert(true);
+                APIMappingLine.SetRange("Is Primary", false);
+                if APIMappingLine.FindSet() then begin
+                    repeat
+                        ltFieldRef := ltRecordRef.FIELD(APIMappingLine."Field No.");
+                        if UpperCase(format(ltFieldRef.Type)) IN ['CODE', 'TEXT'] then
+                            ltFieldRef.Validate(SelectJsonTokenText(pJsonObject, '$.' + APIMappingLine."Service Name"));
+                        if UpperCase(format(ltFieldRef.Type)) IN ['INTEGER', 'DECIMAL', 'BIGINTEGER'] then
+                            ltFieldRef.validate(SelectJsonTokenInterger(pJsonObject, '$.' + APIMappingLine."Service Name"));
+                    until APIMappingLine.Next() = 0;
+                    ltRecordRef.Modify(true);
+                end;
+                ltRecordRef.Modify(true);
+
+                // if ltJsonObjectDetail.SelectToken('$.reservelines', ltJsonTokenReserve) then
+                //     InsertReserve();
+            end;
+        end;
+    end;
+
+    local procedure InsertReserve(pDocumentNo: Code[30]; pLineNo: Integer; pTableID: Integer)
+    begin
+
     end;
 
     local procedure GetNoOfAPI(pPageName: Text): Integer;
@@ -170,7 +275,11 @@ codeunit 50030 "FK Func"
     /// <param name="pTableID">Integer.</param>
     /// <param name="pSubTableID">Integer.</param>
     /// <param name="pDocumentNo">Text.</param>
-    procedure ExportJsonFormatMuntitable(pPageNO: Integer; pPageNOSubform: Integer; pDocumentType: Enum "Sales Document Type"; pApiName: Text; pPageName: Integer; pTableID: Integer; pSubTableID: Integer; pDocumentNo: Text)
+    procedure ExportJsonFormatMuntitable(pPageNO: Integer; pPageNOSubform: Integer; pDocumentType: Enum "Sales Document Type"; pApiName: Text;
+                                                                                                       pPageName: Integer;
+                                                                                                       pTableID: Integer;
+                                                                                                       pSubTableID: Integer;
+                                                                                                       pDocumentNo: Text)
     var
         //  PageControl, PageControlDetail : Record "Page Control Field";
         APIMapping, APIMappingLine : Record "API Setup Line";
@@ -415,4 +524,6 @@ codeunit 50030 "FK Func"
         Evaluate(ConvertTextToDecimal, DecimalText);
         exit(ConvertTextToDecimal);
     end;
+
+
 }
