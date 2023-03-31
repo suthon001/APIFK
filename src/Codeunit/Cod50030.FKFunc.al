@@ -56,9 +56,18 @@ codeunit 50030 "FK Func"
         APIMappingLine.SetRange("Line Type", APIMappingLine."Line Type"::Header);
         APIMappingLine.SetRange(Include, true);
         APIMappingLine.SetFilter("Service Name", '<>%1', '');
+        APIMappingLine.SetRange("Is Primary", true);
+        if APIMappingLine.FindSet() then
+            repeat
+                ltFieldRef := ltRecordRef.FIELD(APIMappingLine."Field No.");
+                if UpperCase(format(ltFieldRef.Type)) IN ['CODE', 'TEXT'] then
+                    ltFieldRef.Validate(SelectJsonTokenText(pJsonObject, '$.' + APIMappingLine."Service Name"));
+                if UpperCase(format(ltFieldRef.Type)) IN ['INTEGER', 'DECIMAL', 'BIGINTEGER'] then
+                    ltFieldRef.validate(SelectJsonTokenInterger(pJsonObject, '$.' + APIMappingLine."Service Name"));
+            until APIMappingLine.Next() = 0;
+        ltRecordRef.Insert(true);
+        APIMappingLine.SetRange("Is Primary", false);
         if APIMappingLine.FindSet() then begin
-            IsfindPrimarykey(APIMappingHeader."Page Name", APIMappingHeader."Table ID", pJsonObject, ltRecordRef);
-            ltRecordRef.Insert(true);
             repeat
                 ltFieldRef := ltRecordRef.FIELD(APIMappingLine."Field No.");
                 if UpperCase(format(ltFieldRef.Type)) IN ['CODE', 'TEXT'] then
@@ -91,6 +100,7 @@ codeunit 50030 "FK Func"
         JsonText := '';
         pjsonObject.WriteTo(JsonText);
         apiLog.Init();
+        apiLog."Entry No." := GetLastEntryLog();
         apiLog."Page Name" := PageName;
         apiLog."No." := pTableID;
         apiLog."Date Time" := pDateTime;
@@ -99,6 +109,17 @@ codeunit 50030 "FK Func"
         apiLog.Status := pStatus;
         apiLog."No. of API" := pNoOfAPI;
         apiLog.Insert(true);
+    end;
+
+    local procedure GetLastEntryLog(): Integer
+    var
+        apiLog: Record "API Log";
+    begin
+        apiLog.reset();
+        apiLog.SetCurrentKey("Entry No.");
+        if apiLog.FindLast() then
+            exit(apiLog."Entry No." + 1);
+        exit(1);
     end;
 
     local procedure ReuturnErrorAPI(pPageName: Text; pNoOfAPI: Integer): Text
@@ -136,21 +157,7 @@ codeunit 50030 "FK Func"
         exit(ltReturnText);
     end;
 
-    local procedure IsfindPrimarykey(pPageName: Option; pTableID: Integer; pJsonObject: JsonObject; var pRecordRef: RecordRef)
-    var
-        APIMappingLine: Record "API Setup Line";
-        ltFieldRef: FieldRef;
-    begin
-        APIMappingLine.reset();
-        APIMappingLine.SetRange("Page Name", pPageName);
-        APIMappingLine.SetRange("Line Type", APIMappingLine."Line Type"::Line);
-        APIMappingLine.SetRange("Is Primary", true);
-        if APIMappingLine.FindSet() then
-            repeat
-                ltFieldRef := pRecordRef.FIELD(APIMappingLine."Field No.");
-                ltFieldRef.Validate(SelectJsonTokenText(pJsonObject, '$.' + APIMappingLine."Service Name"));
-            until APIMappingLine.Next() = 0;
-    end;
+
 
     /// <summary>
     /// ExportJsonFormatMuntitable.
