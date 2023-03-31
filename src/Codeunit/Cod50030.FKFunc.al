@@ -41,7 +41,8 @@ codeunit 50030 "FK Func"
     /// <param name="pPageName">Integer.</param>
     /// <param name="pTableID">Integer.</param>
     /// <param name="pSubTableID">Integer.</param>
-    procedure ExportJsonFormatMuntitable(pPageNO: Integer; pPageNOSubform: Integer; pDocumentType: Enum "Sales Document Type"; pApiName: Text; pPageName: Integer; pTableID: Integer; pSubTableID: Integer)
+    /// <param name="pDocumentNo">Text.</param>
+    procedure ExportJsonFormatMuntitable(pPageNO: Integer; pPageNOSubform: Integer; pDocumentType: Enum "Sales Document Type"; pApiName: Text; pPageName: Integer; pTableID: Integer; pSubTableID: Integer; pDocumentNo: Text)
     var
         //  PageControl, PageControlDetail : Record "Page Control Field";
         APIMapping, APIMappingLine : Record "API Setup Line";
@@ -68,6 +69,10 @@ codeunit 50030 "FK Func"
         ltRecordRef.Open(pTableID);
         ltFieldRef := ltRecordRef.FieldIndex(1);
         ltFieldRef.SetRange(pDocumentType);
+        if pDocumentNo <> '' then begin
+            ltFieldRef := ltRecordRef.FieldIndex(2);
+            ltFieldRef.SetFilter(pDocumentNo);
+        end;
         if ltRecordRef.FindFirst() then begin
             ltFieldRef := ltRecordRef.FieldIndex(2);
             documentNo := format(ltFieldRef.Value);
@@ -174,6 +179,7 @@ codeunit 50030 "FK Func"
 
     end;
 
+
     /// <summary>
     /// ExportJsonFormat.
     /// </summary>
@@ -181,7 +187,8 @@ codeunit 50030 "FK Func"
     /// <param name="pTableID">Integer.</param>
     /// <param name="pApiName">Text.</param>
     /// <param name="pPageName">Integer.</param>
-    procedure ExportJsonFormat(pPageNO: Integer; pTableID: Integer; pApiName: Text; pPageName: Integer)
+    /// <param name="pDocumentNo">Text.</param>
+    procedure ExportJsonFormat(pPageNO: Integer; pTableID: Integer; pApiName: Text; pPageName: Integer; pDocumentNo: Text)
     var
 
         APIMappingLine: Record "API Setup Line";
@@ -200,6 +207,13 @@ codeunit 50030 "FK Func"
     begin
 
         ltRecordRef.Open(pTableID);
+        if pDocumentNo <> '' then begin
+            if not (pTableID in [81, 83]) then
+                ltFieldRef := ltRecordRef.FieldIndex(1)
+            else
+                ltFieldRef := ltRecordRef.Field(7);
+            ltFieldRef.SetFilter(pDocumentNo);
+        end;
         if ltRecordRef.FindFirst() then begin
             CLEAR(ltJsonObject);
             CLEAR(ltJsonArray);

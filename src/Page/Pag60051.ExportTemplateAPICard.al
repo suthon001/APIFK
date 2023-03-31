@@ -33,6 +33,12 @@ page 60051 "FK API Mapping Card"
                     ApplicationArea = all;
                     ToolTip = 'Specifies value of the field.';
                 }
+                field(documentNoFilter; documentNoFilter)
+                {
+                    ApplicationArea = all;
+                    Caption = 'Document No. Filter';
+                    ToolTip = 'Specifies value of the field.';
+                }
             }
             part(LineHeader; "Export Template Subform")
             {
@@ -84,7 +90,7 @@ page 60051 "FK API Mapping Card"
                     DocumentType: Enum "Sales Document Type";
                 begin
                     if rec."Sub Table ID" = 0 then
-                        FKFunc.ExportJsonFormat(rec."Page No.", rec."Table ID", rec."Serivce Name", rec."Page Name")
+                        FKFunc.ExportJsonFormat(rec."Page No.", rec."Table ID", rec."Serivce Name", rec."Page Name", documentNoFilter)
                     else begin
 
                         if rec."Page Name" = rec."Page Name"::"Purchase Order" then
@@ -96,10 +102,12 @@ page 60051 "FK API Mapping Card"
                         if rec."Page Name" = rec."Page Name"::"Sales Credit Memo" then
                             DocumentType := DocumentType::"Credit Memo";
 
-                        FKFunc.ExportJsonFormatMuntitable(rec."Page No.", rec."Sub Page No.", DocumentType, rec."Serivce Name", rec."Page Name", rec."Table ID", rec."Sub Table ID");
+                        FKFunc.ExportJsonFormatMuntitable(rec."Page No.", rec."Sub Page No.", DocumentType, rec."Serivce Name", rec."Page Name", rec."Table ID", rec."Sub Table ID", documentNoFilter);
                     end;
                 end;
             }
         }
     }
+    var
+        documentNoFilter: Text;
 }
