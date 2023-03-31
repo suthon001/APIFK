@@ -3,6 +3,11 @@
 /// </summary>
 codeunit 50030 "FK Func"
 {
+    /// <summary>
+    /// CreateCustomer.
+    /// </summary>
+    /// <param name="customerlists">BigText.</param>
+    /// <returns>Return value of type Text.</returns>
     procedure CreateCustomer(customerlists: BigText): Text;
     var
         ltJsonObject, ltJsonObjectDetail, ltJsonObject2, JsonObjectSelect : JsonObject;
@@ -142,7 +147,7 @@ codeunit 50030 "FK Func"
                         until APIMappingLine.Next() = 0;
                     CLEAR(ltJsonObjectReserve);
 
-                    CLEAR(ltJsonArrayReserve);
+                    //  CLEAR(ltJsonArrayReserve);
                     ltFieldRef := ltRecordRef.FieldIndex(3);
                     Evaluate(ltLineNo, format(ltFieldRef.Value));
                     ReservationEntry.reset();
@@ -150,6 +155,7 @@ codeunit 50030 "FK Func"
                     ReservationEntry.SetRange("Source Ref. No.", ltLineNo);
                     if ReservationEntry.FindSet() then begin
                         repeat
+                            CLEAR(ltJsonObjectReserve);
                             ltJsonObjectReserve.Add('quantity', ReservationEntry.Quantity);
                             ltJsonObjectReserve.Add('lotno', ReservationEntry."Lot No.");
                             ltJsonObjectReserve.Add('serialno', ReservationEntry."Serial No.");
