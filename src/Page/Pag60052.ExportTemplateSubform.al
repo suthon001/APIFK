@@ -1,7 +1,7 @@
 /// <summary>
-/// Page Export Template Subform (ID 50052).
+/// Page Export Template Subform (ID 60052).
 /// </summary>
-page 50052 "Export Template Subform"
+page 60052 "Export Template Subform"
 {
     Caption = 'Export Template Subform';
     PageType = ListPart;

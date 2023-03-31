@@ -13,28 +13,144 @@ codeunit 50030 "FK Func"
         ltJsonObject, ltJsonObjectDetail, ltJsonObject2, JsonObjectSelect : JsonObject;
         ltJsonToken, ltJsonToken2, ltJsonTokenDetail : JsonToken;
         ltJsonArray, ltJsonArrayDetail : JsonArray;
-        ltmyLoop: Integer;
-        JSONManagement: Codeunit "JSON Management";
-        CustomerJsonObject: text;
-        PageControl: Record "Page Control Field";
-        ltFieldRef: FieldRef;
-        ltRecordRef: RecordRef;
-        ltField: Record Field;
+        ltDateTime: DateTime;
+        ltPageName: Text;
+        ltNoofAPI: Integer;
     begin
+        ltPageName := UpperCase('Customer');
+        ltNoofAPI := GetNoOfAPI(ltPageName);
+        ltDateTime := CurrentDateTime();
         ltJsonToken.ReadFrom(Format(customerlists).Replace('\', ''));
         ltJsonArray := ltJsonToken.AsArray();
         foreach ltJsonToken2 in ltJsonArray do begin
             ltJsonObject2 := ltJsonToken2.AsObject();
-            ltJsonObject2.SelectToken('$.detail', ltJsonToken2);
-            ltJsonArrayDetail := ltJsonToken2.AsArray();
-            foreach ltJsonTokenDetail in ltJsonArrayDetail do begin
-                ltJsonObjectDetail := ltJsonTokenDetail.AsObject();
-                ERROR(SelectJsonTokenText(ltJsonObjectDetail, '$.nos'));
-            end;
+            if not InsertTotableHeader(2, Database::Customer, ltJsonObject2) then
+                Insertlog(Database::Customer, ltPageName, ltJsonObject2, ltDateTime, GetLastErrorText(), 1, ltNoofAPI)
+            else
+                Insertlog(Database::Customer, ltPageName, ltJsonObject2, ltDateTime, '', 0, ltNoofAPI);
+            // ltJsonObject2.SelectToken('$.detail', ltJsonToken2);
+            // ltJsonArrayDetail := ltJsonToken2.AsArray();
+            // foreach ltJsonTokenDetail in ltJsonArrayDetail do begin
+            //     ltJsonObjectDetail := ltJsonTokenDetail.AsObject();
+            //     ERROR(SelectJsonTokenText(ltJsonObjectDetail, '$.nos'));
+            // end;
         end;
+        exit(ReuturnErrorAPI(ltPageName, ltNoofAPI));
     end;
 
+    [TryFunction]
+    local procedure InsertTotableHeader(pPageName: Option; pTableID: Integer; pJsonObject: JsonObject)
+    var
+        APIMappingHeader: Record "API Setup Header";
+        APIMappingLine: Record "API Setup Line";
+        ltFieldRef: FieldRef;
+        ltRecordRef: RecordRef;
+        ltField: Record Field;
 
+    begin
+        APIMappingHeader.GET(pPageName);
+        ltRecordRef.Open(APIMappingHeader."Table ID");
+        ltRecordRef.Init();
+        APIMappingLine.reset();
+        APIMappingLine.SetRange("Page Name", APIMappingHeader."Page Name");
+        APIMappingLine.SetRange("Line Type", APIMappingLine."Line Type"::Header);
+        APIMappingLine.SetRange(Include, true);
+        APIMappingLine.SetFilter("Service Name", '<>%1', '');
+        if APIMappingLine.FindSet() then begin
+            IsfindPrimarykey(APIMappingHeader."Page Name", APIMappingHeader."Table ID", pJsonObject, ltRecordRef);
+            ltRecordRef.Insert(true);
+            repeat
+                ltFieldRef := ltRecordRef.FIELD(APIMappingLine."Field No.");
+                if UpperCase(format(ltFieldRef.Type)) IN ['CODE', 'TEXT'] then
+                    ltFieldRef.Validate(SelectJsonTokenText(pJsonObject, '$.' + APIMappingLine."Service Name"));
+                if UpperCase(format(ltFieldRef.Type)) IN ['INTEGER', 'DECIMAL', 'BIGINTEGER'] then
+                    ltFieldRef.validate(SelectJsonTokenInterger(pJsonObject, '$.' + APIMappingLine."Service Name"));
+            until APIMappingLine.Next() = 0;
+            ltRecordRef.Modify(true);
+        end;
+        ltRecordRef.Close();
+    end;
+
+    local procedure GetNoOfAPI(pPageName: Text): Integer;
+    var
+        apiLog: Record "API Log";
+    begin
+        apiLog.reset();
+        apiLog.SetCurrentKey("Page Name", "No. of API");
+        apiLog.SetRange("Page Name", pPageName);
+        if apiLog.FindLast() then
+            exit(apiLog."No. of API" + 1);
+        exit(1);
+    end;
+
+    local procedure insertlog(pTableID: integer; PageName: text; pjsonObject: JsonObject; pDateTime: DateTime; pMsgError: Text; pStatus: Option Successfully,"Error"; pNoOfAPI: Integer)
+    var
+        apiLog: Record "API Log";
+        JsonText: Text;
+    begin
+        JsonText := '';
+        pjsonObject.WriteTo(JsonText);
+        apiLog.Init();
+        apiLog."Page Name" := PageName;
+        apiLog."No." := pTableID;
+        apiLog."Date Time" := pDateTime;
+        apiLog."Json Msg." := copystr(JsonText, 1, 2047);
+        apiLog."Last Error" := copystr(pMsgError, 1, 2047);
+        apiLog.Status := pStatus;
+        apiLog."No. of API" := pNoOfAPI;
+        apiLog.Insert(true);
+    end;
+
+    local procedure ReuturnErrorAPI(pPageName: Text; pNoOfAPI: Integer): Text
+    var
+        apiLog: Record "API Log";
+        pJsonObject, pJsonObjectBuill : JsonObject;
+        pJsonArray: JsonArray;
+        ltReturnText: Text;
+    begin
+        ltReturnText := '';
+        CLEAR(pJsonObject);
+        CLEAR(pJsonArray);
+        CLEAR(pJsonObjectBuill);
+        apiLog.reset();
+        apiLog.SetRange("Page Name", pPageName);
+        apiLog.SetRange("No. of API", pNoOfAPI);
+        apiLog.SetRange(Status, apiLog.Status::Error);
+        if apiLog.FindSet() then begin
+            repeat
+                CLEAR(pJsonObject);
+                pJsonObject.Add('page', apiLog."Page Name");
+                pJsonObject.Add('tableID', apiLog."No.");
+                pJsonObject.Add('dateTime', apiLog."Date Time");
+                pJsonObject.Add('lastError', apiLog."Last Error");
+                pJsonArray.Add(pJsonObject);
+            until apiLog.Next() = 0;
+            pJsonObjectBuill.Add('status', 'Error');
+            pJsonObjectBuill.Add('total', apiLog.Count);
+            pJsonObjectBuill.Add('detail', pJsonArray);
+            pJsonObjectBuill.WriteTo(ltReturnText);
+        end else begin
+            pJsonObjectBuill.Add('status', 'Successfully');
+            pJsonObjectBuill.WriteTo(ltReturnText);
+        end;
+        exit(ltReturnText);
+    end;
+
+    local procedure IsfindPrimarykey(pPageName: Option; pTableID: Integer; pJsonObject: JsonObject; var pRecordRef: RecordRef)
+    var
+        APIMappingLine: Record "API Setup Line";
+        ltFieldRef: FieldRef;
+    begin
+        APIMappingLine.reset();
+        APIMappingLine.SetRange("Page Name", pPageName);
+        APIMappingLine.SetRange("Line Type", APIMappingLine."Line Type"::Line);
+        APIMappingLine.SetRange("Is Primary", true);
+        if APIMappingLine.FindSet() then
+            repeat
+                ltFieldRef := pRecordRef.FIELD(APIMappingLine."Field No.");
+                ltFieldRef.Validate(SelectJsonTokenText(pJsonObject, '$.' + APIMappingLine."Service Name"));
+            until APIMappingLine.Next() = 0;
+    end;
 
     /// <summary>
     /// ExportJsonFormatMuntitable.
@@ -274,5 +390,22 @@ codeunit 50030 "FK Func"
         if ltJsonToken.AsValue.IsNull then
             exit('');
         exit(ltJsonToken.asvalue.astext());
+    end;
+
+    local procedure SelectJsonTokenInterger(JsonObject: JsonObject; Path: text): Decimal;
+    var
+        ltJsonToken: JsonToken;
+        ConvertTextToDecimal: Decimal;
+        DecimalText: Text;
+    begin
+        if not JsonObject.SelectToken(Path, ltJsonToken) then
+            exit(0);
+        if ltJsonToken.AsValue.IsNull then
+            exit(0);
+        DecimalText := delchr(format(ltJsonToken), '=', '"');
+        if DecimalText = '' then
+            DecimalText := '0';
+        Evaluate(ConvertTextToDecimal, DecimalText);
+        exit(ConvertTextToDecimal);
     end;
 }
