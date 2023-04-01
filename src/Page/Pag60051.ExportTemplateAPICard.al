@@ -102,7 +102,7 @@ page 60051 "FK API Mapping Card"
                         if rec."Page Name" = rec."Page Name"::"Sales Credit Memo" then
                             DocumentType := DocumentType::"Credit Memo";
 
-                        FKFunc.ExportJsonFormatMuntitable(rec."Page No.", rec."Sub Page No.", DocumentType, rec."Serivce Name", rec."Page Name", rec."Table ID", rec."Sub Table ID", documentNoFilter);
+                        FKFunc.ExportJsonFormatMultitable(rec."Page No.", rec."Sub Page No.", DocumentType, rec."Serivce Name", rec."Page Name", rec."Table ID", rec."Sub Table ID", documentNoFilter);
                     end;
                 end;
             }
