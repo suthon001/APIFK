@@ -423,7 +423,7 @@ codeunit 50030 "FK Func"
                                                                                                        pPageName: Integer;
                                                                                                        pTableID: Integer;
                                                                                                        pSubTableID: Integer;
-                                                                                                       pDocumentNo: Text)
+                                                                                                       pDocumentNo: Text; pJsonFormat: Boolean)
     var
         //  PageControl, PageControlDetail : Record "Page Control Field";
         APIMapping, APIMappingLine : Record "API Setup Line";
@@ -550,9 +550,11 @@ codeunit 50030 "FK Func"
 
         ltResult.Add(pApiName, ltJsonArraybuill);
         ltResult.WriteTo(ltText);
-        ltText := ltText.Replace('"', '\"');
-        ltText := ltText.Replace('\"' + pApiName + '\":', '"' + pApiName + '":"');
-        ltText := COPYSTR(ltText, 1, StrLen(ltText) - 1) + '"}';
+        if not pJsonFormat then begin
+            ltText := ltText.Replace('"', '\"');
+            ltText := ltText.Replace('\"' + pApiName + '\":', '"' + pApiName + '":"');
+            ltText := COPYSTR(ltText, 1, StrLen(ltText) - 1) + '"}';
+        end;
         tempBlob.CreateOutStream(ltOutStr, TextEncoding::UTF8);
         ltOutStr.WriteText(ltText);
         tempBlob.CreateInStream(ltInstr, TextEncoding::UTF8);
@@ -570,7 +572,7 @@ codeunit 50030 "FK Func"
     /// <param name="pApiName">Text.</param>
     /// <param name="pPageName">Integer.</param>
     /// <param name="pDocumentNo">Text.</param>
-    procedure ExportJsonFormat(pPageNO: Integer; pTableID: Integer; pApiName: Text; pPageName: Integer; pDocumentNo: Text)
+    procedure ExportJsonFormat(pPageNO: Integer; pTableID: Integer; pApiName: Text; pPageName: Integer; pDocumentNo: Text; pJsonFormat: Boolean)
     var
 
         APIMappingLine: Record "API Setup Line";
@@ -654,9 +656,13 @@ codeunit 50030 "FK Func"
         ltRecordRef.Close();
         ltResult.Add(pApiName, ltJsonArray);
         ltResult.WriteTo(ltText);
-        ltText := ltText.Replace('"', '\"');
-        ltText := ltText.Replace('\"' + pApiName + '\":', '"' + pApiName + '":"');
-        ltText := COPYSTR(ltText, 1, StrLen(ltText) - 1) + '"}';
+
+
+        if not pJsonFormat then begin
+            ltText := ltText.Replace('"', '\"');
+            ltText := ltText.Replace('\"' + pApiName + '\":', '"' + pApiName + '":"');
+            ltText := COPYSTR(ltText, 1, StrLen(ltText) - 1) + '"}';
+        end;
         tempBlob.CreateOutStream(ltOutStr, TextEncoding::UTF8);
         ltOutStr.WriteText(ltText);
         tempBlob.CreateInStream(ltInstr, TextEncoding::UTF8);
