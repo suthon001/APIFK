@@ -3,6 +3,12 @@
 /// </summary>
 codeunit 50030 "FK Func"
 {
+
+    [EventSubscriber(ObjectType::Page, Page::"Vendor Card", 'OnModifyRecordEvent', '', false, false)]
+    local procedure OnModifyRecordEventVendor(var Rec: Record Vendor)
+    begin
+        rec."Already Send" := false;
+    end;
     /// <summary>
     /// createcustomer.
     /// </summary>
@@ -130,7 +136,9 @@ codeunit 50030 "FK Func"
     //[TryFunction]
     local procedure sendvendor()
     var
+
         apisetupline: Record "API Setup Line";
+        apiSetupHeader: Record "API Setup Header";
         TempBlob: Codeunit "Temp Blob";
         ltRecordRef: RecordRef;
         ltFieldRef: FieldRef;
@@ -144,6 +152,9 @@ codeunit 50030 "FK Func"
         CR, LF, TAB : Char;
     begin
         ltpayload := '';
+        apiSetupHeader.GET(apiSetupHeader."Page Name"::Vendor);
+        apiSetupHeader.TestField(URL);
+        ltURL := apiSetupHeader.URL;
         CLEAR(ltJsonArray);
         CLEAR(ltJsonObjectBiuld);
         ltRecordRef.Open(Database::Vendor);
@@ -190,8 +201,12 @@ codeunit 50030 "FK Func"
             TempBlob.CreateInStream(ltStr, TextEncoding::UTF8);
             ltFileName := 'Vendorlists.txt';
             DownloadFromStream(ltStr, '', '', '', ltFileName);
-            if (ltURL <> '') and (ltpayload <> '') then
+            if (ltURL <> '') and (ltpayload <> '') then begin
                 ConnectToWebService(ltpayload, ltURL);
+                ltFieldRef := ltRecordRef.Field(50090);
+                ltFieldRef.Value := true;
+                ltRecordRef.Modify();
+            end;
         end;
         ltRecordRef.Close();
     end;

@@ -159,6 +159,15 @@ table 50090 "API Setup Header"
             DataClassification = CustomerContent;
             Editable = false;
         }
+        field(9; "URL"; Text[2047])
+        {
+            Caption = 'URL';
+            DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                rec.TestField("Page Name", rec."Page Name"::Vendor);
+            end;
+        }
     }
     keys
     {
@@ -184,6 +193,20 @@ table 50090 "API Setup Header"
     trigger OnRename()
     begin
         ERROR('Cannot Rename');
+    end;
+
+
+    /// <summary>
+    /// apisetuplineexists.
+    /// </summary>
+    /// <returns>Return value of type Boolean.</returns>
+    procedure apisetuplineexists(): Boolean
+    var
+        apisetupline: Record "API Setup Line";
+    begin
+        apisetupline.Reset();
+        apisetupline.SetRange("Page Name", rec."Page Name");
+        exit(apisetupline.IsEmpty);
     end;
     /// <summary>
     /// GenerateDetail.

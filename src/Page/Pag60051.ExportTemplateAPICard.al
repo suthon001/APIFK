@@ -20,6 +20,7 @@ page 60051 "FK API Mapping Card"
                     ToolTip = 'Specifies value of the field.';
                     trigger OnValidate()
                     begin
+
                         CurrPage.SaveRecord();
                     end;
                 }
@@ -30,6 +31,12 @@ page 60051 "FK API Mapping Card"
                 }
                 field(Remark; Rec.Remark)
                 {
+                    ApplicationArea = all;
+                    ToolTip = 'Specifies value of the field.';
+                }
+                field(URL; Rec.URL)
+                {
+
                     ApplicationArea = all;
                     ToolTip = 'Specifies value of the field.';
                 }
@@ -89,20 +96,23 @@ page 60051 "FK API Mapping Card"
                     FKFunc: Codeunit "FK Func";
                     DocumentType: Enum "Sales Document Type";
                 begin
-                    if rec."Sub Table ID" = 0 then
-                        FKFunc.ExportJsonFormat(rec."Page No.", rec."Table ID", rec."Serivce Name", rec."Page Name", documentNoFilter, false)
+                    if rec.apisetuplineexists() then
+                        Message('please generate detail befor export')
                     else begin
+                        if rec."Sub Table ID" = 0 then
+                            FKFunc.ExportJsonFormat(rec."Page No.", rec."Table ID", rec."Serivce Name", rec."Page Name", documentNoFilter, false)
+                        else begin
+                            if rec."Page Name" = rec."Page Name"::"Purchase Order" then
+                                DocumentType := DocumentType::Order;
+                            if rec."Page Name" = rec."Page Name"::"Purchase Return Order" then
+                                DocumentType := DocumentType::"Return Order";
+                            if rec."Page Name" = rec."Page Name"::"Sales Invoice" then
+                                DocumentType := DocumentType::Invoice;
+                            if rec."Page Name" = rec."Page Name"::"Sales Credit Memo" then
+                                DocumentType := DocumentType::"Credit Memo";
 
-                        if rec."Page Name" = rec."Page Name"::"Purchase Order" then
-                            DocumentType := DocumentType::Order;
-                        if rec."Page Name" = rec."Page Name"::"Purchase Return Order" then
-                            DocumentType := DocumentType::"Return Order";
-                        if rec."Page Name" = rec."Page Name"::"Sales Invoice" then
-                            DocumentType := DocumentType::Invoice;
-                        if rec."Page Name" = rec."Page Name"::"Sales Credit Memo" then
-                            DocumentType := DocumentType::"Credit Memo";
-
-                        FKFunc.ExportJsonFormatMultitable(rec."Page No.", rec."Sub Page No.", DocumentType, rec."Serivce Name", rec."Page Name", rec."Table ID", rec."Sub Table ID", documentNoFilter, false);
+                            FKFunc.ExportJsonFormatMultitable(rec."Page No.", rec."Sub Page No.", DocumentType, rec."Serivce Name", rec."Page Name", rec."Table ID", rec."Sub Table ID", documentNoFilter, false);
+                        end;
                     end;
                 end;
             }
@@ -119,25 +129,30 @@ page 60051 "FK API Mapping Card"
                     FKFunc: Codeunit "FK Func";
                     DocumentType: Enum "Sales Document Type";
                 begin
-                    if rec."Sub Table ID" = 0 then
-                        FKFunc.ExportJsonFormat(rec."Page No.", rec."Table ID", rec."Serivce Name", rec."Page Name", documentNoFilter, true)
+                    if rec.apisetuplineexists() then
+                        Message('please generate detail befor export')
                     else begin
+                        if rec."Sub Table ID" = 0 then
+                            FKFunc.ExportJsonFormat(rec."Page No.", rec."Table ID", rec."Serivce Name", rec."Page Name", documentNoFilter, true)
+                        else begin
 
-                        if rec."Page Name" = rec."Page Name"::"Purchase Order" then
-                            DocumentType := DocumentType::Order;
-                        if rec."Page Name" = rec."Page Name"::"Purchase Return Order" then
-                            DocumentType := DocumentType::"Return Order";
-                        if rec."Page Name" = rec."Page Name"::"Sales Invoice" then
-                            DocumentType := DocumentType::Invoice;
-                        if rec."Page Name" = rec."Page Name"::"Sales Credit Memo" then
-                            DocumentType := DocumentType::"Credit Memo";
-
-                        FKFunc.ExportJsonFormatMultitable(rec."Page No.", rec."Sub Page No.", DocumentType, rec."Serivce Name", rec."Page Name", rec."Table ID", rec."Sub Table ID", documentNoFilter, true);
+                            if rec."Page Name" = rec."Page Name"::"Purchase Order" then
+                                DocumentType := DocumentType::Order;
+                            if rec."Page Name" = rec."Page Name"::"Purchase Return Order" then
+                                DocumentType := DocumentType::"Return Order";
+                            if rec."Page Name" = rec."Page Name"::"Sales Invoice" then
+                                DocumentType := DocumentType::Invoice;
+                            if rec."Page Name" = rec."Page Name"::"Sales Credit Memo" then
+                                DocumentType := DocumentType::"Credit Memo";
+                            FKFunc.ExportJsonFormatMultitable(rec."Page No.", rec."Sub Page No.", DocumentType, rec."Serivce Name", rec."Page Name", rec."Table ID", rec."Sub Table ID", documentNoFilter, true);
+                        end;
                     end;
                 end;
             }
         }
     }
+
     var
         documentNoFilter: Text;
+
 }
