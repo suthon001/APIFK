@@ -113,6 +113,7 @@ page 60051 "FK API Mapping Card"
                 Promoted = true;
                 PromotedCategory = Process;
                 ApplicationArea = basic;
+                Visible = false;
                 trigger OnAction()
                 var
                     FKFunc: Codeunit "FK Func";

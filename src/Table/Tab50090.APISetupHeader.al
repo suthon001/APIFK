@@ -12,8 +12,8 @@ table 50090 "API Setup Header"
         {
             Caption = 'Page Name';
             DataClassification = CustomerContent;
-            OptionCaption = ' ,Item,Customer,Vendor,Purchase Order,Purchase Return Order,Sales Invoice,Sales Credit Memo,Item Journal,Item Reclass,Cash Receipt';
-            OptionMembers = " ",Item,Customer,Vendor,"Purchase Order","Purchase Return Order","Sales Invoice","Sales Credit Memo","Item Journal","Item Reclass","Cash Receipt";
+            OptionCaption = ' ,Item,Customer,Vendor,Purchase Order,Purchase Return Order,Good Receipt Note,Purchase Return Receipt,Sales Invoice,Sales Credit Memo,Item Journal,Item Reclass,Cash Receipt';
+            OptionMembers = " ",Item,Customer,Vendor,"Purchase Order","Purchase Return Order","Good Receipt Note","Purchase Return Receipt","Sales Invoice","Sales Credit Memo","Item Journal","Item Reclass","Cash Receipt";
             trigger OnValidate()
             begin
                 if rec."Page Name" <> xrec."Page Name" then begin
@@ -53,6 +53,24 @@ table 50090 "API Setup Header"
 
                         5:
                             begin
+                                rec."Page No." := page::"Purchase Order";
+                                rec."Sub Page No." := 0;
+                                rec."Table ID" := Database::"Purchase Line";
+                                rec."Sub Table ID" := 0;
+                                rec."Serivce Name" := 'goodreceiptnotelists';
+                            end;
+
+                        6:
+                            begin
+                                rec."Page No." := page::"Purchase Return Order";
+                                rec."Sub Page No." := 0;
+                                rec."Table ID" := Database::"Purchase Line";
+                                rec."Sub Table ID" := 0;
+                                rec."Serivce Name" := 'returnreceiptlists';
+                            end;
+
+                        7:
+                            begin
                                 rec."Page No." := page::"Purchase Return Order";
                                 rec."Sub Page No." := page::"Purchase Return Order Subform";
                                 rec."Table ID" := Database::"Purchase Header";
@@ -60,7 +78,7 @@ table 50090 "API Setup Header"
                                 rec."Serivce Name" := 'purchasereturnorderlists';
                             end;
 
-                        6:
+                        8:
                             begin
                                 rec."Page No." := page::"Sales Invoice";
                                 rec."Sub Page No." := page::"Sales Invoice Subform";
@@ -68,7 +86,7 @@ table 50090 "API Setup Header"
                                 rec."Sub Table ID" := Database::"Sales Line";
                                 rec."Serivce Name" := 'salesinvoicelists';
                             end;
-                        7:
+                        9:
                             begin
                                 rec."Page No." := page::"Sales Credit Memo";
                                 rec."Sub Page No." := page::"Sales Cr. Memo Subform";
@@ -76,7 +94,7 @@ table 50090 "API Setup Header"
                                 rec."Sub Table ID" := Database::"Sales Line";
                                 rec."Serivce Name" := 'salescreditmemolists';
                             end;
-                        8:
+                        10:
                             begin
                                 rec."Page No." := page::"Item Journal";
                                 rec."Sub Page No." := 0;
@@ -84,7 +102,7 @@ table 50090 "API Setup Header"
                                 rec."Sub Table ID" := 0;
                                 rec."Serivce Name" := 'itemjournal';
                             end;
-                        9:
+                        11:
                             begin
                                 rec."Page No." := page::"Item Reclass. Journal";
                                 rec."Sub Page No." := 0;
@@ -92,7 +110,7 @@ table 50090 "API Setup Header"
                                 rec."Sub Table ID" := 0;
                                 rec."Serivce Name" := 'itemreclass';
                             end;
-                        10:
+                        12:
                             begin
                                 rec."Page No." := page::"Cash Receipt Journal";
                                 rec."Sub Page No." := 0;

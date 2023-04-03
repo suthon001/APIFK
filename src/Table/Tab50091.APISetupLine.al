@@ -12,8 +12,8 @@ table 50091 "API Setup Line"
         {
             Caption = 'Page Name';
             DataClassification = CustomerContent;
-            OptionCaption = 'Item,Customer,Vendor,Purchase Order,Purchase Invoice,Purchase Credit Memo';
-            OptionMembers = Item,Customer,Vendor,"Purchase Order","Purchase Invoice","Purchase Credit Memo";
+            OptionCaption = ' ,Item,Customer,Vendor,Purchase Order,Purchase Return Order,Good Receipt Note,Purchase Return Receipt,Sales Invoice,Sales Credit Memo,Item Journal,Item Reclass,Cash Receipt';
+            OptionMembers = " ",Item,Customer,Vendor,"Purchase Order","Purchase Return Order","Good Receipt Note","Purchase Return Receipt","Sales Invoice","Sales Credit Memo","Item Journal","Item Reclass","Cash Receipt";
         }
         field(2; "Line Type"; Option)
         {
@@ -44,6 +44,7 @@ table 50091 "API Setup Line"
         {
             Caption = 'Service Name';
             DataClassification = CustomerContent;
+            Editable = false;
         }
         field(7; "Lenth"; text[50])
         {
