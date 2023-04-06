@@ -116,6 +116,36 @@ page 60051 "FK API Mapping Card"
                     end;
                 end;
             }
+
+
+            action(ExportTimeOut)
+            {
+                Caption = 'Export Time Out';
+                Image = Export;
+                Promoted = true;
+                PromotedCategory = Process;
+                ApplicationArea = basic;
+                trigger OnAction()
+                var
+                    FKFunc: Codeunit "FK Func";
+                    DocumentType: Enum "Sales Document Type";
+                begin
+
+                    if rec."Page Name" = rec."Page Name"::"Purchase Order" then
+                        DocumentType := DocumentType::Order;
+                    if rec."Page Name" = rec."Page Name"::"Purchase Return Order" then
+                        DocumentType := DocumentType::"Return Order";
+                    if rec."Page Name" = rec."Page Name"::"Sales Invoice" then
+                        DocumentType := DocumentType::Invoice;
+                    if rec."Page Name" = rec."Page Name"::"Sales Credit Memo" then
+                        DocumentType := DocumentType::"Credit Memo";
+
+
+                    FKFunc.ExportTestTimeOut(rec."Page No.", rec."Sub Page No.", DocumentType, rec."Serivce Name", rec."Page Name", rec."Table ID", rec."Sub Table ID", documentNoFilter, false);
+
+
+                end;
+            }
             action(ExportTemplate)
             {
                 Caption = 'Export Json';

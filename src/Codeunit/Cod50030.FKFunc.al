@@ -38,26 +38,34 @@ codeunit 50030 "FK Func"
         ltInstr: InStream;
         ltFileName: Text;
         ValueDecimal: Decimal;
-        ValueInteger, ltLineNo, ltloop, ltloop2 : Integer;
+        ValueInteger, ltLineNo, ltloop, ltloop2, ToLine1, ToLine2 : Integer;
         documentNo, TESTdocumentNo : Code[20];
         CR, LF, tab : char;
         CheckFirstLine: Text;
         CheckFirstLineInt, CheckFirstLineInt2 : Integer;
+        CheckLineNo: Boolean;
     begin
+
+        if not (pTableID in [36, 38]) then begin
+            Message('for sales & purchase');
+            exit;
+        end;
         CLEAR(ltFieldRef);
         CLEAR(ltJsonObject);
         CLEAR(ltJsonObjectbuill);
         CLEAR(ltJsonArrayReserve);
         CLEAR(ltJsonObjectReserve);
-        ltRecordRef.Open(pTableID);
-        ltFieldRef := ltRecordRef.FieldIndex(1);
-        ltFieldRef.SetRange(pDocumentType);
-        if pDocumentNo <> '' then begin
-            ltFieldRef := ltRecordRef.FieldIndex(2);
-            ltFieldRef.SetFilter(pDocumentNo);
-        end;
-        if ltRecordRef.FindFirst() then
-            for ltloop := 1 to 2 do begin
+        ToLine1 := 2;
+        ToLine2 := 2;
+        for ltloop := 1 to ToLine1 do begin
+            ltRecordRef.Open(pTableID);
+            ltFieldRef := ltRecordRef.FieldIndex(1);
+            ltFieldRef.SetRange(pDocumentType);
+            if pDocumentNo <> '' then begin
+                ltFieldRef := ltRecordRef.FieldIndex(2);
+                ltFieldRef.SetFilter(pDocumentNo);
+            end;
+            if ltRecordRef.FindFirst() then begin
                 CLEAR(ltJsonObjectbuill);
 
                 ltFieldRef := ltRecordRef.FieldIndex(2);
@@ -94,20 +102,26 @@ codeunit 50030 "FK Func"
                     until APIMappingLine.Next() = 0;
                 end;
                 ltRecordRef.Close();
-
-                CLEAR(ltJsonArray);
-                CLEAR(ltFieldRef);
                 CheckFirstLineInt := 0;
                 CheckFirstLineInt2 := 0;
-                ltRecordRef.Open(pSubTableID);
-                ltFieldRef := ltRecordRef.FieldIndex(1);
-                ltFieldRef.SetRange(pDocumentType);
-                ltFieldRef := ltRecordRef.FieldIndex(2);
-                ltFieldRef.SetRange(documentNo);
-                if ltRecordRef.FindFirst() then begin
-                    repeat
+                CLEAR(ltJsonArray);
+                for ltloop2 := 1 to ToLine2 do begin
+
+                    CLEAR(ltFieldRef);
+                    CheckLineNo := false;
+                    ltRecordRef.Open(pSubTableID);
+                    ltFieldRef := ltRecordRef.FieldIndex(1);
+                    ltFieldRef.SetRange(pDocumentType);
+                    ltFieldRef := ltRecordRef.FieldIndex(2);
+                    ltFieldRef.SetRange(documentNo);
+                    if ltRecordRef.FindFirst() then begin
+
                         CheckFirstLineInt2 := CheckFirstLineInt2 + 1;
+
                         CLEAR(ltJsonObject);
+
+
+
                         APIMappingLine.reset();
                         APIMappingLine.SetCurrentKey("Page Name", "Line Type", "Field No.");
                         APIMappingLine.SetRange("Page Name", pPageName);
@@ -127,19 +141,22 @@ codeunit 50030 "FK Func"
                                             CheckFirstLine := '@'
                                     end else
                                         CheckFirstLine := '?';
+
+                                    if not CheckLineNo then
+                                        ltJsonObject.Add(CheckFirstLine + 'lineno', ltloop2 * 10000);
                                     ltFieldRef := ltRecordRef.Field(ltField."No.");
                                     if ltField.Type in [ltField.Type::Decimal, ltField.Type::Integer] then begin
                                         if ltField.Type = ltField.Type::Integer then begin
                                             Evaluate(ValueInteger, format(ltFieldRef.Value));
-                                            if ltJsonObject.Add(APIMappingLine."Service Name", ValueInteger) then;
+                                            if ltJsonObject.Add(CheckFirstLine + APIMappingLine."Service Name", ValueInteger) then;
                                         end else begin
                                             Evaluate(ValueDecimal, format(ltFieldRef.Value));
-                                            if ltJsonObject.Add(APIMappingLine."Service Name", ValueDecimal) then;
+                                            if ltJsonObject.Add(CheckFirstLine + APIMappingLine."Service Name", ValueDecimal) then;
                                         end;
                                     end else
-                                        if ltJsonObject.Add(APIMappingLine."Service Name", format(ltFieldRef.Value)) then;
+                                        if ltJsonObject.Add(CheckFirstLine + APIMappingLine."Service Name", format(ltFieldRef.Value)) then;
                                 end;
-
+                                CheckLineNo := true;
                             until APIMappingLine.Next() = 0;
                         CLEAR(ltJsonObjectReserve);
                         CLEAR(ltJsonArrayReserve);
@@ -167,14 +184,16 @@ codeunit 50030 "FK Func"
                             ltJsonObject.Add('?reservelines', ltJsonArrayReserve);
                         end;
                         ltJsonArray.Add(ltJsonObject);
-                    until ltRecordRef.next = 0;
 
-                    ltRecordRef.Close();
+
+                        ltRecordRef.Close();
+                    end;
                 end;
 
                 ltJsonObjectbuill.Add('detaillines', ltJsonArray);
                 ltJsonArraybuill.Add(ltJsonObjectbuill);
             end;
+        end;
 
         ltResult.Add(pApiName, ltJsonArraybuill);
         ltResult.WriteTo(ltText);
@@ -1085,13 +1104,13 @@ codeunit 50030 "FK Func"
                                 if ltField.Type in [ltField.Type::Decimal, ltField.Type::Integer] then begin
                                     if ltField.Type = ltField.Type::Integer then begin
                                         Evaluate(ValueInteger, format(ltFieldRef.Value));
-                                        if ltJsonObject.Add(APIMappingLine."Service Name", ValueInteger) then;
+                                        if ltJsonObject.Add(CheckFirstLine + APIMappingLine."Service Name", ValueInteger) then;
                                     end else begin
                                         Evaluate(ValueDecimal, format(ltFieldRef.Value));
-                                        if ltJsonObject.Add(APIMappingLine."Service Name", ValueDecimal) then;
+                                        if ltJsonObject.Add(CheckFirstLine + APIMappingLine."Service Name", ValueDecimal) then;
                                     end;
                                 end else
-                                    if ltJsonObject.Add(APIMappingLine."Service Name", format(ltFieldRef.Value)) then;
+                                    if ltJsonObject.Add(CheckFirstLine + APIMappingLine."Service Name", format(ltFieldRef.Value)) then;
                             end;
 
                         until APIMappingLine.Next() = 0;
