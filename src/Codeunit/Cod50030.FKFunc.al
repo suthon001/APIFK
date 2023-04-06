@@ -4,6 +4,202 @@
 codeunit 50030 "FK Func"
 {
 
+
+    /// <summary>
+    /// ExportTestTimeOut.
+    /// </summary>
+    /// <param name="pPageNO">Integer.</param>
+    /// <param name="pPageNOSubform">Integer.</param>
+    /// <param name="pDocumentType">Enum "Sales Document Type".</param>
+    /// <param name="pApiName">Text.</param>
+    /// <param name="pPageName">Integer.</param>
+    /// <param name="pTableID">Integer.</param>
+    /// <param name="pSubTableID">Integer.</param>
+    /// <param name="pDocumentNo">Text.</param>
+    /// <param name="pJsonFormat">Boolean.</param>
+    procedure ExportTestTimeOut(pPageNO: Integer; pPageNOSubform: Integer; pDocumentType: Enum "Sales Document Type"; pApiName: Text;
+                                                                                                       pPageName: Integer;
+                                                                                                       pTableID: Integer;
+                                                                                                       pSubTableID: Integer;
+                                                                                                       pDocumentNo: Text;
+                                                                                                       pJsonFormat: Boolean)
+    var
+        //  PageControl, PageControlDetail : Record "Page Control Field";
+        APIMapping, APIMappingLine : Record "API Setup Line";
+        ReservationEntry: Record "Reservation Entry";
+        ltField: Record Field;
+        ltJsonObject, ltResult, ltJsonObjectbuill, ltJsonObjectbuillReserve, ltJsonObjectReserve : JsonObject;
+        ltJsonArray, ltJsonArraybuill, ltJsonArrayReserve : JsonArray;
+        ltFieldRef: FieldRef;
+        ltRecordRef: RecordRef;
+        ltText: Text;
+        tempBlob: Codeunit "Temp Blob";
+        ltOutStr: OutStream;
+        ltInstr: InStream;
+        ltFileName: Text;
+        ValueDecimal: Decimal;
+        ValueInteger, ltLineNo, ltloop, ltloop2 : Integer;
+        documentNo, TESTdocumentNo : Code[20];
+        CR, LF, tab : char;
+        CheckFirstLine: Text;
+        CheckFirstLineInt, CheckFirstLineInt2 : Integer;
+    begin
+        CLEAR(ltFieldRef);
+        CLEAR(ltJsonObject);
+        CLEAR(ltJsonObjectbuill);
+        CLEAR(ltJsonArrayReserve);
+        CLEAR(ltJsonObjectReserve);
+        ltRecordRef.Open(pTableID);
+        ltFieldRef := ltRecordRef.FieldIndex(1);
+        ltFieldRef.SetRange(pDocumentType);
+        if pDocumentNo <> '' then begin
+            ltFieldRef := ltRecordRef.FieldIndex(2);
+            ltFieldRef.SetFilter(pDocumentNo);
+        end;
+        if ltRecordRef.FindFirst() then
+            for ltloop := 1 to 2 do begin
+                CLEAR(ltJsonObjectbuill);
+
+                ltFieldRef := ltRecordRef.FieldIndex(2);
+                documentNo := format(ltFieldRef.Value);
+
+                TESTdocumentNo := 'TESTAPI_' + format(ltloop);
+                ltJsonObjectbuill.Add('documenttype', format(pDocumentType));
+                ltJsonObjectbuill.Add('no', TESTdocumentNo);
+                CheckFirstLineInt := 0;
+                APIMappingLine.reset();
+                APIMappingLine.SetCurrentKey("Page Name", "Line Type", "Field No.");
+                APIMappingLine.SetRange("Page Name", pPageName);
+                APIMappingLine.SetRange("Line Type", APIMappingLine."Line Type"::Header);
+                APIMappingLine.SetRange(Include, true);
+                APIMappingLine.SetRange("Is Primary", false);
+                APIMappingLine.SetFilter("Service Name", '<>%1', '');
+                if APIMappingLine.FindSet() then begin
+                    repeat
+                        ltField.GET(pTableID, APIMappingLine."Field No.");
+                        if (ltField.Class = ltField.Class::Normal) and (ltField.Type <> ltField.Type::BLOB) then begin
+                            ltFieldRef := ltRecordRef.Field(ltField."No.");
+                            if ltField.Type in [ltField.Type::Decimal, ltField.Type::Integer] then begin
+                                if ltField.Type = ltField.Type::Integer then begin
+                                    Evaluate(ValueInteger, format(ltFieldRef.Value));
+                                    if ltJsonObjectbuill.Add(APIMappingLine."Service Name", ValueInteger) then;
+                                end else begin
+                                    Evaluate(ValueDecimal, format(ltFieldRef.Value));
+                                    if ltJsonObjectbuill.Add(APIMappingLine."Service Name", ValueDecimal) then;
+                                end;
+                            end else
+                                if ltJsonObjectbuill.Add(APIMappingLine."Service Name", format(ltFieldRef.Value)) then;
+                        end;
+
+                    until APIMappingLine.Next() = 0;
+                end;
+                ltRecordRef.Close();
+
+                CLEAR(ltJsonArray);
+                CLEAR(ltFieldRef);
+                CheckFirstLineInt := 0;
+                CheckFirstLineInt2 := 0;
+                ltRecordRef.Open(pSubTableID);
+                ltFieldRef := ltRecordRef.FieldIndex(1);
+                ltFieldRef.SetRange(pDocumentType);
+                ltFieldRef := ltRecordRef.FieldIndex(2);
+                ltFieldRef.SetRange(documentNo);
+                if ltRecordRef.FindFirst() then begin
+                    repeat
+                        CheckFirstLineInt2 := CheckFirstLineInt2 + 1;
+                        CLEAR(ltJsonObject);
+                        APIMappingLine.reset();
+                        APIMappingLine.SetCurrentKey("Page Name", "Line Type", "Field No.");
+                        APIMappingLine.SetRange("Page Name", pPageName);
+                        APIMappingLine.SetRange("Line Type", APIMappingLine."Line Type"::Line);
+                        APIMappingLine.SetRange(Include, true);
+                        APIMappingLine.SetRange("Is Primary", false);
+                        APIMappingLine.SetFilter("Service Name", '<>%1', '');
+                        if APIMappingLine.FindSet() then
+                            repeat
+
+                                ltField.GET(pSubTableID, APIMappingLine."Field No.");
+                                if (ltField.Class = ltField.Class::Normal) and (ltField.Type <> ltField.Type::BLOB) then begin
+                                    CheckFirstLineInt := CheckFirstLineInt + 1;
+                                    CheckFirstLine := '';
+                                    if CheckFirstLineInt2 = 1 then begin
+                                        if CheckFirstLineInt > 1 then
+                                            CheckFirstLine := '@'
+                                    end else
+                                        CheckFirstLine := '?';
+                                    ltFieldRef := ltRecordRef.Field(ltField."No.");
+                                    if ltField.Type in [ltField.Type::Decimal, ltField.Type::Integer] then begin
+                                        if ltField.Type = ltField.Type::Integer then begin
+                                            Evaluate(ValueInteger, format(ltFieldRef.Value));
+                                            if ltJsonObject.Add(APIMappingLine."Service Name", ValueInteger) then;
+                                        end else begin
+                                            Evaluate(ValueDecimal, format(ltFieldRef.Value));
+                                            if ltJsonObject.Add(APIMappingLine."Service Name", ValueDecimal) then;
+                                        end;
+                                    end else
+                                        if ltJsonObject.Add(APIMappingLine."Service Name", format(ltFieldRef.Value)) then;
+                                end;
+
+                            until APIMappingLine.Next() = 0;
+                        CLEAR(ltJsonObjectReserve);
+                        CLEAR(ltJsonArrayReserve);
+                        CheckFirstLineInt := 0;
+                        ltFieldRef := ltRecordRef.FieldIndex(3);
+                        Evaluate(ltLineNo, format(ltFieldRef.Value));
+                        ReservationEntry.reset();
+                        ReservationEntry.SetRange("Source ID", documentNo);
+                        ReservationEntry.SetRange("Source Ref. No.", ltLineNo);
+                        if ReservationEntry.FindSet() then begin
+                            repeat
+                                CheckFirstLineInt := CheckFirstLineInt + 1;
+                                CLEAR(ltJsonObjectReserve);
+                                if CheckFirstLineInt = 1 then begin
+                                    ltJsonObjectReserve.Add('quantity', ReservationEntry.Quantity);
+                                    ltJsonObjectReserve.Add('$lotno', ReservationEntry."Lot No.");
+                                    ltJsonObjectReserve.Add('$serialno', ReservationEntry."Serial No.");
+                                end else begin
+                                    ltJsonObjectReserve.Add('$quantity', ReservationEntry.Quantity);
+                                    ltJsonObjectReserve.Add('$lotno', ReservationEntry."Lot No.");
+                                    ltJsonObjectReserve.Add('$serialno', ReservationEntry."Serial No.");
+                                end;
+                                ltJsonArrayReserve.Add(ltJsonObjectReserve);
+                            until ReservationEntry.Next() = 0;
+                            ltJsonObject.Add('?reservelines', ltJsonArrayReserve);
+                        end;
+                        ltJsonArray.Add(ltJsonObject);
+                    until ltRecordRef.next = 0;
+
+                    ltRecordRef.Close();
+                end;
+
+                ltJsonObjectbuill.Add('detaillines', ltJsonArray);
+                ltJsonArraybuill.Add(ltJsonObjectbuill);
+            end;
+
+        ltResult.Add(pApiName, ltJsonArraybuill);
+        ltResult.WriteTo(ltText);
+        if not pJsonFormat then begin
+            CR := 13;
+            LF := 10;
+            tab := 09;
+            ltText := ltText.Replace('"', '\"');
+            ltText := ltText.Replace(',', ',' + format(CR) + Format(lf) + format(tab) + format(tab) + format(tab) + format(tab));
+            ltText := ltText.Replace('\"@', format(tab) + format(tab) + format(tab) + '\"');
+            ltText := ltText.Replace('{\"?', format(tab) + format(tab) + format(tab) + '{\"');
+            ltText := ltText.Replace('\"?', format(tab) + format(tab) + format(tab) + '\"');
+            ltText := ltText.Replace('{\"$', format(tab) + format(tab) + format(tab) + format(tab) + format(tab) + format(tab) + '{\"');
+            ltText := ltText.Replace('\"$', format(tab) + format(tab) + format(tab) + format(tab) + format(tab) + format(tab) + '\"');
+            ltText := ltText.Replace('\"' + pApiName + '\":', '"' + pApiName + '":"');
+            ltText := COPYSTR(ltText, 1, StrLen(ltText) - 1) + '"' + format(CR) + Format(lf) + '}';
+        end;
+        tempBlob.CreateOutStream(ltOutStr, TextEncoding::UTF8);
+        ltOutStr.WriteText(ltText);
+        tempBlob.CreateInStream(ltInstr, TextEncoding::UTF8);
+        ltFileName := 'API_' + pApiName + '.txt';
+        DownloadFromStream(ltInstr, 'Export', '', '', ltFileName)
+
+    end;
+
     [EventSubscriber(ObjectType::Page, Page::"Vendor Card", 'OnModifyRecordEvent', '', false, false)]
     local procedure OnModifyRecordEventVendor(var Rec: Record Vendor)
     begin
@@ -841,13 +1037,13 @@ codeunit 50030 "FK Func"
                         if ltField.Type in [ltField.Type::Decimal, ltField.Type::Integer] then begin
                             if ltField.Type = ltField.Type::Integer then begin
                                 Evaluate(ValueInteger, format(ltFieldRef.Value));
-                                if ltJsonObjectbuill.Add(DelChr(LowerCase(ltField.FieldName), '=', '_-&%(). '), ValueInteger) then;
+                                if ltJsonObjectbuill.Add(APIMappingLine."Service Name", ValueInteger) then;
                             end else begin
                                 Evaluate(ValueDecimal, format(ltFieldRef.Value));
-                                if ltJsonObjectbuill.Add(DelChr(LowerCase(ltField.FieldName), '=', '_-&%(). '), ValueDecimal) then;
+                                if ltJsonObjectbuill.Add(APIMappingLine."Service Name", ValueDecimal) then;
                             end;
                         end else
-                            if ltJsonObjectbuill.Add(DelChr(LowerCase(ltField.FieldName), '=', '_-&%(). '), format(ltFieldRef.Value)) then;
+                            if ltJsonObjectbuill.Add(APIMappingLine."Service Name", format(ltFieldRef.Value)) then;
                     end;
 
                 until APIMappingLine.Next() = 0;
@@ -889,13 +1085,13 @@ codeunit 50030 "FK Func"
                                 if ltField.Type in [ltField.Type::Decimal, ltField.Type::Integer] then begin
                                     if ltField.Type = ltField.Type::Integer then begin
                                         Evaluate(ValueInteger, format(ltFieldRef.Value));
-                                        if ltJsonObject.Add(DelChr(LowerCase(CheckFirstLine + ltField.FieldName), '=', '_-&%(). '), ValueInteger) then;
+                                        if ltJsonObject.Add(APIMappingLine."Service Name", ValueInteger) then;
                                     end else begin
                                         Evaluate(ValueDecimal, format(ltFieldRef.Value));
-                                        if ltJsonObject.Add(DelChr(LowerCase(CheckFirstLine + ltField.FieldName), '=', '_-&%(). '), ValueDecimal) then;
+                                        if ltJsonObject.Add(APIMappingLine."Service Name", ValueDecimal) then;
                                     end;
                                 end else
-                                    if ltJsonObject.Add(DelChr(LowerCase(CheckFirstLine + ltField.FieldName), '=', '_-&%(). '), format(ltFieldRef.Value)) then;
+                                    if ltJsonObject.Add(APIMappingLine."Service Name", format(ltFieldRef.Value)) then;
                             end;
 
                         until APIMappingLine.Next() = 0;
@@ -993,74 +1189,75 @@ codeunit 50030 "FK Func"
         CR, LF, tab : char;
         CheckFirstLineInt: Integer;
     begin
-
+        if pDocumentNo = '' then
+            ERROR('Document no. fillter must specifies');
         ltRecordRef.Open(pTableID);
-        if pDocumentNo <> '' then begin
-            if not (pTableID in [Database::"Gen. Journal Line", Database::"Item Journal Line"]) then
-                ltFieldRef := ltRecordRef.FieldIndex(1)
-            else
-                ltFieldRef := ltRecordRef.Field(7);
-            ltFieldRef.SetFilter(pDocumentNo);
-        end;
+        if not (pTableID in [Database::"Gen. Journal Line", Database::"Item Journal Line"]) then
+            ltFieldRef := ltRecordRef.FieldIndex(1)
+        else
+            ltFieldRef := ltRecordRef.Field(7);
+        ltFieldRef.SetFilter(pDocumentNo);
         if ltRecordRef.FindFirst() then begin
-            CLEAR(ltJsonObject);
-            CLEAR(ltJsonArray);
-            APIMappingLine.reset();
-            APIMappingLine.SetCurrentKey("Page Name", "Line Type", "Field No.");
-            APIMappingLine.SetRange("Page Name", pPageName);
-            APIMappingLine.SetRange("Line Type", APIMappingLine."Line Type"::Header);
-            APIMappingLine.SetRange(Include, true);
-            APIMappingLine.SetFilter("Service Name", '<>%1', '');
-            if APIMappingLine.FindSet() then begin
-                repeat
-                    ltField.GET(pTableID, APIMappingLine."Field No.");
-                    if (ltField.Class = ltField.Class::Normal) and (ltField.Type <> ltField.Type::BLOB) then begin
-                        ltFieldRef := ltRecordRef.Field(ltField."No.");
-                        if ltField.Type in [ltField.Type::Decimal, ltField.Type::Integer] then begin
-                            if ltField.Type = ltField.Type::Integer then begin
-                                Evaluate(ValueInteger, format(ltFieldRef.Value));
-                                if ltJsonObject.Add(DelChr(LowerCase(ltField.FieldName), '=', '_-&%(). '), ValueInteger) then;
-                            end else begin
-                                Evaluate(ValueDecimal, format(ltFieldRef.Value));
-                                if ltJsonObject.Add(DelChr(LowerCase(ltField.FieldName), '=', '_-&%(). '), ValueDecimal) then;
-                            end;
-                        end else
-                            if ltJsonObject.Add(DelChr(LowerCase(ltField.FieldName), '=', '_-&%(). '), format(ltFieldRef.Value)) then;
-                    end;
-
-                until APIMappingLine.Next() = 0;
-                ltJsonArray.Add(ltJsonObject);
-            end;
-            if pTableID = 83 then begin
-                ltFieldRef := ltRecordRef.FieldIndex(1);
-                TemplateName := format(ltFieldRef.Value);
-                ltFieldRef := ltRecordRef.FieldIndex(2);
-                BatchName := format(ltFieldRef.Value);
-                ltFieldRef := ltRecordRef.FieldIndex(3);
-                Evaluate(ltLineNo, format(ltFieldRef.Value));
-                CLEAR(ltJsonArrayReserve);
-                ReservationEntry.reset();
-                ReservationEntry.SetRange("Source ID", TemplateName);
-                ReservationEntry.SetRange("Source Batch Name", BatchName);
-                ReservationEntry.SetRange("Source Ref. No.", ltLineNo);
-                if ReservationEntry.FindSet() then begin
+            repeat
+                CLEAR(ltJsonObject);
+                APIMappingLine.reset();
+                APIMappingLine.SetCurrentKey("Page Name", "Line Type", "Field No.");
+                APIMappingLine.SetRange("Page Name", pPageName);
+                APIMappingLine.SetRange("Line Type", APIMappingLine."Line Type"::Header);
+                APIMappingLine.SetRange(Include, true);
+                APIMappingLine.SetFilter("Service Name", '<>%1', '');
+                if APIMappingLine.FindSet() then begin
                     repeat
-                        CheckFirstLineInt := CheckFirstLineInt + 1;
-                        CLEAR(ltJsonObjectReserve);
-                        if CheckFirstLineInt = 1 then begin
-                            ltJsonObjectReserve.Add('quantity', ReservationEntry.Quantity);
-                            ltJsonObjectReserve.Add('$lotno', ReservationEntry."Lot No.");
-                            ltJsonObjectReserve.Add('$serialno', ReservationEntry."Serial No.");
-                        end else begin
-                            ltJsonObjectReserve.Add('$quantity', ReservationEntry.Quantity);
-                            ltJsonObjectReserve.Add('$lotno', ReservationEntry."Lot No.");
-                            ltJsonObjectReserve.Add('$serialno', ReservationEntry."Serial No.");
+                        ltField.GET(pTableID, APIMappingLine."Field No.");
+                        if (ltField.Class = ltField.Class::Normal) and (ltField.Type <> ltField.Type::BLOB) then begin
+                            ltFieldRef := ltRecordRef.Field(ltField."No.");
+                            if ltField.Type in [ltField.Type::Decimal, ltField.Type::Integer] then begin
+                                if ltField.Type = ltField.Type::Integer then begin
+                                    Evaluate(ValueInteger, format(ltFieldRef.Value));
+                                    if ltJsonObject.Add(APIMappingLine."Service Name", ValueInteger) then;
+                                end else begin
+                                    Evaluate(ValueDecimal, format(ltFieldRef.Value));
+                                    if ltJsonObject.Add(APIMappingLine."Service Name", ValueDecimal) then;
+                                end;
+                            end else
+                                if ltJsonObject.Add(APIMappingLine."Service Name", format(ltFieldRef.Value)) then;
                         end;
-                        ltJsonArrayReserve.Add(ltJsonObjectReserve);
-                    until ReservationEntry.Next() = 0;
-                    ltJsonObject.Add('?reservelines', ltJsonArrayReserve);
+
+                    until APIMappingLine.Next() = 0;
+                    ltJsonArray.Add(ltJsonObject);
                 end;
-            end;
+                if pTableID = 83 then begin
+                    ltFieldRef := ltRecordRef.FieldIndex(1);
+                    TemplateName := format(ltFieldRef.Value);
+                    ltFieldRef := ltRecordRef.FieldIndex(2);
+                    BatchName := format(ltFieldRef.Value);
+                    ltFieldRef := ltRecordRef.FieldIndex(3);
+                    Evaluate(ltLineNo, format(ltFieldRef.Value));
+                    CLEAR(ltJsonArrayReserve);
+                    ReservationEntry.reset();
+                    ReservationEntry.SetRange("Source ID", TemplateName);
+                    ReservationEntry.SetRange("Source Batch Name", BatchName);
+                    ReservationEntry.SetRange("Source Ref. No.", ltLineNo);
+                    if ReservationEntry.FindSet() then begin
+                        repeat
+                            CheckFirstLineInt := CheckFirstLineInt + 1;
+                            CLEAR(ltJsonObjectReserve);
+                            if CheckFirstLineInt = 1 then begin
+                                ltJsonObjectReserve.Add('quantity', ReservationEntry.Quantity);
+                                ltJsonObjectReserve.Add('$lotno', ReservationEntry."Lot No.");
+                                ltJsonObjectReserve.Add('$serialno', ReservationEntry."Serial No.");
+                            end else begin
+                                ltJsonObjectReserve.Add('$quantity', ReservationEntry.Quantity);
+                                ltJsonObjectReserve.Add('$lotno', ReservationEntry."Lot No.");
+                                ltJsonObjectReserve.Add('$serialno', ReservationEntry."Serial No.");
+                            end;
+                            ltJsonArrayReserve.Add(ltJsonObjectReserve);
+                        until ReservationEntry.Next() = 0;
+                        ltJsonObject.Add('?reservelines', ltJsonArrayReserve);
+                    end;
+                end;
+
+            until ltRecordRef.Next() = 0;
         end;
         ltRecordRef.Close();
         ltResult.Add(pApiName, ltJsonArray);
