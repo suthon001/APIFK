@@ -1,3 +1,6 @@
+/// <summary>
+/// Table API Log (ID 50092).
+/// </summary>
 table 50092 "API Log"
 {
     Caption = 'API Log';
@@ -23,11 +26,10 @@ table 50092 "API Log"
             DataClassification = CustomerContent;
             Editable = false;
         }
-        field(4; "Json Msg."; Text[2047])
+        field(4; "Json Msg."; Blob)
         {
             Caption = 'Json Msg.';
             DataClassification = CustomerContent;
-            Editable = false;
         }
         field(5; "Last Error"; Text[2047])
         {
@@ -54,6 +56,20 @@ table 50092 "API Log"
             DataClassification = CustomerContent;
             Editable = false;
         }
+        field(9; "Last Error Code"; Text[2047])
+        {
+            Caption = 'Last Error Code';
+            DataClassification = CustomerContent;
+            Editable = false;
+
+        }
+        field(10; "Document No."; Code[30])
+        {
+            Caption = 'Document No.';
+            DataClassification = CustomerContent;
+            Editable = false;
+
+        }
 
     }
     keys
@@ -72,4 +88,18 @@ table 50092 "API Log"
         }
 
     }
+    /// <summary>
+    /// GetJsonLog.
+    /// </summary>
+    /// <returns>Return variable JsonLog of type Text.</returns>
+    procedure GetJsonLog() JsonLog: Text
+    var
+        TypeHelper: Codeunit "Type Helper";
+        InStream: InStream;
+    begin
+        CalcFields("Json Msg.");
+        "Json Msg.".CreateInStream(InStream, TEXTENCODING::UTF8);
+        exit(TypeHelper.TryReadAsTextWithSepAndFieldErrMsg(InStream, TypeHelper.LFSeparator(), FieldName("Json Msg.")));
+    end;
+
 }

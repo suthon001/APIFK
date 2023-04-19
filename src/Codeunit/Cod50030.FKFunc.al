@@ -247,9 +247,9 @@ codeunit 50030 "FK Func"
         foreach ltJsonToken2 in ltJsonArray do begin
             ltJsonObject2 := ltJsonToken2.AsObject();
             if not InsertTotable(2, Database::Customer, ltJsonObject2) then
-                Insertlog(Database::Customer, ltPageName, ltJsonObject2, ltDateTime, GetLastErrorText(), 1, ltNoofAPI)
+                Insertlog(Database::Customer, ltPageName, ltJsonObject2, ltDateTime, GetLastErrorText(), 1, ltNoofAPI, GetLastErrorCode(), SelectJsonTokenText(ltJsonObject2, '$.no'))
             else
-                Insertlog(Database::Customer, ltPageName, ltJsonObject2, ltDateTime, '', 0, ltNoofAPI);
+                Insertlog(Database::Customer, ltPageName, ltJsonObject2, ltDateTime, '', 0, ltNoofAPI, '', SelectJsonTokenText(ltJsonObject2, '$.no'));
 
         end;
         exit(ReuturnErrorAPI(ltPageName, ltNoofAPI));
@@ -277,9 +277,9 @@ codeunit 50030 "FK Func"
         foreach ltJsonToken2 in ltJsonArray do begin
             ltJsonObject2 := ltJsonToken2.AsObject();
             if not InsertTotable(1, Database::Item, ltJsonObject2) then
-                Insertlog(Database::Item, ltPageName, ltJsonObject2, ltDateTime, GetLastErrorText(), 1, ltNoofAPI)
+                Insertlog(Database::Item, ltPageName, ltJsonObject2, ltDateTime, GetLastErrorText(), 1, ltNoofAPI, GetLastErrorCode(), SelectJsonTokenText(ltJsonObject2, '$.no'))
             else
-                Insertlog(Database::Item, ltPageName, ltJsonObject2, ltDateTime, '', 0, ltNoofAPI);
+                Insertlog(Database::Item, ltPageName, ltJsonObject2, ltDateTime, '', 0, ltNoofAPI, '', SelectJsonTokenText(ltJsonObject2, '$.no'));
         end;
         exit(ReuturnErrorAPI(ltPageName, ltNoofAPI));
     end;
@@ -306,9 +306,9 @@ codeunit 50030 "FK Func"
         foreach ltJsonToken2 in ltJsonArray do begin
             ltJsonObject2 := ltJsonToken2.AsObject();
             if not InsertTotable(3, Database::vendor, ltJsonObject2) then
-                Insertlog(Database::Vendor, ltPageName, ltJsonObject2, ltDateTime, GetLastErrorText(), 1, ltNoofAPI)
+                Insertlog(Database::Vendor, ltPageName, ltJsonObject2, ltDateTime, GetLastErrorText(), 1, ltNoofAPI, GetLastErrorCode(), SelectJsonTokenText(ltJsonObject2, '$.no'))
             else
-                Insertlog(Database::Vendor, ltPageName, ltJsonObject2, ltDateTime, '', 0, ltNoofAPI);
+                Insertlog(Database::Vendor, ltPageName, ltJsonObject2, ltDateTime, '', 0, ltNoofAPI, '', SelectJsonTokenText(ltJsonObject2, '$.no'));
         end;
         exit(ReuturnErrorAPI(ltPageName, ltNoofAPI));
     end;
@@ -448,11 +448,13 @@ codeunit 50030 "FK Func"
         ltJsonArray := ltJsonToken.AsArray();
         foreach ltJsonToken2 in ltJsonArray do begin
             ltJsonObject2 := ltJsonToken2.AsObject();
-            if not InsertTotable(4, Database::"Purchase Header", ltJsonObject2) then
-                Insertlog(Database::"Purchase Header", ltPageName, ltJsonObject2, ltDateTime, GetLastErrorText(), 1, ltNoofAPI)
+            if not InsertTotable(4, Database::"Purchase Header", ltJsonObject2) then begin
+                Insertlog(Database::"Purchase Header", ltPageName, ltJsonObject2, ltDateTime, GetLastErrorText(), 1, ltNoofAPI, GetLastErrorCode(), SelectJsonTokenText(ltJsonObject2, '$.no'));
+                DeleteDocAfterGetError(Database::"Purchase Header", ltDocumentType::Order.AsInteger(), SelectJsonTokenText(ltJsonObject2, '$.no'));
+            end
             else begin
                 UpdatePurchaseStatusToRelease(ltDocumentType::Order, SelectJsonTokenText(ltJsonObject2, '$.no'));
-                Insertlog(Database::"Purchase Header", ltPageName, ltJsonObject2, ltDateTime, '', 0, ltNoofAPI);
+                Insertlog(Database::"Purchase Header", ltPageName, ltJsonObject2, ltDateTime, '', 0, ltNoofAPI, '', SelectJsonTokenText(ltJsonObject2, '$.no'));
             end;
         end;
         exit(ReuturnErrorAPI(ltPageName, ltNoofAPI));
@@ -480,11 +482,12 @@ codeunit 50030 "FK Func"
         ltJsonArray := ltJsonToken.AsArray();
         foreach ltJsonToken2 in ltJsonArray do begin
             ltJsonObject2 := ltJsonToken2.AsObject();
-            if not InsertTotable(7, Database::"Purchase Header", ltJsonObject2) then
-                Insertlog(Database::"Purchase Header", ltPageName, ltJsonObject2, ltDateTime, GetLastErrorText(), 1, ltNoofAPI)
-            else begin
+            if not InsertTotable(5, Database::"Purchase Header", ltJsonObject2) then begin
+                Insertlog(Database::"Purchase Header", ltPageName, ltJsonObject2, ltDateTime, GetLastErrorText(), 1, ltNoofAPI, GetLastErrorCode(), SelectJsonTokenText(ltJsonObject2, '$.no'));
+                DeleteDocAfterGetError(Database::"Purchase Header", ltDocumentType::"Return Order".AsInteger(), SelectJsonTokenText(ltJsonObject2, '$.no'));
+            end else begin
                 UpdatePurchaseStatusToRelease(ltDocumentType::"Return Order", SelectJsonTokenText(ltJsonObject2, '$.no'));
-                Insertlog(Database::"Purchase Header", ltPageName, ltJsonObject2, ltDateTime, '', 0, ltNoofAPI);
+                Insertlog(Database::"Purchase Header", ltPageName, ltJsonObject2, ltDateTime, '', 0, ltNoofAPI, '', SelectJsonTokenText(ltJsonObject2, '$.no'));
             end;
         end;
         exit(ReuturnErrorAPI(ltPageName, ltNoofAPI));
@@ -514,10 +517,10 @@ codeunit 50030 "FK Func"
         ltJsonArray := ltJsonToken.AsArray();
         foreach ltJsonToken2 in ltJsonArray do begin
             ltJsonObject2 := ltJsonToken2.AsObject();
-            if updateqtypurchase(ltDocumentType::Order, SelectJsonTokenText(ltJsonObject2, '$.documentno'), SelectJsonTokenText(ltJsonObject2, '$.no'), 1, true) then
-                Insertlog(Database::"Purchase Line", ltPageName, ltJsonObject2, ltDateTime, GetLastErrorText(), 1, ltNoofAPI)
+            if not updateqtypurchase(ltDocumentType::Order, SelectJsonTokenText(ltJsonObject2, '$.documentno'), SelectJsonTokenText(ltJsonObject2, '$.no'), 1, true) then
+                Insertlog(Database::"Purchase Line", ltPageName, ltJsonObject2, ltDateTime, GetLastErrorText(), 1, ltNoofAPI, GetLastErrorCode(), SelectJsonTokenText(ltJsonObject2, '$.documentno'))
             else
-                Insertlog(Database::"Purchase Line", ltPageName, ltJsonObject2, ltDateTime, '', 0, ltNoofAPI);
+                Insertlog(Database::"Purchase Line", ltPageName, ltJsonObject2, ltDateTime, '', 0, ltNoofAPI, '', SelectJsonTokenText(ltJsonObject2, '$.documentno'));
         end;
         exit(ReuturnErrorAPI(ltPageName, ltNoofAPI));
     end;
@@ -545,10 +548,10 @@ codeunit 50030 "FK Func"
         ltJsonArray := ltJsonToken.AsArray();
         foreach ltJsonToken2 in ltJsonArray do begin
             ltJsonObject2 := ltJsonToken2.AsObject();
-            if updateqtypurchase(ltDocumentType::"Return Order", SelectJsonTokenText(ltJsonObject2, '$.documentno'), SelectJsonTokenText(ltJsonObject2, '$.no'), 1, false) then
-                Insertlog(Database::"Purchase Line", ltPageName, ltJsonObject2, ltDateTime, GetLastErrorText(), 1, ltNoofAPI)
+            if not updateqtypurchase(ltDocumentType::"Return Order", SelectJsonTokenText(ltJsonObject2, '$.documentno'), SelectJsonTokenText(ltJsonObject2, '$.no'), 1, false) then
+                Insertlog(Database::"Purchase Line", ltPageName, ltJsonObject2, ltDateTime, GetLastErrorText(), 1, ltNoofAPI, GetLastErrorCode(), SelectJsonTokenText(ltJsonObject2, '$.documentno'))
             else
-                Insertlog(Database::"Purchase Line", ltPageName, ltJsonObject2, ltDateTime, '', 0, ltNoofAPI);
+                Insertlog(Database::"Purchase Line", ltPageName, ltJsonObject2, ltDateTime, '', 0, ltNoofAPI, '', SelectJsonTokenText(ltJsonObject2, '$.documentno'));
         end;
         exit(ReuturnErrorAPI(ltPageName, ltNoofAPI));
     end;
@@ -574,11 +577,13 @@ codeunit 50030 "FK Func"
         ltJsonArray := ltJsonToken.AsArray();
         foreach ltJsonToken2 in ltJsonArray do begin
             ltJsonObject2 := ltJsonToken2.AsObject();
-            if not InsertTotable(8, Database::"Sales Header", ltJsonObject2) then
-                Insertlog(Database::"Sales Header", ltPageName, ltJsonObject2, ltDateTime, GetLastErrorText(), 1, ltNoofAPI)
+            if not InsertTotable(8, Database::"Sales Header", ltJsonObject2) then begin
+                Insertlog(Database::"Sales Header", ltPageName, ltJsonObject2, ltDateTime, GetLastErrorText(), 1, ltNoofAPI, GetLastErrorCode(), SelectJsonTokenText(ltJsonObject2, '$.no'));
+                DeleteDocAfterGetError(Database::"Sales Header", ltDocumentType::Invoice.AsInteger(), SelectJsonTokenText(ltJsonObject2, '$.no'));
+            end
             else begin
                 UpdateSalesStatusToRelease(ltDocumentType::Invoice, SelectJsonTokenText(ltJsonObject2, '$.no'));
-                Insertlog(Database::"Sales Header", ltPageName, ltJsonObject2, ltDateTime, '', 0, ltNoofAPI);
+                Insertlog(Database::"Sales Header", ltPageName, ltJsonObject2, ltDateTime, '', 0, ltNoofAPI, '', SelectJsonTokenText(ltJsonObject2, '$.no'));
             end;
         end;
         exit(ReuturnErrorAPI(ltPageName, ltNoofAPI));
@@ -607,11 +612,13 @@ codeunit 50030 "FK Func"
         ltJsonArray := ltJsonToken.AsArray();
         foreach ltJsonToken2 in ltJsonArray do begin
             ltJsonObject2 := ltJsonToken2.AsObject();
-            if not InsertTotable(9, Database::"Sales Header", ltJsonObject2) then
-                Insertlog(Database::"Sales Header", ltPageName, ltJsonObject2, ltDateTime, GetLastErrorText(), 1, ltNoofAPI)
+            if not InsertTotable(9, Database::"Sales Header", ltJsonObject2) then begin
+                Insertlog(Database::"Sales Header", ltPageName, ltJsonObject2, ltDateTime, GetLastErrorText(), 1, ltNoofAPI, GetLastErrorCode(), SelectJsonTokenText(ltJsonObject2, '$.no'));
+                DeleteDocAfterGetError(Database::"Sales Header", ltDocumentType::"Credit Memo".AsInteger(), SelectJsonTokenText(ltJsonObject2, '$.no'));
+            end
             else begin
                 UpdateSalesStatusToRelease(ltDocumentType::"Credit Memo", SelectJsonTokenText(ltJsonObject2, '$.no'));
-                Insertlog(Database::"Sales Header", ltPageName, ltJsonObject2, ltDateTime, '', 0, ltNoofAPI);
+                Insertlog(Database::"Sales Header", ltPageName, ltJsonObject2, ltDateTime, '', 0, ltNoofAPI, '', SelectJsonTokenText(ltJsonObject2, '$.no'));
             end;
         end;
         exit(ReuturnErrorAPI(ltPageName, ltNoofAPI));
@@ -669,12 +676,15 @@ codeunit 50030 "FK Func"
         ltField: Record Field;
         ltJsonTokenReserve: JsonToken;
         TemplateName, BatchName : Code[30];
-        ltLineNo: Integer;
+        ltLineNo, ltIndexof, ltIndexofDetail : Integer;
+        ltDate: Date;
+        ltDocNo: Code[30];
     begin
         APIMappingHeader.GET(pPageName);
         ltRecordRef.Open(APIMappingHeader."Table ID");
         ltRecordRef.Init();
         APIMappingLine.reset();
+        APIMappingLine.SetCurrentKey("Page Name", "Line Type", "Field No.");
         APIMappingLine.SetRange("Page Name", APIMappingHeader."Page Name");
         APIMappingLine.SetRange("Line Type", APIMappingLine."Line Type"::Header);
         APIMappingLine.SetRange(Include, true);
@@ -683,26 +693,44 @@ codeunit 50030 "FK Func"
         if APIMappingLine.FindSet() then
             repeat
                 ltFieldRef := ltRecordRef.FIELD(APIMappingLine."Field No.");
-                if UpperCase(format(ltFieldRef.Type)) IN ['CODE', 'TEXT'] then
-                    ltFieldRef.Validate(SelectJsonTokenText(pJsonObject, '$.' + APIMappingLine."Service Name"));
-                if UpperCase(format(ltFieldRef.Type)) IN ['INTEGER', 'DECIMAL', 'BIGINTEGER'] then
-                    ltFieldRef.validate(SelectJsonTokenInterger(pJsonObject, '$.' + APIMappingLine."Service Name"));
+                if ltFieldRef.Type IN [ltFieldRef.Type::Integer, ltFieldRef.Type::Decimal, ltFieldRef.Type::Option] then
+                    if ltFieldRef.Type = ltFieldRef.Type::Option then begin
+                        ltIndexof := SelectOption(ltFieldRef.OptionCaption, SelectJsonTokenText(pJsonObject, '$.' + APIMappingLine."Service Name"));
+                        ltFieldRef.validate(ltIndexof);
+                    end else
+                        ltFieldRef.validate(SelectJsonTokenInterger(pJsonObject, '$.' + APIMappingLine."Service Name"))
+                else
+                    if ltFieldRef.Type = ltFieldRef.Type::Date then begin
+                        Evaluate(ltDate, SelectJsonTokenText(pJsonObject, '$.' + APIMappingLine."Service Name"));
+                        ltFieldRef.Validate(ltDate);
+                    end else begin
+                        ltDocNo := SelectJsonTokenText(pJsonObject, '$.' + APIMappingLine."Service Name");
+                        ltFieldRef.Validate(ltDocNo);
+                    end;
             until APIMappingLine.Next() = 0;
         ltRecordRef.Insert(true);
         APIMappingLine.SetRange("Is Primary", false);
         if APIMappingLine.FindSet() then begin
             repeat
                 ltFieldRef := ltRecordRef.FIELD(APIMappingLine."Field No.");
-                if UpperCase(format(ltFieldRef.Type)) IN ['CODE', 'TEXT'] then
-                    ltFieldRef.Validate(SelectJsonTokenText(pJsonObject, '$.' + APIMappingLine."Service Name"));
-                if UpperCase(format(ltFieldRef.Type)) IN ['INTEGER', 'DECIMAL', 'BIGINTEGER'] then
-                    ltFieldRef.validate(SelectJsonTokenInterger(pJsonObject, '$.' + APIMappingLine."Service Name"));
+                if ltFieldRef.Type IN [ltFieldRef.Type::Integer, ltFieldRef.Type::Decimal, ltFieldRef.Type::Option] then
+                    if ltFieldRef.Type = ltFieldRef.Type::Option then begin
+                        ltIndexofDetail := SelectOption(ltFieldRef.OptionCaption, SelectJsonTokenText(pJsonObject, '$.' + APIMappingLine."Service Name"));
+                        ltFieldRef.validate(ltIndexofDetail);
+                    end else
+                        ltFieldRef.validate(SelectJsonTokenInterger(pJsonObject, '$.' + APIMappingLine."Service Name"))
+                else
+                    if ltFieldRef.Type = ltFieldRef.Type::Date then begin
+                        Evaluate(ltDate, SelectJsonTokenText(pJsonObject, '$.' + APIMappingLine."Service Name"));
+                        ltFieldRef.Validate(ltDate);
+                    end else
+                        ltFieldRef.Validate(SelectJsonTokenText(pJsonObject, '$.' + APIMappingLine."Service Name"));
             until APIMappingLine.Next() = 0;
             ltRecordRef.Modify(true);
         end;
 
         IF APIMappingHeader."Sub Table ID" <> 0 then
-            InsertTotableLine(pJsonObject, APIMappingHeader."Sub Table ID", APIMappingHeader."Page Name", APIMappingHeader."Sub Page No.")
+            InsertTotableLine(pJsonObject, APIMappingHeader."Sub Table ID", APIMappingHeader."Page Name", APIMappingHeader."Sub Page No.", ltIndexof, ltDocNo)
         else
             if APIMappingHeader."Table ID" = Database::"Item Journal Line" then
                 if pJsonObject.SelectToken('$.reservelines', ltJsonTokenReserve) then begin
@@ -714,13 +742,13 @@ codeunit 50030 "FK Func"
                     Evaluate(ltLineNo, format(ltFieldRef.Value));
                     ItemJournalInsertReserveLine(TemplateName, BatchName, ltLineNo, ltJsonTokenReserve);
                 end;
-
         ltRecordRef.Close();
     end;
 
-    local procedure InsertTotableLine(pJsonObject: JsonObject; subtableID: Integer; pPageID: Integer; pSubPageID: Integer)
+
+    local procedure InsertTotableLine(pJsonObject: JsonObject; subtableID: Integer; pPageID: Integer; pSubPageID: Integer; pDocumentType: Integer; pDocumentNo: code[30])
     var
-        ltJsonObject, ltJsonObjectDetail : JsonObject;
+        ltJsonObjectDetail: JsonObject;
         APIMappingLine: Record "API Setup Line";
         ltJsonToken: JsonToken;
         ltJsonArray: JsonArray;
@@ -728,61 +756,118 @@ codeunit 50030 "FK Func"
         ltFieldRef: FieldRef;
         ltRecordRef: RecordRef;
         ltField: Record Field;
-        ltDocumentNo: code[30];
-        ltDOcumentType: Enum "Purchase Document Type";
-        ltDOcumentTypeSales: Enum "Sales Document Type";
         ltLineNo: Integer;
+        ltDate: Date;
+        ltCheckLine: JsonToken;
     begin
-        if ltJsonObject.SelectToken('$.detail', ltJsonToken) then begin
+        if pJsonObject.SelectToken('$.detaillines', ltJsonToken) then begin
             ltJsonArray := ltJsonToken.AsArray();
             foreach ltJsonTokenDetail in ltJsonArray do begin
                 ltJsonObjectDetail := ltJsonTokenDetail.AsObject();
                 ltRecordRef.Open(subtableID);
                 ltRecordRef.Init();
+                ltFieldRef := ltRecordRef.FieldIndex(1);
+                ltFieldRef.validate(pDocumentType);
+                ltFieldRef := ltRecordRef.FieldIndex(2);
+                ltFieldRef.validate(pDocumentNo);
+                ltFieldRef := ltRecordRef.FieldIndex(3);
+                if ltJsonObjectDetail.SelectToken('$.lineno', ltCheckLine) then
+                    ltFieldRef.validate(SelectJsonTokenInterger(ltJsonObjectDetail, '$.lineno'))
+                else
+                    ltFieldRef.validate(GetLastLine(subtableID, pDocumentType, pDocumentNo));
+                ltLineNo := ltFieldRef.Value;
+                ltRecordRef.Insert(true);
+
                 APIMappingLine.reset();
+                APIMappingLine.SetCurrentKey("Page Name", "Line Type", "Field No.");
                 APIMappingLine.SetRange("Page Name", pPageID);
                 APIMappingLine.SetRange("Line Type", APIMappingLine."Line Type"::Line);
                 APIMappingLine.SetRange(Include, true);
                 APIMappingLine.SetFilter("Service Name", '<>%1', '');
-                APIMappingLine.SetRange("Is Primary", true);
-                if APIMappingLine.FindSet() then
-                    repeat
-                        ltFieldRef := ltRecordRef.FIELD(APIMappingLine."Field No.");
-                        if UpperCase(format(ltFieldRef.Type)) IN ['CODE', 'TEXT'] then
-                            ltFieldRef.Validate(SelectJsonTokenText(pJsonObject, '$.' + APIMappingLine."Service Name"));
-                        if UpperCase(format(ltFieldRef.Type)) IN ['INTEGER', 'DECIMAL', 'BIGINTEGER'] then
-                            ltFieldRef.validate(SelectJsonTokenInterger(pJsonObject, '$.' + APIMappingLine."Service Name"));
-                    until APIMappingLine.Next() = 0;
-                ltRecordRef.Insert(true);
                 APIMappingLine.SetRange("Is Primary", false);
                 if APIMappingLine.FindSet() then begin
                     repeat
                         ltFieldRef := ltRecordRef.FIELD(APIMappingLine."Field No.");
-                        if UpperCase(format(ltFieldRef.Type)) IN ['CODE', 'TEXT'] then
-                            ltFieldRef.Validate(SelectJsonTokenText(pJsonObject, '$.' + APIMappingLine."Service Name"));
-                        if UpperCase(format(ltFieldRef.Type)) IN ['INTEGER', 'DECIMAL', 'BIGINTEGER'] then
-                            ltFieldRef.validate(SelectJsonTokenInterger(pJsonObject, '$.' + APIMappingLine."Service Name"));
+                        if ltFieldRef.Type IN [ltFieldRef.Type::Integer, ltFieldRef.Type::Decimal, ltFieldRef.Type::Option] then begin
+                            if ltFieldRef.Type = ltFieldRef.Type::Option then
+                                ltFieldRef.validate(SelectOption(ltFieldRef.OptionCaption, SelectJsonTokenText(ltJsonObjectDetail, '$.' + APIMappingLine."Service Name")))
+                            else
+                                if SelectJsonTokenInterger(ltJsonObjectDetail, '$.' + APIMappingLine."Service Name") <> 0 then begin
+                                    ltFieldRef.validate(SelectJsonTokenInterger(ltJsonObjectDetail, '$.' + APIMappingLine."Service Name"));
+                                end
+                        end else
+                            if ltFieldRef.Type = ltFieldRef.Type::Date then begin
+                                if SelectJsonTokenText(ltJsonObjectDetail, '$.' + APIMappingLine."Service Name") <> '' then begin
+                                    Evaluate(ltDate, SelectJsonTokenText(ltJsonObjectDetail, '$.' + APIMappingLine."Service Name"));
+                                    ltFieldRef.Validate(ltDate);
+                                end;
+                            end else
+                                if SelectJsonTokenText(ltJsonObjectDetail, '$.' + APIMappingLine."Service Name") <> '' then
+                                    ltFieldRef.Validate(SelectJsonTokenText(ltJsonObjectDetail, '$.' + APIMappingLine."Service Name"));
                     until APIMappingLine.Next() = 0;
-                    ltRecordRef.Modify(true);
                 end;
-                ltRecordRef.Modify(true);
-                ltRecordRef.Close();
-                if ltJsonObjectDetail.SelectToken('$.reservelines', ltJsonTokenReserve) then begin
-                    ltFieldRef := ltRecordRef.FieldIndex(1);
+                ltRecordRef.Modify();
+                if ltJsonObjectDetail.SelectToken('$.reservelines', ltJsonTokenReserve) then
                     if subtableID = Database::"Purchase Line" then
-                        ltDOcumentType := ltFieldRef.Value;
-                    if subtableID = Database::"Sales Line" then
-                        ltDOcumentTypeSales := ltFieldRef.Value;
-                    ltFieldRef := ltRecordRef.FieldIndex(2);
-                    ltDocumentNo := ltFieldRef.Value;
-                    ltFieldRef := ltRecordRef.FieldIndex(3);
-                    Evaluate(ltLineNo, format(ltFieldRef.Value));
-                    if subtableID = Database::"Purchase Line" then;
-                    PurchaseInsertReserveLine(ltDOcumentType, ltDocumentNo, ltLineNo, ltJsonTokenReserve);
-                    if subtableID = Database::"Sales Line" then;
-                    SalesInsertReserveLine(ltDOcumentTypeSales, ltDocumentNo, ltLineNo, ltJsonTokenReserve);
-                end;
+                        PurchaseInsertReserveLine(pDocumentType, pDocumentNo, ltLineNo, ltJsonTokenReserve)
+                    else
+                        SalesInsertReserveLine(pDocumentType, pDocumentNo, ltLineNo, ltJsonTokenReserve);
+
+                ltRecordRef.Close();
             end;
+        end;
+    end;
+
+    local procedure DeleteDocAfterGetError(pTableID: Integer; pDocumentType: Integer; pDocumentNo: code[30])
+    var
+        SalesHeader: Record "Sales Header";
+        PurchaseHeader: Record "Purchase Header";
+    begin
+        if pTableID = Database::"Sales Header" then begin
+            SalesHeader.reset();
+            SalesHeader.SetRange("Document Type", pDocumentType);
+            SalesHeader.SetRange("No.", pDocumentNo);
+            if SalesHeader.FindFirst() then
+                SalesHeader.Delete(true);
+        end else begin
+            PurchaseHeader.reset();
+            PurchaseHeader.SetRange("Document Type", pDocumentType);
+            PurchaseHeader.SetRange("No.", pDocumentNo);
+            if PurchaseHeader.FindFirst() then
+                PurchaseHeader.Delete(true);
+        end;
+    end;
+
+    local procedure GetLastLine(subTableID: Integer; pDocumentType: Integer; pDocumentNo: Code[30]): Integer
+    var
+        SalesLine: Record "Sales Line";
+        PurchaseLine: Record "Purchase Line";
+    begin
+        if subTableID = 37 then begin
+            SalesLine.reset();
+            SalesLine.SetRange("Document Type", pDocumentType);
+            SalesLine.SetRange("Document No.", pDocumentNo);
+            if SalesLine.FindLast() then
+                exit(SalesLine."Line No." + 10000);
+            exiT(10000);
+        end else begin
+            PurchaseLine.reset();
+            PurchaseLine.SetRange("Document Type", pDocumentType);
+            PurchaseLine.SetRange("Document No.", pDocumentNo);
+            if PurchaseLine.FindLast() then
+                exit(PurchaseLine."Line No." + 10000);
+            exiT(10000);
+        end;
+    end;
+
+    local procedure SelectOption(pOptionCaption: Text; pValue: Text): integer
+    var
+        ltLoopOption: Integer;
+    begin
+        pOptionCaption := pOptionCaption + ',,,,,,,,,,';
+        for ltLoopOption := 1 TO 10 do begin
+            if UPPERCASE(SelectStr(ltLoopOption, pOptionCaption)) = uppercase(pValue) then
+                exit(ltLoopOption - 1);
         end;
     end;
 
@@ -812,7 +897,7 @@ codeunit 50030 "FK Func"
         end;
     end;
 
-    local procedure PurchaseInsertReserveLine(pDocumentType: Enum "Purchase Document Type"; pDocumentNo: Code[30];
+    local procedure PurchaseInsertReserveLine(pDocumentType: Integer; pDocumentNo: Code[30];
                                                                  pLineNo: Integer;
                                                                  pJsonToken: JsonToken)
     var
@@ -842,7 +927,7 @@ codeunit 50030 "FK Func"
         end;
     end;
 
-    local procedure SalesInsertReserveLine(pDocumentType: Enum "Sales Document Type"; pDocumentNo: Code[30];
+    local procedure SalesInsertReserveLine(pDocumentType: Integer; pDocumentNo: Code[30];
                                                               pLineNo: Integer;
                                                               pJsonToken: JsonToken)
     var
@@ -920,10 +1005,11 @@ codeunit 50030 "FK Func"
         exit(1);
     end;
 
-    local procedure insertlog(pTableID: integer; PageName: text; pjsonObject: JsonObject; pDateTime: DateTime; pMsgError: Text; pStatus: Option Successfully,"Error"; pNoOfAPI: Integer)
+    local procedure insertlog(pTableID: integer; PageName: text; pjsonObject: JsonObject; pDateTime: DateTime; pMsgError: Text; pStatus: Option Successfully,"Error"; pNoOfAPI: Integer; pMsgErrorCode: text; pDocumentNo: Code[30])
     var
         apiLog: Record "API Log";
         JsonText: Text;
+        ltOutStream: OutStream;
     begin
         JsonText := '';
         pjsonObject.WriteTo(JsonText);
@@ -932,11 +1018,15 @@ codeunit 50030 "FK Func"
         apiLog."Page Name" := PageName;
         apiLog."No." := pTableID;
         apiLog."Date Time" := pDateTime;
-        apiLog."Json Msg." := copystr(JsonText, 1, 2047);
         apiLog."Last Error" := copystr(pMsgError, 1, 2047);
         apiLog.Status := pStatus;
         apiLog."No. of API" := pNoOfAPI;
         apiLog.Insert(true);
+        apiLog."Json Msg.".CreateOutStream(ltOutStream, TEXTENCODING::UTF8);
+        apiLog."Last Error Code" := pMsgErrorCode;
+        apiLog."Document No." := pDocumentNo;
+        ltOutStream.WriteText(JsonText);
+        apiLog.Modify();
     end;
 
     local procedure GetLastEntryLog(): Integer
@@ -1212,7 +1302,10 @@ codeunit 50030 "FK Func"
             ERROR('Document no. fillter must specifies');
         ltRecordRef.Open(pTableID);
         if not (pTableID in [Database::"Gen. Journal Line", Database::"Item Journal Line"]) then
-            ltFieldRef := ltRecordRef.FieldIndex(1)
+            if pApiName in ['goodreceiptnotelists', 'returnreceiptlists'] then
+                ltFieldRef := ltRecordRef.FieldIndex(2)
+            else
+                ltFieldRef := ltRecordRef.FieldIndex(1)
         else
             ltFieldRef := ltRecordRef.Field(7);
         ltFieldRef.SetFilter(pDocumentNo);

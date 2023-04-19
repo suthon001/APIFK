@@ -50,8 +50,16 @@ table 50090 "API Setup Header"
                                 rec."Sub Table ID" := Database::"Purchase Line";
                                 rec."Serivce Name" := 'purchaseorderlists';
                             end;
-
                         5:
+                            begin
+                                rec."Page No." := page::"Purchase Return Order";
+                                rec."Sub Page No." := page::"Purchase Return Order Subform";
+                                rec."Table ID" := Database::"Purchase Header";
+                                rec."Sub Table ID" := Database::"Purchase Line";
+                                rec."Serivce Name" := 'purchasereturnorderlists';
+                            end;
+
+                        6:
                             begin
                                 rec."Page No." := page::"Purchase Order";
                                 rec."Sub Page No." := 0;
@@ -60,22 +68,13 @@ table 50090 "API Setup Header"
                                 rec."Serivce Name" := 'goodreceiptnotelists';
                             end;
 
-                        6:
+                        7:
                             begin
                                 rec."Page No." := page::"Purchase Return Order";
                                 rec."Sub Page No." := 0;
                                 rec."Table ID" := Database::"Purchase Line";
                                 rec."Sub Table ID" := 0;
                                 rec."Serivce Name" := 'returnreceiptlists';
-                            end;
-
-                        7:
-                            begin
-                                rec."Page No." := page::"Purchase Return Order";
-                                rec."Sub Page No." := page::"Purchase Return Order Subform";
-                                rec."Table ID" := Database::"Purchase Header";
-                                rec."Sub Table ID" := Database::"Purchase Line";
-                                rec."Serivce Name" := 'purchasereturnorderlists';
                             end;
 
                         8:

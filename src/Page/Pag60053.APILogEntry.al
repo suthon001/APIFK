@@ -1,3 +1,6 @@
+/// <summary>
+/// Page API Log Entry (ID 60053).
+/// </summary>
 page 60053 "API Log Entry"
 {
     ApplicationArea = All;
@@ -7,6 +10,9 @@ page 60053 "API Log Entry"
     UsageCategory = History;
     InsertAllowed = false;
     ModifyAllowed = false;
+    Editable = false;
+    CardPageId = "FK APi Log Card";
+    DataCaptionExpression = StrSubstNo('%1:%2', rec."Page Name", rec."Document No.");
     layout
     {
         area(content)
@@ -27,6 +33,12 @@ page 60053 "API Log Entry"
                 {
                     ToolTip = 'Specifies the value of the No. field.';
                     ApplicationArea = all;
+                    Caption = 'Table ID';
+                }
+                field("Document No."; Rec."Document No.")
+                {
+                    ToolTip = 'Specifies the value of the Document No. field.';
+                    ApplicationArea = all;
                 }
                 field("Page Name"; Rec."Page Name")
                 {
@@ -38,9 +50,9 @@ page 60053 "API Log Entry"
                     ToolTip = 'Specifies the value of the Last Error field.';
                     ApplicationArea = all;
                 }
-                field("Json Msg."; Rec."Json Msg.")
+                field("Last Error Code"; Rec."Last Error Code")
                 {
-                    ToolTip = 'Specifies the value of the Json Msg. field.';
+                    ToolTip = 'Specifies the value of the Last Error Code field.';
                     ApplicationArea = all;
                 }
                 field("Date Time"; Rec."Date Time")
