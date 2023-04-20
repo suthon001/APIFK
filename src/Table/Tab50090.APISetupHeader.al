@@ -250,7 +250,7 @@ table 50090 "API Setup Header"
                 APISetupLine."Field Type" := format(ltField.Type);
                 APISetupLine.remark := ltField.OptionString;
                 APISetupLine.Include := true;
-                APISetupLine."Service Name" := DelChr(LowerCase(ltField.FieldName), '=', '_-&%(). ');
+                APISetupLine."Service Name" := DelChr(LowerCase(ltField.FieldName), '=', '_-&%()/\. ');
                 APISetupLine.Insert();
             until ltField.Next() = 0;
 
@@ -280,7 +280,7 @@ table 50090 "API Setup Header"
                     if ltField.Type in [ltField.Type::Date] then
                         APISetupLine.remark := 'dd/mm/yyyy';
                     APISetupLine.Include := true;
-                    APISetupLine."Service Name" := DelChr(LowerCase(ltField.FieldName), '=', '_-&%(). ');
+                    APISetupLine."Service Name" := DelChr(LowerCase(ltField.FieldName), '=', '_-&%()/\. ');
                     APISetupLine.Insert();
                 until ltField.Next() = 0;
         end;
