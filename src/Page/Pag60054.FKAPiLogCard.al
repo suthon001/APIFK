@@ -16,12 +16,10 @@ page 60054 "FK APi Log Card"
             group(General)
             {
                 Caption = 'General';
-
-                field("No."; Rec."No.")
+                field("Method Type"; Rec."Method Type")
                 {
+                    ToolTip = 'Specifies the value of the Method Type field.';
                     ApplicationArea = all;
-                    ToolTip = 'Specifies the value of the No. field.';
-                    Caption = 'Table id';
                 }
                 field("Page Name"; Rec."Page Name")
                 {
@@ -32,11 +30,6 @@ page 60054 "FK APi Log Card"
                 {
                     ApplicationArea = all;
                     ToolTip = 'Specifies the value of the Document No. field.';
-                }
-                field("Last Error"; Rec."Last Error")
-                {
-                    ApplicationArea = all;
-                    ToolTip = 'Specifies the value of the Last Error field.';
                 }
                 field(Status; Rec.Status)
                 {
@@ -52,12 +45,29 @@ page 60054 "FK APi Log Card"
             group(JsonLog)
             {
                 Caption = 'Json Log';
-                field(ltJsonLog; ltJsonLog)
+                grid(mygrid)
                 {
-                    Caption = 'Log';
-                    MultiLine = true;
-                    Editable = false;
-                    ApplicationArea = all;
+                    group(Json)
+                    {
+                        ShowCaption = false;
+                        field(ltJsonLog; ltJsonLog)
+                        {
+                            Caption = 'Log';
+                            MultiLine = true;
+                            Editable = false;
+                            ApplicationArea = all;
+                        }
+                    }
+                    group(lasterr)
+                    {
+                        ShowCaption = false;
+                        field("Last Error"; Rec."Last Error")
+                        {
+                            ApplicationArea = all;
+                            ToolTip = 'Specifies the value of the Last Error field.';
+                            MultiLine = true;
+                        }
+                    }
                 }
 
             }

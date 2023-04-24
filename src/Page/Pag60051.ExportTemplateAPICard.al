@@ -46,29 +46,23 @@ page 60051 "FK API Mapping Card"
                     Caption = 'Document No. Filter';
                     ToolTip = 'Specifies value of the field.';
                 }
-                field(TESTSEND; TESTSEND)
-                {
-                    MultiLine = true;
-                    ApplicationArea = all;
-                    Caption = 'TEST API';
-                }
             }
             part(LineHeader; "Export Template Subform")
             {
-                Caption = 'header';
+                Caption = 'Detail';
                 ApplicationArea = all;
                 SubPageLink = "Page Name" = field("Page Name");
                 SubPageView = sorting("Page Name", "Line Type", "Field No.") where("Line Type" = const(header));
                 ShowFilter = false;
             }
-            part(Line; "Export Template Subform")
-            {
-                Caption = 'line';
-                ApplicationArea = all;
-                SubPageLink = "Page Name" = field("Page Name");
-                SubPageView = sorting("Page Name", "Line Type", "Field No.") where("Line Type" = const(line));
-                ShowFilter = false;
-            }
+            // part(Line; "Export Template Subform")
+            // {
+            //     Caption = 'line';
+            //     ApplicationArea = all;
+            //     SubPageLink = "Page Name" = field("Page Name");
+            //     SubPageView = sorting("Page Name", "Line Type", "Field No.") where("Line Type" = const(line));
+            //     ShowFilter = false;
+            // }
         }
     }
     actions
@@ -122,51 +116,51 @@ page 60051 "FK API Mapping Card"
                         if rec."Sub Table ID" = 0 then
                             FKFunc.ExportJsonFormat(rec."Page No.", rec."Table ID", rec."Serivce Name", rec."Page Name", documentNoFilter, false)
                         else begin
-                            if rec."Page Name" = rec."Page Name"::"Purchase Order" then
-                                DocumentType := DocumentType::Order;
-                            if rec."Page Name" = rec."Page Name"::"Purchase Return Order" then
-                                DocumentType := DocumentType::"Return Order";
-                            if rec."Page Name" = rec."Page Name"::"Sales Invoice" then
-                                DocumentType := DocumentType::Invoice;
-                            if rec."Page Name" = rec."Page Name"::"Sales Credit Memo" then
-                                DocumentType := DocumentType::"Credit Memo";
+                            // if rec."Page Name" = rec."Page Name"::"Purchase Order" then
+                            //     DocumentType := DocumentType::Order;
+                            // if rec."Page Name" = rec."Page Name"::"Purchase Return Order" then
+                            //     DocumentType := DocumentType::"Return Order";
+                            // if rec."Page Name" = rec."Page Name"::"Sales Invoice" then
+                            //     DocumentType := DocumentType::Invoice;
+                            // if rec."Page Name" = rec."Page Name"::"Sales Credit Memo" then
+                            //     DocumentType := DocumentType::"Credit Memo";
 
-                            FKFunc.ExportJsonFormatMultitable(rec."Page No.", rec."Sub Page No.", DocumentType, rec."Serivce Name", rec."Page Name", rec."Table ID", rec."Sub Table ID", documentNoFilter, false);
+                            // FKFunc.ExportJsonFormatMultitable(rec."Page No.", rec."Sub Page No.", DocumentType, rec."Serivce Name", rec."Page Name", rec."Table ID", rec."Sub Table ID", documentNoFilter, false);
                         end;
                     end;
                 end;
             }
 
 
-            action(ExportTimeOut)
-            {
-                Caption = 'Export Time Out';
-                Image = Export;
-                Promoted = true;
-                PromotedCategory = Process;
-                ApplicationArea = basic;
-                trigger OnAction()
-                var
-                    FKFunc: Codeunit "FK Func";
-                    DocumentType: Enum "Sales Document Type";
-                begin
+            // action(ExportTimeOut)
+            // {
+            //     Caption = 'Export Time Out';
+            //     Image = Export;
+            //     Promoted = true;
+            //     PromotedCategory = Process;
+            //     ApplicationArea = basic;
+            //     trigger OnAction()
+            //     var
+            //         FKFunc: Codeunit "FK Func";
+            //         DocumentType: Enum "Sales Document Type";
+            //     begin
 
-                    if rec."Page Name" = rec."Page Name"::"Purchase Order" then
-                        DocumentType := DocumentType::Order;
-                    if rec."Page Name" = rec."Page Name"::"Purchase Return Order" then
-                        DocumentType := DocumentType::"Return Order";
-                    if rec."Page Name" = rec."Page Name"::"Sales Invoice" then
-                        DocumentType := DocumentType::Invoice;
-                    if rec."Page Name" = rec."Page Name"::"Sales Credit Memo" then
-                        DocumentType := DocumentType::"Credit Memo";
-
-
-                    FKFunc.ExportTestTimeOut(rec."Page No.", rec."Sub Page No.", DocumentType, rec."Serivce Name", rec."Page Name", rec."Table ID", rec."Sub Table ID", documentNoFilter, false);
+            //         if rec."Page Name" = rec."Page Name"::"Purchase Order" then
+            //             DocumentType := DocumentType::Order;
+            //         if rec."Page Name" = rec."Page Name"::"Purchase Return Order" then
+            //             DocumentType := DocumentType::"Return Order";
+            //         if rec."Page Name" = rec."Page Name"::"Sales Invoice" then
+            //             DocumentType := DocumentType::Invoice;
+            //         if rec."Page Name" = rec."Page Name"::"Sales Credit Memo" then
+            //             DocumentType := DocumentType::"Credit Memo";
 
 
-                end;
+            //         FKFunc.ExportTestTimeOut(rec."Page No.", rec."Sub Page No.", DocumentType, rec."Serivce Name", rec."Page Name", rec."Table ID", rec."Sub Table ID", documentNoFilter, false);
 
-            }
+
+            //     end;
+
+            // }
         }
     }
 

@@ -8,17 +8,15 @@ table 50090 "API Setup Header"
 
     fields
     {
-        field(1; "Page Name"; Option)
+        field(1; "Page Name"; Enum "FK Api Page Type")
         {
             Caption = 'Page Name';
             DataClassification = CustomerContent;
-            OptionCaption = ' ,Item,Customer,Vendor,Purchase Order,Purchase Return Order,Good Receipt Note,Purchase Return Receipt,Sales Invoice,Sales Credit Memo,Item Journal,Item Reclass,Cash Receipt';
-            OptionMembers = " ",Item,Customer,Vendor,"Purchase Order","Purchase Return Order","Good Receipt Note","Purchase Return Receipt","Sales Invoice","Sales Credit Memo","Item Journal","Item Reclass","Cash Receipt";
             trigger OnValidate()
             begin
                 if rec."Page Name" <> xrec."Page Name" then begin
                     case "Page Name" of
-                        1:
+                        "Page Name"::Item:
                             begin
                                 rec."Page No." := page::"Item Card";
                                 rec."Table ID" := Database::Item;
@@ -26,7 +24,7 @@ table 50090 "API Setup Header"
                                 rec."Sub Table ID" := 0;
                                 rec."Serivce Name" := 'itemlists';
                             end;
-                        2:
+                        "Page Name"::Customer:
                             begin
                                 rec."Page No." := page::"Customer Card";
                                 rec."Table ID" := Database::Customer;
@@ -34,88 +32,13 @@ table 50090 "API Setup Header"
                                 rec."Sub Table ID" := 0;
                                 rec."Serivce Name" := 'customerlists';
                             end;
-                        3:
+                        "Page Name"::Vendor:
                             begin
                                 rec."Page No." := page::"Vendor Card";
                                 rec."Table ID" := Database::Vendor;
                                 rec."Sub Page No." := 0;
                                 rec."Sub Table ID" := 0;
                                 rec."Serivce Name" := 'vendorlists';
-                            end;
-                        4:
-                            begin
-                                rec."Page No." := page::"Purchase Order";
-                                rec."Sub Page No." := page::"Purchase Order Subform";
-                                rec."Table ID" := Database::"Purchase Header";
-                                rec."Sub Table ID" := Database::"Purchase Line";
-                                rec."Serivce Name" := 'purchaseorderlists';
-                            end;
-                        5:
-                            begin
-                                rec."Page No." := page::"Purchase Return Order";
-                                rec."Sub Page No." := page::"Purchase Return Order Subform";
-                                rec."Table ID" := Database::"Purchase Header";
-                                rec."Sub Table ID" := Database::"Purchase Line";
-                                rec."Serivce Name" := 'purchasereturnorderlists';
-                            end;
-
-                        6:
-                            begin
-                                rec."Page No." := page::"Purchase Order";
-                                rec."Sub Page No." := 0;
-                                rec."Table ID" := Database::"Purchase Line";
-                                rec."Sub Table ID" := 0;
-                                rec."Serivce Name" := 'goodreceiptnotelists';
-                            end;
-
-                        7:
-                            begin
-                                rec."Page No." := page::"Purchase Return Order";
-                                rec."Sub Page No." := 0;
-                                rec."Table ID" := Database::"Purchase Line";
-                                rec."Sub Table ID" := 0;
-                                rec."Serivce Name" := 'returnreceiptlists';
-                            end;
-
-                        8:
-                            begin
-                                rec."Page No." := page::"Sales Invoice";
-                                rec."Sub Page No." := page::"Sales Invoice Subform";
-                                rec."Table ID" := Database::"Sales Header";
-                                rec."Sub Table ID" := Database::"Sales Line";
-                                rec."Serivce Name" := 'salesinvoicelists';
-                            end;
-                        9:
-                            begin
-                                rec."Page No." := page::"Sales Credit Memo";
-                                rec."Sub Page No." := page::"Sales Cr. Memo Subform";
-                                rec."Table ID" := Database::"Sales Header";
-                                rec."Sub Table ID" := Database::"Sales Line";
-                                rec."Serivce Name" := 'salescreditmemolists';
-                            end;
-                        10:
-                            begin
-                                rec."Page No." := page::"Item Journal";
-                                rec."Sub Page No." := 0;
-                                rec."Table ID" := Database::"Item Journal Line";
-                                rec."Sub Table ID" := 0;
-                                rec."Serivce Name" := 'itemjournal';
-                            end;
-                        11:
-                            begin
-                                rec."Page No." := page::"Item Reclass. Journal";
-                                rec."Sub Page No." := 0;
-                                rec."Table ID" := Database::"Item Journal Line";
-                                rec."Sub Table ID" := 0;
-                                rec."Serivce Name" := 'itemreclass';
-                            end;
-                        12:
-                            begin
-                                rec."Page No." := page::"Cash Receipt Journal";
-                                rec."Sub Page No." := 0;
-                                rec."Table ID" := Database::"Gen. Journal Line";
-                                rec."Sub Table ID" := 0;
-                                rec."Serivce Name" := 'cashreceipt';
                             end;
                     end;
                 end;

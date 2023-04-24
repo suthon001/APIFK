@@ -8,12 +8,10 @@ table 50091 "API Setup Line"
 
     fields
     {
-        field(1; "Page Name"; Option)
+        field(1; "Page Name"; Enum "FK Api Page Type")
         {
             Caption = 'Page Name';
             DataClassification = CustomerContent;
-            OptionCaption = ' ,Item,Customer,Vendor,Purchase Order,Purchase Return Order,Good Receipt Note,Purchase Return Receipt,Sales Invoice,Sales Credit Memo,Item Journal,Item Reclass,Cash Receipt';
-            OptionMembers = " ",Item,Customer,Vendor,"Purchase Order","Purchase Return Order","Good Receipt Note","Purchase Return Receipt","Sales Invoice","Sales Credit Memo","Item Journal","Item Reclass","Cash Receipt";
         }
         field(2; "Line Type"; Option)
         {

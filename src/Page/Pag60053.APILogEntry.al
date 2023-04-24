@@ -24,6 +24,11 @@ page 60053 "API Log Entry"
                     ToolTip = 'Specifies the value of the Entry No. field.';
                     ApplicationArea = all;
                 }
+                field("Method Type"; Rec."Method Type")
+                {
+                    ToolTip = 'Specifies the value of the Method Type field.';
+                    ApplicationArea = all;
+                }
                 field(Status; Rec.Status)
                 {
                     ToolTip = 'Specifies the value of the Status field.';

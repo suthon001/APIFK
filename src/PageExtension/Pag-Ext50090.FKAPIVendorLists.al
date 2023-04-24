@@ -1,7 +1,7 @@
 /// <summary>
-/// PageExtension FK API Vendor Lists (ID 50000) extends Record Vendor List.
+/// PageExtension FK API Vendor Lists (ID 50090) extends Record Vendor List.
 /// </summary>
-pageextension 50000 "FK API Vendor Lists" extends "Vendor List"
+pageextension 50090 "FK API Vendor Lists" extends "Vendor List"
 {
     actions
     {
@@ -29,7 +29,7 @@ pageextension 50000 "FK API Vendor Lists" extends "Vendor List"
                                 pVendorFilter := pVendorFilter + '|';
                             pVendorFilter := pVendorFilter + ltVend."No.";
                         until ltVend.Next() = 0;
-                    FKFunc.SetVendorFilter(pVendorFilter);
+                    FKFunc.setDocumentNo(pVendorFilter);
                     FKFunc.callandsendvendorManual();
                 end;
             }

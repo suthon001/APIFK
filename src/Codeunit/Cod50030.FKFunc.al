@@ -247,9 +247,9 @@ codeunit 50030 "FK Func"
         foreach ltJsonToken2 in ltJsonArray do begin
             ltJsonObject2 := ltJsonToken2.AsObject();
             if not InsertTotable(2, Database::Customer, ltJsonObject2) then
-                Insertlog(Database::Customer, ltPageName, ltJsonObject2, ltDateTime, GetLastErrorText(), 1, ltNoofAPI, GetLastErrorCode(), SelectJsonTokenText(ltJsonObject2, '$.no'))
+                Insertlog(Database::Customer, ltPageName, ltJsonObject2, ltDateTime, GetLastErrorText(), 1, ltNoofAPI, GetLastErrorCode(), SelectJsonTokenText(ltJsonObject2, '$.no'), 0)
             else
-                Insertlog(Database::Customer, ltPageName, ltJsonObject2, ltDateTime, '', 0, ltNoofAPI, '', SelectJsonTokenText(ltJsonObject2, '$.no'));
+                Insertlog(Database::Customer, ltPageName, ltJsonObject2, ltDateTime, '', 0, ltNoofAPI, '', SelectJsonTokenText(ltJsonObject2, '$.no'), 0);
 
         end;
         exit(ReuturnErrorAPI(ltPageName, ltNoofAPI));
@@ -277,9 +277,9 @@ codeunit 50030 "FK Func"
         foreach ltJsonToken2 in ltJsonArray do begin
             ltJsonObject2 := ltJsonToken2.AsObject();
             if not InsertTotable(1, Database::Item, ltJsonObject2) then
-                Insertlog(Database::Item, ltPageName, ltJsonObject2, ltDateTime, GetLastErrorText(), 1, ltNoofAPI, GetLastErrorCode(), SelectJsonTokenText(ltJsonObject2, '$.no'))
+                Insertlog(Database::Item, ltPageName, ltJsonObject2, ltDateTime, GetLastErrorText(), 1, ltNoofAPI, GetLastErrorCode(), SelectJsonTokenText(ltJsonObject2, '$.no'), 0)
             else
-                Insertlog(Database::Item, ltPageName, ltJsonObject2, ltDateTime, '', 0, ltNoofAPI, '', SelectJsonTokenText(ltJsonObject2, '$.no'));
+                Insertlog(Database::Item, ltPageName, ltJsonObject2, ltDateTime, '', 0, ltNoofAPI, '', SelectJsonTokenText(ltJsonObject2, '$.no'), 0);
         end;
         exit(ReuturnErrorAPI(ltPageName, ltNoofAPI));
     end;
@@ -306,9 +306,9 @@ codeunit 50030 "FK Func"
         foreach ltJsonToken2 in ltJsonArray do begin
             ltJsonObject2 := ltJsonToken2.AsObject();
             if not InsertTotable(3, Database::vendor, ltJsonObject2) then
-                Insertlog(Database::Vendor, ltPageName, ltJsonObject2, ltDateTime, GetLastErrorText(), 1, ltNoofAPI, GetLastErrorCode(), SelectJsonTokenText(ltJsonObject2, '$.no'))
+                Insertlog(Database::Vendor, ltPageName, ltJsonObject2, ltDateTime, GetLastErrorText(), 1, ltNoofAPI, GetLastErrorCode(), SelectJsonTokenText(ltJsonObject2, '$.no'), 0)
             else
-                Insertlog(Database::Vendor, ltPageName, ltJsonObject2, ltDateTime, '', 0, ltNoofAPI, '', SelectJsonTokenText(ltJsonObject2, '$.no'));
+                Insertlog(Database::Vendor, ltPageName, ltJsonObject2, ltDateTime, '', 0, ltNoofAPI, '', SelectJsonTokenText(ltJsonObject2, '$.no'), 0);
         end;
         exit(ReuturnErrorAPI(ltPageName, ltNoofAPI));
     end;
@@ -317,14 +317,14 @@ codeunit 50030 "FK Func"
     /// <summary>
     /// callandsendvendor.
     /// </summary>
-    procedure callandsendvendor()
+    procedure callandsendvendorbyJob()
     var
         ltDateTime: DateTime;
         ltNoofAPI: Integer;
     begin
         ltDateTime := CurrentDateTime();
         ltNoofAPI := GetNoOfAPI('Vendor');
-        sendvendor();
+        sendtointranet(Database::Vendor);
         // if not sendvendor() then
         //     Insertlog(Database::Vendor, 'Vendor', ltJsonObject2, ltDateTime, GetLastErrorText(), 1, ltNoofAPI)
     end;
@@ -334,22 +334,22 @@ codeunit 50030 "FK Func"
     /// </summary>
     procedure callandsendvendorManual()
     begin
-        if not Confirm(StrSubstNo('Do you wany to send a vendor no.%1', gvVendorNo)) then
+        if not Confirm(StrSubstNo('Do you wany to send a vendor no.%1', gvNo)) then
             exit;
-        sendvendor();
+        sendtointranet(Database::Vendor);
     end;
 
     /// <summary>
-    /// SetVendorFilter.
+    /// setDocumentNo.
     /// </summary>
-    /// <param name="pVendor">Text.</param>
-    procedure SetVendorFilter(pVendor: Text)
+    /// <param name="pNo">Text.</param>
+    procedure setDocumentNo(pNo: Text)
     begin
-        gvVendorNo := pVendor;
+        gvNo := pNo;
     end;
 
     //[TryFunction]
-    local procedure sendvendor()
+    local procedure sendtointranet(pTableID: Integer)
     var
 
         apisetupline: Record "API Setup Line";
@@ -365,19 +365,33 @@ codeunit 50030 "FK Func"
         ltStr: InStream;
         ltOutStr: OutStream;
         CR, LF, TAB : Char;
+        ltPageNo: Enum "FK Api Page Type";
     begin
         ltpayload := '';
-        apiSetupHeader.GET(apiSetupHeader."Page Name"::Vendor);
-        apiSetupHeader.TestField(URL);
+        if pTableID = Database::item then
+            ltPageNo := ltPageNo::Item;
+        if pTableID = Database::Customer then
+            ltPageNo := ltPageNo::Customer;
+        if pTableID = Database::Vendor then
+            ltPageNo := ltPageNo::Vendor;
+
+        apiSetupHeader.GET(ltPageNo);
+
+        apiSetupHeader.TestField("Serivce Name");
+        //  apiSetupHeader.TestField(URL);
         ltURL := apiSetupHeader.URL;
         CLEAR(ltJsonArray);
         CLEAR(ltJsonObjectBiuld);
-        ltRecordRef.Open(Database::Vendor);
-        ltFieldRef := ltRecordRef.Field(50090);
+        ltRecordRef.Open(pTableID);
+        ltFieldRef := ltRecordRef.Field(70000);
         ltFieldRef.SetRange(false);
-        if gvVendorNo <> '' then begin
+        if gvNo <> '' then begin
             ltFieldRef := ltRecordRef.FieldIndex(1);
-            ltFieldRef.SetFilter(gvVendorNo);
+            ltFieldRef.SetFilter(gvNo);
+        end;
+        if pTableID = Database::Vendor then begin
+            ltFieldRef := ltRecordRef.Field(70011);
+            ltFieldRef.SetRange(true);
         end;
         if ltRecordRef.FindSet() then begin
             repeat
@@ -404,7 +418,7 @@ codeunit 50030 "FK Func"
                 ltJsonArray.Add(ltJsonObject);
             until ltRecordRef.next = 0;
             ltURL := '';
-            ltJsonObjectBiuld.Add('vendorlists', ltJsonArray);
+            ltJsonObjectBiuld.Add(apiSetupHeader."Serivce Name", ltJsonArray);
             ltJsonObjectBiuld.WriteTo(ltpayload);
             TempBlob.CreateOutStream(ltOutStr, TextEncoding::UTF8);
             CR := 13;
@@ -414,11 +428,11 @@ codeunit 50030 "FK Func"
             ltpayload := COPYSTR(ltpayload, 1, StrLen(ltpayload) - 1) + format(CR) + Format(lf) + '}';
             ltOutStr.WriteText(ltpayload);
             TempBlob.CreateInStream(ltStr, TextEncoding::UTF8);
-            ltFileName := 'Vendorlists.txt';
+            ltFileName := apiSetupHeader."Serivce Name" + '.txt';
             DownloadFromStream(ltStr, '', '', '', ltFileName);
             if (ltURL <> '') and (ltpayload <> '') then begin
                 ConnectToWebService(ltpayload, ltURL);
-                ltFieldRef := ltRecordRef.Field(50090);
+                ltFieldRef := ltRecordRef.Field(70000);
                 ltFieldRef.Value := true;
                 ltRecordRef.Modify();
             end;
@@ -449,12 +463,12 @@ codeunit 50030 "FK Func"
         foreach ltJsonToken2 in ltJsonArray do begin
             ltJsonObject2 := ltJsonToken2.AsObject();
             if not InsertTotable(4, Database::"Purchase Header", ltJsonObject2) then begin
-                Insertlog(Database::"Purchase Header", ltPageName, ltJsonObject2, ltDateTime, GetLastErrorText(), 1, ltNoofAPI, GetLastErrorCode(), SelectJsonTokenText(ltJsonObject2, '$.no'));
+                Insertlog(Database::"Purchase Header", ltPageName, ltJsonObject2, ltDateTime, GetLastErrorText(), 1, ltNoofAPI, GetLastErrorCode(), SelectJsonTokenText(ltJsonObject2, '$.no'), 0);
                 DeleteDocAfterGetError(Database::"Purchase Header", ltDocumentType::Order.AsInteger(), SelectJsonTokenText(ltJsonObject2, '$.no'));
             end
             else begin
                 UpdatePurchaseStatusToRelease(ltDocumentType::Order, SelectJsonTokenText(ltJsonObject2, '$.no'));
-                Insertlog(Database::"Purchase Header", ltPageName, ltJsonObject2, ltDateTime, '', 0, ltNoofAPI, '', SelectJsonTokenText(ltJsonObject2, '$.no'));
+                Insertlog(Database::"Purchase Header", ltPageName, ltJsonObject2, ltDateTime, '', 0, ltNoofAPI, '', SelectJsonTokenText(ltJsonObject2, '$.no'), 0);
             end;
         end;
         exit(ReuturnErrorAPI(ltPageName, ltNoofAPI));
@@ -483,11 +497,11 @@ codeunit 50030 "FK Func"
         foreach ltJsonToken2 in ltJsonArray do begin
             ltJsonObject2 := ltJsonToken2.AsObject();
             if not InsertTotable(5, Database::"Purchase Header", ltJsonObject2) then begin
-                Insertlog(Database::"Purchase Header", ltPageName, ltJsonObject2, ltDateTime, GetLastErrorText(), 1, ltNoofAPI, GetLastErrorCode(), SelectJsonTokenText(ltJsonObject2, '$.no'));
+                Insertlog(Database::"Purchase Header", ltPageName, ltJsonObject2, ltDateTime, GetLastErrorText(), 1, ltNoofAPI, GetLastErrorCode(), SelectJsonTokenText(ltJsonObject2, '$.no'), 0);
                 DeleteDocAfterGetError(Database::"Purchase Header", ltDocumentType::"Return Order".AsInteger(), SelectJsonTokenText(ltJsonObject2, '$.no'));
             end else begin
                 UpdatePurchaseStatusToRelease(ltDocumentType::"Return Order", SelectJsonTokenText(ltJsonObject2, '$.no'));
-                Insertlog(Database::"Purchase Header", ltPageName, ltJsonObject2, ltDateTime, '', 0, ltNoofAPI, '', SelectJsonTokenText(ltJsonObject2, '$.no'));
+                Insertlog(Database::"Purchase Header", ltPageName, ltJsonObject2, ltDateTime, '', 0, ltNoofAPI, '', SelectJsonTokenText(ltJsonObject2, '$.no'), 0);
             end;
         end;
         exit(ReuturnErrorAPI(ltPageName, ltNoofAPI));
@@ -518,9 +532,9 @@ codeunit 50030 "FK Func"
         foreach ltJsonToken2 in ltJsonArray do begin
             ltJsonObject2 := ltJsonToken2.AsObject();
             if not updateqtypurchase(ltDocumentType::Order, SelectJsonTokenText(ltJsonObject2, '$.documentno'), SelectJsonTokenText(ltJsonObject2, '$.no'), 1, true) then
-                Insertlog(Database::"Purchase Line", ltPageName, ltJsonObject2, ltDateTime, GetLastErrorText(), 1, ltNoofAPI, GetLastErrorCode(), SelectJsonTokenText(ltJsonObject2, '$.documentno'))
+                Insertlog(Database::"Purchase Line", ltPageName, ltJsonObject2, ltDateTime, GetLastErrorText(), 1, ltNoofAPI, GetLastErrorCode(), SelectJsonTokenText(ltJsonObject2, '$.documentno'), 1)
             else
-                Insertlog(Database::"Purchase Line", ltPageName, ltJsonObject2, ltDateTime, '', 0, ltNoofAPI, '', SelectJsonTokenText(ltJsonObject2, '$.documentno'));
+                Insertlog(Database::"Purchase Line", ltPageName, ltJsonObject2, ltDateTime, '', 0, ltNoofAPI, '', SelectJsonTokenText(ltJsonObject2, '$.documentno'), 1);
         end;
         exit(ReuturnErrorAPI(ltPageName, ltNoofAPI));
     end;
@@ -549,9 +563,9 @@ codeunit 50030 "FK Func"
         foreach ltJsonToken2 in ltJsonArray do begin
             ltJsonObject2 := ltJsonToken2.AsObject();
             if not updateqtypurchase(ltDocumentType::"Return Order", SelectJsonTokenText(ltJsonObject2, '$.documentno'), SelectJsonTokenText(ltJsonObject2, '$.no'), 1, false) then
-                Insertlog(Database::"Purchase Line", ltPageName, ltJsonObject2, ltDateTime, GetLastErrorText(), 1, ltNoofAPI, GetLastErrorCode(), SelectJsonTokenText(ltJsonObject2, '$.documentno'))
+                Insertlog(Database::"Purchase Line", ltPageName, ltJsonObject2, ltDateTime, GetLastErrorText(), 1, ltNoofAPI, GetLastErrorCode(), SelectJsonTokenText(ltJsonObject2, '$.documentno'), 1)
             else
-                Insertlog(Database::"Purchase Line", ltPageName, ltJsonObject2, ltDateTime, '', 0, ltNoofAPI, '', SelectJsonTokenText(ltJsonObject2, '$.documentno'));
+                Insertlog(Database::"Purchase Line", ltPageName, ltJsonObject2, ltDateTime, '', 0, ltNoofAPI, '', SelectJsonTokenText(ltJsonObject2, '$.documentno'), 1);
         end;
         exit(ReuturnErrorAPI(ltPageName, ltNoofAPI));
     end;
@@ -578,12 +592,12 @@ codeunit 50030 "FK Func"
         foreach ltJsonToken2 in ltJsonArray do begin
             ltJsonObject2 := ltJsonToken2.AsObject();
             if not InsertTotable(8, Database::"Sales Header", ltJsonObject2) then begin
-                Insertlog(Database::"Sales Header", ltPageName, ltJsonObject2, ltDateTime, GetLastErrorText(), 1, ltNoofAPI, GetLastErrorCode(), SelectJsonTokenText(ltJsonObject2, '$.no'));
+                Insertlog(Database::"Sales Header", ltPageName, ltJsonObject2, ltDateTime, GetLastErrorText(), 1, ltNoofAPI, GetLastErrorCode(), SelectJsonTokenText(ltJsonObject2, '$.no'), 0);
                 DeleteDocAfterGetError(Database::"Sales Header", ltDocumentType::Invoice.AsInteger(), SelectJsonTokenText(ltJsonObject2, '$.no'));
             end
             else begin
                 UpdateSalesStatusToRelease(ltDocumentType::Invoice, SelectJsonTokenText(ltJsonObject2, '$.no'));
-                Insertlog(Database::"Sales Header", ltPageName, ltJsonObject2, ltDateTime, '', 0, ltNoofAPI, '', SelectJsonTokenText(ltJsonObject2, '$.no'));
+                Insertlog(Database::"Sales Header", ltPageName, ltJsonObject2, ltDateTime, '', 0, ltNoofAPI, '', SelectJsonTokenText(ltJsonObject2, '$.no'), 0);
             end;
         end;
         exit(ReuturnErrorAPI(ltPageName, ltNoofAPI));
@@ -613,12 +627,12 @@ codeunit 50030 "FK Func"
         foreach ltJsonToken2 in ltJsonArray do begin
             ltJsonObject2 := ltJsonToken2.AsObject();
             if not InsertTotable(9, Database::"Sales Header", ltJsonObject2) then begin
-                Insertlog(Database::"Sales Header", ltPageName, ltJsonObject2, ltDateTime, GetLastErrorText(), 1, ltNoofAPI, GetLastErrorCode(), SelectJsonTokenText(ltJsonObject2, '$.no'));
+                Insertlog(Database::"Sales Header", ltPageName, ltJsonObject2, ltDateTime, GetLastErrorText(), 1, ltNoofAPI, GetLastErrorCode(), SelectJsonTokenText(ltJsonObject2, '$.no'), 0);
                 DeleteDocAfterGetError(Database::"Sales Header", ltDocumentType::"Credit Memo".AsInteger(), SelectJsonTokenText(ltJsonObject2, '$.no'));
             end
             else begin
                 UpdateSalesStatusToRelease(ltDocumentType::"Credit Memo", SelectJsonTokenText(ltJsonObject2, '$.no'));
-                Insertlog(Database::"Sales Header", ltPageName, ltJsonObject2, ltDateTime, '', 0, ltNoofAPI, '', SelectJsonTokenText(ltJsonObject2, '$.no'));
+                Insertlog(Database::"Sales Header", ltPageName, ltJsonObject2, ltDateTime, '', 0, ltNoofAPI, '', SelectJsonTokenText(ltJsonObject2, '$.no'), 0);
             end;
         end;
         exit(ReuturnErrorAPI(ltPageName, ltNoofAPI));
@@ -1005,7 +1019,7 @@ codeunit 50030 "FK Func"
         exit(1);
     end;
 
-    local procedure insertlog(pTableID: integer; PageName: text; pjsonObject: JsonObject; pDateTime: DateTime; pMsgError: Text; pStatus: Option Successfully,"Error"; pNoOfAPI: Integer; pMsgErrorCode: text; pDocumentNo: Code[30])
+    local procedure insertlog(pTableID: integer; PageName: text; pjsonObject: JsonObject; pDateTime: DateTime; pMsgError: Text; pStatus: Option Successfully,"Error"; pNoOfAPI: Integer; pMsgErrorCode: text; pDocumentNo: Code[30]; pMethodType: Option "Insert","Update","Delete")
     var
         apiLog: Record "API Log";
         JsonText: Text;
@@ -1021,6 +1035,7 @@ codeunit 50030 "FK Func"
         apiLog."Last Error" := copystr(pMsgError, 1, 2047);
         apiLog.Status := pStatus;
         apiLog."No. of API" := pNoOfAPI;
+        apiLog."Method Type" := pMethodType;
         apiLog.Insert(true);
         apiLog."Json Msg.".CreateOutStream(ltOutStream, TEXTENCODING::UTF8);
         apiLog."Last Error Code" := pMsgErrorCode;
@@ -1465,5 +1480,5 @@ codeunit 50030 "FK Func"
     end;
 
     var
-        gvVendorNo: Text;
+        gvNo: Text;
 }

@@ -70,6 +70,13 @@ table 50092 "API Log"
             Editable = false;
 
         }
+        field(11; "Method Type"; Option)
+        {
+            Caption = 'Method Type';
+            OptionCaption = 'Insert,Update,Delete';
+            OptionMembers = "Insert","UpDate","Delete";
+            Editable = false;
+        }
 
     }
     keys
