@@ -20,7 +20,6 @@ page 60051 "FK API Mapping Card"
                     ToolTip = 'Specifies value of the field.';
                     trigger OnValidate()
                     begin
-
                         CurrPage.SaveRecord();
                     end;
                 }
@@ -75,7 +74,8 @@ page 60051 "FK API Mapping Card"
                 Image = GetEntries;
                 Promoted = true;
                 PromotedCategory = Process;
-                ApplicationArea = basic;
+                ApplicationArea = Basic, Suite;
+                Visible = false;
                 trigger OnAction()
                 var
                     FKFunc: Codeunit "FK Func";
@@ -85,11 +85,11 @@ page 60051 "FK API Mapping Card"
             }
             action(GeneralDeteil)
             {
-                Caption = 'General Detail';
+                Caption = 'Generate Detail';
                 Image = GetEntries;
                 Promoted = true;
                 PromotedCategory = Process;
-                ApplicationArea = basic;
+                ApplicationArea = Basic, Suite;
                 trigger OnAction()
                 var
                     FKFunc: Codeunit "FK Func";
@@ -104,7 +104,7 @@ page 60051 "FK API Mapping Card"
                 Image = Export;
                 Promoted = true;
                 PromotedCategory = Process;
-                ApplicationArea = basic;
+                ApplicationArea = Basic, Suite;
                 trigger OnAction()
                 var
                     FKFunc: Codeunit "FK Func";
@@ -130,7 +130,26 @@ page 60051 "FK API Mapping Card"
                     end;
                 end;
             }
-
+            action(ShowLog)
+            {
+                Caption = 'Log Entries';
+                ApplicationArea = Basic, Suite;
+                Image = Log;
+                Promoted = true;
+                PromotedCategory = Process;
+                trigger OnAction()
+                var
+                    FKLogEntry: Record "FK API Log";
+                    FKAPILogEntries: Page "FK API Log Entry";
+                begin
+                    CLEAR(FKAPILogEntries);
+                    FKLogEntry.reset();
+                    FKLogEntry.SetRange("No.", rec."Table ID");
+                    FKAPILogEntries.SetTableView(FKLogEntry);
+                    FKAPILogEntries.RunModal();
+                    CLEAR(FKAPILogEntries);
+                end;
+            }
 
             // action(ExportTimeOut)
             // {

@@ -1,12 +1,12 @@
 /// <summary>
 /// Page API Log Entry (ID 60053).
 /// </summary>
-page 60053 "API Log Entry"
+page 60053 "FK API Log Entry"
 {
     ApplicationArea = All;
     Caption = 'API Log Entry';
     PageType = List;
-    SourceTable = "API Log";
+    SourceTable = "FK API Log";
     UsageCategory = History;
     InsertAllowed = false;
     ModifyAllowed = false;
@@ -59,6 +59,12 @@ page 60053 "API Log Entry"
                 {
                     ToolTip = 'Specifies the value of the Last Error Code field.';
                     ApplicationArea = all;
+                }
+                field("Interface By"; Rec."Interface By")
+                {
+                    ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the Interface By field.';
+
                 }
                 field("Date Time"; Rec."Date Time")
                 {

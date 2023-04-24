@@ -6,8 +6,9 @@ page 60054 "FK APi Log Card"
 
     Caption = 'FK APi Log Card';
     PageType = Card;
-    SourceTable = "API Log";
+    SourceTable = "FK API Log";
     UsageCategory = None;
+    InsertAllowed = false;
     DataCaptionExpression = StrSubstNo('%1:%2', rec."Page Name", rec."Document No.");
     layout
     {
@@ -36,6 +37,12 @@ page 60054 "FK APi Log Card"
                     ApplicationArea = all;
                     ToolTip = 'Specifies the value of the Status field.';
                 }
+                field("Interface By"; Rec."Interface By")
+                {
+                    ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the Interface By field.';
+
+                }
                 field("Date Time"; Rec."Date Time")
                 {
                     ApplicationArea = all;
@@ -44,7 +51,7 @@ page 60054 "FK APi Log Card"
             }
             group(JsonLog)
             {
-                Caption = 'Json Log';
+                Caption = 'Log';
                 grid(mygrid)
                 {
                     group(Json)
@@ -52,7 +59,7 @@ page 60054 "FK APi Log Card"
                         ShowCaption = false;
                         field(ltJsonLog; ltJsonLog)
                         {
-                            Caption = 'Log';
+                            Caption = 'Json Log';
                             MultiLine = true;
                             Editable = false;
                             ApplicationArea = all;

@@ -1,7 +1,7 @@
 /// <summary>
 /// Table API Log (ID 50092).
 /// </summary>
-table 50092 "API Log"
+table 50092 "FK API Log"
 {
     Caption = 'API Log';
     DataClassification = CustomerContent;
@@ -76,6 +76,12 @@ table 50092 "API Log"
             OptionCaption = 'Insert,Update,Delete';
             OptionMembers = "Insert","UpDate","Delete";
             Editable = false;
+        }
+        field(12; "Interface By"; Code[100])
+        {
+            Caption = 'Interface By';
+            Editable = false;
+            DataClassification = CustomerContent;
         }
 
     }

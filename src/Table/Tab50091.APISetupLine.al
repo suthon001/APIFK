@@ -61,6 +61,10 @@ table 50091 "API Setup Line"
         {
             Caption = 'Include';
             DataClassification = CustomerContent;
+            trigger OnValidate()
+            begin
+                rec.TestField("Is Primary", false);
+            end;
         }
         field(10; Remark; text[2047])
         {

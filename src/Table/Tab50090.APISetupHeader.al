@@ -151,6 +151,8 @@ table 50090 "API Setup Header"
         ltField.SetRange(Enabled, true);
         ltField.SetRange(Class, ltField.Class::Normal);
         ltField.SetRange(ObsoleteState, ltField.ObsoleteState::No);
+        ltField.SetFilter(FieldName, '<>%1', 'NWTH*');
+        ltField.SetFilter("No.", '<>%1&<>%2', 2000000001, 2000000003);
         ltField.SetFilter(Type, '<>%1&<>%2&<>%3&<>%4&<>%5&<>%6', ltField.Type::BLOB, ltField.Type::GUID, ltField.Type::Media, ltField.Type::MediaSet, ltField.Type::BigInteger, ltField.Type::Binary);
         if ltField.FindSet() then
             repeat
@@ -183,6 +185,8 @@ table 50090 "API Setup Header"
             ltField.SetRange(TableNo, rec."Sub Table ID");
             ltField.SetRange(Enabled, true);
             ltField.SetRange(Class, ltField.Class::Normal);
+            ltField.SetFilter(FieldName, '<>%1', 'NWTH*');
+            ltField.SetFilter("No.", '<>%1&<>%2', 2000000001, 2000000003);
             ltField.SetRange(ObsoleteState, ltField.ObsoleteState::No);
             ltField.SetFilter(Type, '<>%1&<>%2&<>%3&<>%4&<>%5&<>%6', ltField.Type::BLOB, ltField.Type::GUID, ltField.Type::Media, ltField.Type::MediaSet, ltField.Type::BigInteger, ltField.Type::Binary);
             if ltField.FindSet() then
