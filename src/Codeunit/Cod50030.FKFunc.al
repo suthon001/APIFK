@@ -927,7 +927,7 @@ codeunit 50030 "FK Func"
     end;
 
 
-    local procedure InsertTotableLine(pJsonObject: JsonObject; subtableID: Integer; pPageID: Integer; pSubPageID: Integer; pDocumentType: Integer; pDocumentNo: code[30])
+    local procedure InsertTotableLine(pJsonObject: JsonObject; subtableID: Integer; pPageID: Enum "FK Api Page Type"; pSubPageID: Integer; pDocumentType: Integer; pDocumentNo: code[30])
     var
         ltJsonObjectDetail: JsonObject;
         APIMappingLine: Record "API Setup Line";
