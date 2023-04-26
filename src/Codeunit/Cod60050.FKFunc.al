@@ -395,7 +395,7 @@ codeunit 60050 "FK Func"
     /// </summary>
     /// <param name="vendorlists">BigText.</param>
     /// <returns>Return value of type Text.</returns>
-    procedure updateVendor(vendorlists: BigText): Text;
+    procedure updatevendor(vendorlists: BigText): Text;
     var
         ltJsonObject, ltJsonObjectDetail, ltJsonObject2 : JsonObject;
         ltJsonToken, ltJsonToken2 : JsonToken;
@@ -855,11 +855,11 @@ codeunit 60050 "FK Func"
                 ltRecordRef.Close();
             end else begin
                 if APIMappingHeader."Page Name" = APIMappingHeader."Page Name"::Vendor then
-                    ERROR('vendor no %1 does not exists', ltDocNo);
+                    ERROR('Vendor no. %1 does not exists', ltDocNo);
                 if APIMappingHeader."Page Name" = APIMappingHeader."Page Name"::Item then
                     ERROR('Item no %1 does not exists', ltDocNo);
                 if APIMappingHeader."Page Name" = APIMappingHeader."Page Name"::Customer then
-                    ERROR('Customer no %1 does not exists', ltDocNo);
+                    ERROR('Customer no. %1 does not exists', ltDocNo);
             end;
         end;
     end;
