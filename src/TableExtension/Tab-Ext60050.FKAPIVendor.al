@@ -1,22 +1,16 @@
 /// <summary>
-/// TableExtension FK API Vendor (ID 50090) extends Record Vendor.
+/// TableExtension FK API Vendor (ID 60050) extends Record Vendor.
 /// </summary>
-tableextension 50090 "FK API Vendor" extends Vendor
+tableextension 60050 "FK API Vendor" extends Vendor
 {
     fields
     {
-        field(70000; "Already Send"; Boolean)
-        {
-            Caption = 'Already Send';
-            DataClassification = CustomerContent;
-            Editable = false;
-        }
-        field(70001; "Supplier Eng Name"; Text[100])
+        field(60050; "Supplier Eng Name"; Text[100])
         {
             Caption = 'Supplier Eng Name';
             DataClassification = CustomerContent;
         }
-        field(70002; "Vendor No. Intranet"; Code[20])
+        field(60051; "Vendor No. Intranet"; Code[20])
         {
             Caption = 'Vendor No. Intranet';
             DataClassification = CustomerContent;
@@ -37,18 +31,18 @@ tableextension 50090 "FK API Vendor" extends Vendor
 
             end;
         }
-        field(70003; "Billing Address"; Text[100])
+        field(60052; "Billing Address"; Text[100])
         {
             Caption = 'Billing Address';
             DataClassification = CustomerContent;
         }
-        field(70004; "Billing Address 2"; Text[50])
+        field(60053; "Billing Address 2"; Text[50])
         {
             Caption = 'Billing Address 2';
             DataClassification = CustomerContent;
 
         }
-        field(70005; "Billing City"; Text[30])
+        field(60054; "Billing City"; Text[30])
         {
             Caption = 'Billing City';
             TableRelation = IF ("Billing Region Code" = CONST('')) "Post Code".City
@@ -76,7 +70,7 @@ tableextension 50090 "FK API Vendor" extends Vendor
 
             end;
         }
-        field(70006; "Billing Post Code"; code[20])
+        field(60055; "Billing Post Code"; code[20])
         {
             Caption = 'Billing Post Code';
             TableRelation = IF ("Billing Region Code" = CONST('')) "Post Code"
@@ -104,7 +98,7 @@ tableextension 50090 "FK API Vendor" extends Vendor
 
             end;
         }
-        field(70007; "Billing Region Code"; code[10])
+        field(60056; "Billing Region Code"; code[10])
         {
             Caption = 'Billing Country/Region Code';
             TableRelation = "Country/Region";
@@ -114,7 +108,7 @@ tableextension 50090 "FK API Vendor" extends Vendor
                 PostCode.CheckClearPostCodeCityCounty("Billing City", "Billing Post Code", County, "Billing Region Code", xRec."Billing Region Code");
             end;
         }
-        field(70008; "User_Name"; text[50])
+        field(60057; "User_Name"; text[50])
         {
             Caption = 'User_Name';
             trigger OnValidate()
@@ -131,21 +125,28 @@ tableextension 50090 "FK API Vendor" extends Vendor
                     end;
             end;
         }
-        field(70009; "VAT registration supplier"; Boolean)
+        field(60058; "VAT registration supplier"; Boolean)
         {
             Caption = 'VAT registration supplier';
             DataClassification = CustomerContent;
         }
-        field(70010; "Company Type"; Boolean)
+        field(60059; "Company Type"; Boolean)
         {
             Caption = 'Company Type';
             DataClassification = CustomerContent;
         }
-        field(70011; "Vendor Direct"; Boolean)
+        field(60060; "Vendor Direct"; Boolean)
         {
             Caption = 'Vendor Direct';
             DataClassification = CustomerContent;
         }
+        field(70000; "Already Send"; Boolean)
+        {
+            Caption = 'Already Send';
+            DataClassification = CustomerContent;
+            Editable = false;
+        }
+
     }
     var
         PostCode: Record "Post Code";

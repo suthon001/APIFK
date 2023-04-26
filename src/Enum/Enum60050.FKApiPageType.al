@@ -1,7 +1,7 @@
 /// <summary>
-/// Enum FK Api Page Type (ID 50000).
+/// Enum FK Api Page Type (ID 60050).
 /// </summary>
-enum 50000 "FK Api Page Type"
+enum 60050 "FK Api Page Type"
 {
     Extensible = true;
     value(0; " ") { Caption = ' '; }

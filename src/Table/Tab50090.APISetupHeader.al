@@ -1,7 +1,7 @@
 /// <summary>
-/// Table API Setup Header (ID 50090).
+/// Table API Setup Header (ID 60050).
 /// </summary>
-table 50090 "API Setup Header"
+table 60050 "API Setup Header"
 {
     Caption = 'API Setup Header';
     DataClassification = CustomerContent;

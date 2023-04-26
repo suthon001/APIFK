@@ -1,7 +1,7 @@
 /// <summary>
-/// PageExtension FK API Vendor Lists (ID 50090) extends Record Vendor List.
+/// PageExtension FK API Vendor Lists (ID 60050) extends Record Vendor List.
 /// </summary>
-pageextension 50090 "FK API Vendor Lists" extends "Vendor List"
+pageextension 60050 "FK API Vendor Lists" extends "Vendor List"
 {
     actions
     {

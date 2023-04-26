@@ -17,6 +17,7 @@ page 60057 "FK Good ReceiptNote Subpage"
                 field("TPP Type"; Rec.Type)
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies value of the field.';
                     trigger OnValidate()
                     begin
                         IF xRec."No." <> '' THEN
@@ -27,6 +28,7 @@ page 60057 "FK Good ReceiptNote Subpage"
                 field("TPP No."; Rec."No.")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies value of the field.';
                     trigger OnValidate()
                     begin
                         IF xRec."No." <> '' THEN
@@ -37,18 +39,22 @@ page 60057 "FK Good ReceiptNote Subpage"
                 field("TPP Description"; Rec.Description)
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies value of the field.';
                 }
                 field("TPP Description 2"; Rec."Description 2")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies value of the field.';
                 }
                 field("TPP Location Code"; Rec."Location Code")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies value of the field.';
                 }
                 field("TPP Quantity"; Rec.Quantity)
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies value of the field.';
                     trigger OnValidate()
                     begin
                         "TPP RedistributeTotalsOnAfterValidate";
@@ -57,38 +63,52 @@ page 60057 "FK Good ReceiptNote Subpage"
                 field("TPP Unit of Measure Code"; Rec."Unit of Measure Code")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies value of the field.';
                 }
                 field("TPP Outstanding Quantity"; Rec."Outstanding Quantity")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies value of the field.';
                 }
                 field("TPP Unit Cost"; Rec."Unit Cost")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies value of the field.';
                 }
                 field("TPP Qty. to Receive"; Rec."Qty. to Receive")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies value of the field.';
                 }
                 field("TPP Quantity Received"; Rec."Quantity Received")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies value of the field.';
                 }
                 field("TPP Line Amount"; Rec."Line Amount")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies value of the field.';
                 }
                 field("TPP Line Discount %"; Rec."Line Discount %")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies value of the field.';
                 }
                 field("TPP Shortcut Dimension 1 Code"; Rec."Shortcut Dimension 1 Code")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies value of the field.';
                 }
                 field("TPP Shortcut Dimension 2 Code"; Rec."Shortcut Dimension 2 Code")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies value of the field.';
+                }
+                field("Ref. GR No. Intranet"; Rec."Ref. GR No. Intranet")
+                {
+                    ApplicationArea = all;
+                    ToolTip = 'Specifies value of the field.';
                 }
             }
             group("TPP Total")

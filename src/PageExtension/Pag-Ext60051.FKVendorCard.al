@@ -1,7 +1,7 @@
 /// <summary>
-/// PageExtension FK Vendor Card (ID 50091) extends Record Vendor Card.
+/// PageExtension FK Vendor Card (ID 60051) extends Record Vendor Card.
 /// </summary>
-pageextension 50091 "FK Vendor Card" extends "Vendor Card"
+pageextension 60051 "FK Vendor Card" extends "Vendor Card"
 {
     layout
     {

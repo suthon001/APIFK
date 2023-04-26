@@ -1,7 +1,7 @@
 /// <summary>
-/// TableExtension FK Customer (ID 50092) extends Record Customer.
+/// TableExtension FK Item (ID 60051) extends Record Item.
 /// </summary>
-tableextension 50092 "FK Customer" extends Customer
+tableextension 60051 "FK Item" extends Item
 {
     fields
     {

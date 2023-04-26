@@ -1,3 +1,6 @@
+/// <summary>
+/// Unknown API FK Permiss (ID 60050).
+/// </summary>
 permissionset 60050 "API FK Permiss"
 {
     Assignable = true;

@@ -1,7 +1,7 @@
 /// <summary>
-/// PageExtension FK Business Manager Role Cente (ID 50094) extends Record Business Manager Role Center.
+/// PageExtension FK Team Member Role Center (ID 60058) extends Record Team Member Role Center.
 /// </summary>
-pageextension 50094 "FK Business Manager Role Cente" extends "Business Manager Role Center"
+pageextension 60058 "FK Team Member Role Center" extends "Team Member Role Center"
 {
     actions
     {

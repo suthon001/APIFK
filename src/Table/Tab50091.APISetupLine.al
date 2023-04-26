@@ -1,7 +1,7 @@
 /// <summary>
-/// Table API Setup Line (ID 50091).
+/// Table API Setup Line (ID 60051).
 /// </summary>
-table 50091 "API Setup Line"
+table 60051 "API Setup Line"
 {
     Caption = 'API Setup Line';
     DataClassification = CustomerContent;

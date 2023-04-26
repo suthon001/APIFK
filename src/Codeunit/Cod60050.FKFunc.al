@@ -1,9 +1,27 @@
 /// <summary>
-/// Codeunit FK Func (ID 50030).
+/// Codeunit FK Func (ID 60050).
 /// </summary>
-codeunit 50030 "FK Func"
+codeunit 60050 "FK Func"
 {
+    [EventSubscriber(ObjectType::Table, Database::"Purch. Rcpt. Line", 'OnBeforeInsertInvLineFromRcptLine', '', false, false)]
+    local procedure OnBeforeInsertInvLineFromRcptLine(var PurchLine: Record "Purchase Line"; var PurchRcptLine: Record "Purch. Rcpt. Line")
+    begin
+        PurchLine."Ref. GR No. Intranet" := PurchRcptLine."Ref. GR No. Intranet";
+    end;
 
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Get Receipt", 'OnAfterInsertLines', '', false, false)]
+    local procedure OnAfterInsertInvoiceLines(var PurchHeader: Record "Purchase Header")
+    var
+        PurchaseLine: record "Purchase Line";
+    begin
+        PurchaseLine.reset();
+        PurchaseLine.setrange("Document Type", PurchHeader."Document Type");
+        PurchaseLine.SetRange("Document No.", PurchHeader."No.");
+        PurchaseLine.SetFilter("Ref. GR No. Intranet", '<>%1', '');
+        if PurchaseLine.FindFirst() then
+            PurchHeader."Ref. GR No. Intranet" := PurchaseLine."Ref. GR No. Intranet";
+
+    end;
 
     /// <summary>
     /// ExportTestTimeOut.
@@ -496,7 +514,7 @@ codeunit 50030 "FK Func"
             ltFieldRef.SetFilter(gvNo);
         end;
         if pTableID = Database::Vendor then begin
-            ltFieldRef := ltRecordRef.Field(70011);
+            ltFieldRef := ltRecordRef.Field(60060);
             ltFieldRef.SetRange(true);
         end;
         if ltRecordRef.FindSet() then begin

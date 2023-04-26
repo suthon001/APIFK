@@ -23,56 +23,69 @@ page 60055 "FK Good ReceiptNote List"
                 field("TPP No."; Rec."No.")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies value of the field.';
                 }
                 field("TPP Completely Received"; Rec."Completely Received")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies value of the field.';
                 }
                 field("TPP Posting Date"; Rec."Posting Date")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies value of the field.';
                 }
                 field("TPP Buy-from Vendor No."; Rec."Buy-from Vendor No.")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies value of the field.';
                 }
                 field("TPP Buy-from Vendor Name"; Rec."Buy-from Vendor Name")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies value of the field.';
                 }
                 field("TPP Buy-from Vendor Name 2"; Rec."Buy-from Vendor Name 2")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies value of the field.';
                 }
                 field("TPP Posting Description"; Rec."Posting Description")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies value of the field.';
                 }
                 field("TPP Vendor Shipment No."; Rec."Vendor Shipment No.")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies value of the field.';
                 }
 
                 field("TPP Amount"; Rec.Amount)
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies value of the field.';
                 }
 
                 field("TPP Amount Including VAT"; Rec."Amount Including VAT")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies value of the field.';
                 }
                 field("TPP Currency Code"; Rec."Currency Code")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies value of the field.';
                 }
                 field("TPP Shortcut Dimension 1 Code"; Rec."Shortcut Dimension 1 Code")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies value of the field.';
                 }
                 field("TPP Shortcut Dimension 2 Code"; Rec."Shortcut Dimension 2 Code")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies value of the field.';
                 }
 
 

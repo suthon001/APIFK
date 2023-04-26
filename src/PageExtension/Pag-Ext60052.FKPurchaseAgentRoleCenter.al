@@ -1,7 +1,7 @@
 /// <summary>
-/// PageExtension FK Purchase Agent Role Center (ID 50092) extends Record Purchasing Agent Role Center.
+/// PageExtension FK Purchase Agent Role Center (ID 60052) extends Record Purchasing Agent Role Center.
 /// </summary>
-pageextension 50092 "FK Purchase Agent Role Center" extends "Purchasing Agent Role Center"
+pageextension 60052 "FK Purchase Agent Role Center" extends "Purchasing Agent Role Center"
 {
     actions
     {

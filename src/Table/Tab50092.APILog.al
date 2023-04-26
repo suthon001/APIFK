@@ -1,7 +1,7 @@
 /// <summary>
-/// Table API Log (ID 50092).
+/// Table API Log (ID 60052).
 /// </summary>
-table 50092 "FK API Log"
+table 60052 "FK API Log"
 {
     Caption = 'API Log';
     DataClassification = CustomerContent;
