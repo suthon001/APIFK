@@ -1,7 +1,7 @@
 /// <summary>
-/// PageExtension FK Posted Purchase Receipt (ID 60055) extends Record Posted Purchase Receipt.
+/// PageExtension FK Purchase Order (ID 60059) extends Record Purchase Order.
 /// </summary>
-pageextension 60055 "FK Posted Purchase Receipt" extends "Posted Purchase Receipt"
+pageextension 60059 "FK Purchase Order" extends "Purchase Order"
 {
     layout
     {

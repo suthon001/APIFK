@@ -11,5 +11,12 @@ tableextension 60053 "FK Purchase Header" extends "Purchase Header"
             DataClassification = CustomerContent;
             Editable = false;
         }
+        field(60051; "Vendor No. Intranet"; Code[20])
+        {
+            Caption = 'Vendor No. Intranet';
+            DataClassification = CustomerContent;
+            Editable = false;
+        }
     }
+
 }

@@ -146,6 +146,11 @@ page 60056 "FK Good ReceiptNote Card"
                     ApplicationArea = all;
                     ToolTip = 'Specifies value of the field.';
                 }
+                field("Vendor No. Intranet"; Rec."Vendor No. Intranet")
+                {
+                    ToolTip = 'Specifies value of the field.';
+                    ApplicationArea = all;
+                }
                 field("Ref. GR No. Intranet"; Rec."Ref. GR No. Intranet")
                 {
                     ToolTip = 'Specifies value of the field.';

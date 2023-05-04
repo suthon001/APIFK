@@ -3,6 +3,12 @@
 /// </summary>
 codeunit 60050 "FK Func"
 {
+    [EventSubscriber(ObjectType::Table, Database::"Purchase Header", 'OnAfterCopyBuyFromVendorFieldsFromVendor', '', false, false)]
+    local procedure OnAfterCopyBuyFromVendorFieldsFromVendor(Vendor: Record Vendor; var PurchaseHeader: Record "Purchase Header")
+    begin
+        PurchaseHeader."Vendor No. Intranet" := Vendor."Vendor No. Intranet";
+    end;
+
     [EventSubscriber(ObjectType::Table, Database::"Purch. Rcpt. Line", 'OnBeforeInsertInvLineFromRcptLine', '', false, false)]
     local procedure OnBeforeInsertInvLineFromRcptLine(var PurchLine: Record "Purchase Line"; var PurchRcptLine: Record "Purch. Rcpt. Line")
     begin

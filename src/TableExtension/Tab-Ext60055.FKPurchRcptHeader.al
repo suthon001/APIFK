@@ -11,5 +11,11 @@ tableextension 60055 "FK Purch. Rcpt. Header" extends "Purch. Rcpt. Header"
             DataClassification = CustomerContent;
             Editable = false;
         }
+        field(60051; "Vendor No. Intranet"; Code[20])
+        {
+            Caption = 'Vendor No. Intranet';
+            DataClassification = CustomerContent;
+            Editable = false;
+        }
     }
 }
