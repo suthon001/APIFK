@@ -915,6 +915,9 @@ codeunit 60050 "FK Func"
             until APIMappingLine.Next() = 0;
         ltRecordRef.Insert(true);
         APIMappingLine.SetRange("Is Primary", false);
+        if APIMappingHeader."Table ID" = Database::Customer then begin
+            APIMappingLine.SetFilter("Field No.", '<>%1', 12);
+        end;
         if APIMappingLine.FindSet() then begin
             repeat
                 ltFieldRef := ltRecordRef.FIELD(APIMappingLine."Field No.");
@@ -933,6 +936,9 @@ codeunit 60050 "FK Func"
             until APIMappingLine.Next() = 0;
             ltRecordRef.Modify(true);
         end;
+        if APIMappingHeader."Table ID" = Database::Customer then
+            CreateShiptoCode(ltDocNo, pJsonObject, SelectJsonTokenText(pJsonObject, '$.shiptocode'));
+
 
         IF APIMappingHeader."Sub Table ID" <> 0 then
             InsertTotableLine(pJsonObject, APIMappingHeader."Sub Table ID", APIMappingHeader."Page Name", APIMappingHeader."Sub Page No.", ltIndexof, ltDocNo)
@@ -950,6 +956,60 @@ codeunit 60050 "FK Func"
         ltRecordRef.Close();
     end;
 
+    local procedure CreateShiptoCode(pCustomerCode: code[30]; pJsonObject: JsonObject; pShiptoCode: code[20])
+    var
+        Customer: Record Customer;
+        ltJsonObjectDetail: JsonObject;
+        APIMappingLine: Record "API Setup Line";
+        ltJsonToken: JsonToken;
+        ltJsonArray: JsonArray;
+        ltJsonTokenDetail, ltJsonTokenReserve : JsonToken;
+        ltFieldRef: FieldRef;
+        ltRecordRef: RecordRef;
+        ltField: Record Field;
+        ltLineNo: Integer;
+        ltDate: Date;
+        ltCheckLine: JsonToken;
+
+    begin
+        if pJsonObject.SelectToken('$.shiptodetail', ltJsonToken) then begin
+            ltJsonArray := ltJsonToken.AsArray();
+            foreach ltJsonTokenDetail in ltJsonArray do begin
+                ltJsonObjectDetail := ltJsonTokenDetail.AsObject();
+                if SelectJsonTokenText(ltJsonObjectDetail, '$.code') <> '' then begin
+                    ltRecordRef.Open(Database::"Ship-to Address");
+                    ltRecordRef.Init();
+                    ltFieldRef := ltRecordRef.FieldIndex(1);
+                    ltFieldRef.validate(pCustomerCode);
+                    ltFieldRef := ltRecordRef.FieldIndex(2);
+                    ltFieldRef.validate(SelectJsonTokenText(ltJsonObjectDetail, '$.code'));
+                    ltRecordRef.Insert(true);
+                    ltFieldRef := ltRecordRef.Field(3);
+                    ltFieldRef.validate(SelectJsonTokenText(ltJsonObjectDetail, '$.name'));
+                    ltFieldRef := ltRecordRef.Field(5);
+                    ltFieldRef.validate(SelectJsonTokenText(ltJsonObjectDetail, '$.address'));
+                    ltFieldRef := ltRecordRef.Field(6);
+                    ltFieldRef.validate(SelectJsonTokenText(ltJsonObjectDetail, '$.address2'));
+                    ltFieldRef := ltRecordRef.Field(7);
+                    ltFieldRef.validate(SelectJsonTokenText(ltJsonObjectDetail, '$.city'));
+                    ltFieldRef := ltRecordRef.Field(8);
+                    ltFieldRef.validate(SelectJsonTokenText(ltJsonObjectDetail, '$.contact'));
+                    ltFieldRef := ltRecordRef.Field(83);
+                    ltFieldRef.validate(SelectJsonTokenText(ltJsonObjectDetail, '$.locationcode'));
+                    ltFieldRef := ltRecordRef.Field(91);
+                    ltFieldRef.validate(SelectJsonTokenText(ltJsonObjectDetail, '$.postcode'));
+                    ltRecordRef.Modify();
+                    ltRecordRef.Close();
+                end;
+            end;
+        end;
+        if pShiptoCode <> '' then begin
+            if Customer.GET(pCustomerCode) then begin
+                Customer."Ship-to Code" := pShiptoCode;
+                Customer.Modify();
+            end;
+        end;
+    end;
 
     local procedure InsertTotableLine(pJsonObject: JsonObject; subtableID: Integer; pPageID: Enum "FK Api Page Type"; pSubPageID: Integer; pDocumentType: Integer; pDocumentNo: code[30])
     var
@@ -1545,35 +1605,18 @@ codeunit 60050 "FK Func"
                     until APIMappingLine.Next() = 0;
                     ltJsonArray.Add(ltJsonObject);
                 end;
-                if pTableID = 83 then begin
-                    ltFieldRef := ltRecordRef.FieldIndex(1);
-                    TemplateName := format(ltFieldRef.Value);
-                    ltFieldRef := ltRecordRef.FieldIndex(2);
-                    BatchName := format(ltFieldRef.Value);
-                    ltFieldRef := ltRecordRef.FieldIndex(3);
-                    Evaluate(ltLineNo, format(ltFieldRef.Value));
+                if pTableID = Database::Customer then begin
                     CLEAR(ltJsonArrayReserve);
-                    ReservationEntry.reset();
-                    ReservationEntry.SetRange("Source ID", TemplateName);
-                    ReservationEntry.SetRange("Source Batch Name", BatchName);
-                    ReservationEntry.SetRange("Source Ref. No.", ltLineNo);
-                    if ReservationEntry.FindSet() then begin
-                        repeat
-                            CheckFirstLineInt := CheckFirstLineInt + 1;
-                            CLEAR(ltJsonObjectReserve);
-                            if CheckFirstLineInt = 1 then begin
-                                ltJsonObjectReserve.Add('quantity', ReservationEntry.Quantity);
-                                ltJsonObjectReserve.Add('$lotno', ReservationEntry."Lot No.");
-                                ltJsonObjectReserve.Add('$serialno', ReservationEntry."Serial No.");
-                            end else begin
-                                ltJsonObjectReserve.Add('$quantity', ReservationEntry.Quantity);
-                                ltJsonObjectReserve.Add('$lotno', ReservationEntry."Lot No.");
-                                ltJsonObjectReserve.Add('$serialno', ReservationEntry."Serial No.");
-                            end;
-                            ltJsonArrayReserve.Add(ltJsonObjectReserve);
-                        until ReservationEntry.Next() = 0;
-                        ltJsonObject.Add('?reservelines', ltJsonArrayReserve);
-                    end;
+                    ltJsonObjectReserve.Add('code', 'TEST Code');
+                    ltJsonObjectReserve.Add('$name', 'TEST name');
+                    ltJsonObjectReserve.Add('$address', 'Address');
+                    ltJsonObjectReserve.Add('$address2', 'Address 2');
+                    ltJsonObjectReserve.Add('$city', 'City');
+                    ltJsonObjectReserve.Add('$postcode', 'Post Code');
+                    ltJsonObjectReserve.Add('$contact', 'contact');
+                    ltJsonObjectReserve.Add('$locationcode', 'Location Code');
+                    ltJsonArrayReserve.Add(ltJsonObjectReserve);
+                    ltJsonObject.Add('?shiptodetail', ltJsonArrayReserve);
                 end;
 
             until ltRecordRef.Next() = 0;
