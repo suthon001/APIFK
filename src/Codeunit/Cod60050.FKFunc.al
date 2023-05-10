@@ -33,13 +33,13 @@ codeunit 60050 "FK Func"
     end;
 
 
-    procedure ImportItemJournalPositive()
+    procedure ImportItemJournalPositive(pIsManual: Boolean)
     var
         ltItemJournalTemp: Record "Item Journal Line" temporary;
         ltItemJournal: Record "Item Journal Line";
         ltFileName: Text;
     begin
-        if InsertToITemJournal(0, ltItemJournalTemp, ltFileName) then begin
+        if InsertToITemJournal(0, ltItemJournalTemp, ltFileName, pIsManual) then begin
             if ltItemJournalTemp.FindSet() then
                 repeat
                     ltItemJournal.Init();
@@ -53,13 +53,13 @@ codeunit 60050 "FK Func"
     end;
 
 
-    procedure ImportItemJournalNegative()
+    procedure ImportItemJournalNegative(pIsManual: Boolean)
     var
         ltItemJournalTemp: Record "Item Journal Line" temporary;
         ltItemJournal: Record "Item Journal Line";
         ltFileName: Text;
     begin
-        if InsertToITemJournal(1, ltItemJournalTemp, ltFileName) then begin
+        if InsertToITemJournal(1, ltItemJournalTemp, ltFileName, pIsManual) then begin
             if ltItemJournalTemp.FindSet() then
                 repeat
                     ltItemJournal.Init();
@@ -73,13 +73,13 @@ codeunit 60050 "FK Func"
 
     end;
 
-    procedure ImportItemJournalReclass()
+    procedure ImportItemJournalReclass(pIsManual: Boolean)
     var
         ltItemJournalTemp: Record "Item Journal Line" temporary;
         ltItemJournal: Record "Item Journal Line";
         ltFileName: Text;
     begin
-        if InsertToItemJournalReclass(ltItemJournalTemp, ltFileName) then begin
+        if InsertToItemJournalReclass(ltItemJournalTemp, ltFileName, pIsManual) then begin
             if ltItemJournalTemp.FindSet() then
                 repeat
                     ltItemJournal.Init();
@@ -93,7 +93,7 @@ codeunit 60050 "FK Func"
 
     end;
 
-    procedure ImportUpdateGRN()
+    procedure ImportUpdateGRN(pIsManual: Boolean)
     var
         ltPurchaseHeaderTemp: Record "Purchase Header" temporary;
         ltPurchaseLineTemp: Record "Purchase Line" temporary;
@@ -101,7 +101,7 @@ codeunit 60050 "FK Func"
         ltPurchaseLine: Record "Purchase Line";
         ltFileName: Text;
     begin
-        if updateOrder(0, ltPurchaseHeaderTemp, ltPurchaseLineTemp, ltFileName) then begin
+        if updateOrder(0, ltPurchaseHeaderTemp, ltPurchaseLineTemp, ltFileName, pIsManual) then begin
             if ltPurchaseHeaderTemp.FindSet() then
                 repeat
                     ltPurchaseHeader.GET(ltPurchaseHeaderTemp."Document Type", ltPurchaseHeaderTemp."No.");
@@ -135,7 +135,7 @@ codeunit 60050 "FK Func"
             InsertLogTransaction(Database::"Purchase Header", 'PURCHASE GRN', CurrentDateTime(), 1, GetLastErrorText(), ltFileName, 1);
     end;
 
-    procedure ImportUpdateReturnShip()
+    procedure ImportUpdateReturnShip(pIsManual: Boolean)
     var
         ltPurchaseHeaderTemp: Record "Purchase Header" temporary;
         ltPurchaseLineTemp: Record "Purchase Line" temporary;
@@ -143,7 +143,7 @@ codeunit 60050 "FK Func"
         ltPurchaseLine: Record "Purchase Line";
         ltFileName: Text;
     begin
-        if updateOrder(1, ltPurchaseHeaderTemp, ltPurchaseLineTemp, ltFileName) then begin
+        if updateOrder(1, ltPurchaseHeaderTemp, ltPurchaseLineTemp, ltFileName, pIsManual) then begin
             if ltPurchaseHeaderTemp.FindSet() then
                 repeat
                     ltPurchaseHeader.GET(ltPurchaseHeaderTemp."Document Type", ltPurchaseHeaderTemp."No.");
@@ -210,12 +210,13 @@ codeunit 60050 "FK Func"
     end;
 
     [TryFunction]
-    local procedure updateOrder(ImportType: Option GRN,Return; var pPurchaseHeader: Record "Purchase Header" temporary; var pPurchaseLine: Record "Purchase Line" temporary; var pFileName: Text[100])
+    local procedure updateOrder(ImportType: Option GRN,Return; var pPurchaseHeader: Record "Purchase Header" temporary; var pPurchaseLine: Record "Purchase Line" temporary; var pFileName: Text[100]; pIsManual: Boolean)
     var
         CSVBuffer, TempCSVBuffer : Record "CSV Buffer" temporary;
         ltPurchaseHeader: Record "Purchase Header" temporary;
         ltPurchaseLine: Record "Purchase Line" temporary;
         ltPurchaseHeaderUpdate: Record "Purchase Header";
+        InterfaceSetup: Record "FK Interface Setup";
         ltItem: Record Item;
         ltLocation: Record location;
         ltUnitOfMeasure: Record "Unit of Measure";
@@ -229,6 +230,17 @@ codeunit 60050 "FK Func"
         ltCheckAlready: Boolean;
         ltPurchaseDocType: Enum "Purchase Document Type";
     begin
+        if not pIsManual then begin
+            if ImportType = ImportType::GRN then begin
+                InterfaceSetup.TestField("Purchase GRN Path");
+                InterfaceSetup.TestField("Purch. GRN Succ. Path");
+                InterfaceSetup.TestField("Purch. GRN Error Path");
+            end else begin
+                InterfaceSetup.TestField("Return to ship Path");
+                InterfaceSetup.TestField("Return to ship Succ. Path");
+                InterfaceSetup.TestField("Return to ship Err Path");
+            end;
+        end;
         if UploadIntoStream('File Name', '', '', CSVFileName, CSVInStrem) then begin
             pFileName := CSVFileName;
             CSVBuffer.reset();
@@ -336,7 +348,7 @@ codeunit 60050 "FK Func"
         end;
     end;
 
-    procedure ImportPO()
+    procedure ImportPO(pIsManual: Boolean)
     var
         ltPurchaseHeaderTemp: Record "Purchase Header" temporary;
         ltPurchaseLineTemp: Record "Purchase Line" temporary;
@@ -344,7 +356,7 @@ codeunit 60050 "FK Func"
         ltPurchaseLine: Record "Purchase Line";
         ltFileName: Text;
     begin
-        if InsertToPurchase(0, ltPurchaseHeaderTemp, ltPurchaseLineTemp, ltFileName) then begin
+        if InsertToPurchase(0, ltPurchaseHeaderTemp, ltPurchaseLineTemp, ltFileName, pIsManual) then begin
             if ltPurchaseHeaderTemp.FindSet() then
                 repeat
                     ltPurchaseHeader.Init();
@@ -380,7 +392,7 @@ codeunit 60050 "FK Func"
             InsertLogTransaction(Database::"Purchase Header", 'PURCHASE ORDER', CurrentDateTime(), 1, GetLastErrorText(), ltFileName, 0);
     end;
 
-    procedure ImportReturnOrder()
+    procedure ImportReturnOrder(pIsManual: Boolean)
     var
         ltPurchaseHeaderTemp: Record "Purchase Header" temporary;
         ltPurchaseLineTemp: Record "Purchase Line" temporary;
@@ -388,7 +400,7 @@ codeunit 60050 "FK Func"
         ltPurchaseLine: Record "Purchase Line";
         ltFileName: Text;
     begin
-        if InsertToPurchase(1, ltPurchaseHeaderTemp, ltPurchaseLineTemp, ltFileName) then begin
+        if InsertToPurchase(1, ltPurchaseHeaderTemp, ltPurchaseLineTemp, ltFileName, pIsManual) then begin
             if ltPurchaseHeaderTemp.FindSet() then
                 repeat
                     ltPurchaseHeader.Init();
@@ -426,8 +438,9 @@ codeunit 60050 "FK Func"
 
 
     [TryFunction]
-    local procedure InsertToPurchase(ImportType: Option PO,Return; var pPurchaseHeader: Record "Purchase Header" temporary; var pPurchaseLine: Record "Purchase Line" temporary; var pFileName: Text[100])
+    local procedure InsertToPurchase(ImportType: Option PO,Return; var pPurchaseHeader: Record "Purchase Header" temporary; var pPurchaseLine: Record "Purchase Line" temporary; var pFileName: Text[100]; pIsManual: Boolean)
     var
+        InterfaceSetup: Record "FK Interface Setup";
         CSVBuffer, TempCSVBuffer : Record "CSV Buffer" temporary;
         ltPurchaseHeader: Record "Purchase Header" temporary;
         ltPurchaseLine: Record "Purchase Line" temporary;
@@ -443,7 +456,21 @@ codeunit 60050 "FK Func"
         ltInteger: Integer;
         ltCheckAlready: Boolean;
         ltPurchaseDocType: Enum "Purchase Document Type";
+
     begin
+        InterfaceSetup.GET();
+
+        if not pIsManual then begin
+            if ImportType = ImportType::PO then begin
+                InterfaceSetup.TestField("Purchase Order Path");
+                InterfaceSetup.TestField("Purchase Order Succ. Path");
+                InterfaceSetup.TestField("Purchase Order Error Path");
+            end else begin
+                InterfaceSetup.TestField("Purchase Return Order Path");
+                InterfaceSetup.TestField("Purch. Return Order Succ. Path");
+                InterfaceSetup.TestField("Purch. Return Order Error Path");
+            end;
+        end;
         if UploadIntoStream('File Name', '', '', CSVFileName, CSVInStrem) then begin
             pFileName := CSVFileName;
             CSVBuffer.reset();
@@ -605,7 +632,7 @@ codeunit 60050 "FK Func"
         end;
     end;
 
-    procedure ImportToSalesCreditMemo()
+    procedure ImportToSalesCreditMemo(pIsManual: Boolean)
     var
         ltSalesHeaderTemp: Record "Sales Header" temporary;
         ltSalesLineTemp: Record "Sales Line" temporary;
@@ -613,7 +640,7 @@ codeunit 60050 "FK Func"
         ltSalesLine: Record "Sales Line";
         ltFileName: Text;
     begin
-        if InsertToSales(1, ltSalesHeaderTemp, ltSalesLineTemp, ltFileName) then begin
+        if InsertToSales(1, ltSalesHeaderTemp, ltSalesLineTemp, ltFileName, pIsManual) then begin
             if ltSalesHeaderTemp.FindSet() then
                 repeat
                     ltSalesHEader.Init();
@@ -651,7 +678,7 @@ codeunit 60050 "FK Func"
             InsertLogTransaction(Database::"Sales Header", 'SALES CREDIT', CurrentDateTime(), 1, GetLastErrorText(), ltFileName, 0);
     end;
 
-    procedure ImportToSalesInvoice()
+    procedure ImportToSalesInvoice(pIsManual: Boolean)
     var
         ltSalesHeaderTemp: Record "Sales Header" temporary;
         ltSalesLineTemp: Record "Sales Line" temporary;
@@ -659,7 +686,7 @@ codeunit 60050 "FK Func"
         ltSalesLine: Record "Sales Line";
         ltFileName: Text;
     begin
-        if InsertToSales(0, ltSalesHeaderTemp, ltSalesLineTemp, ltFileName) then begin
+        if InsertToSales(0, ltSalesHeaderTemp, ltSalesLineTemp, ltFileName, pIsManual) then begin
             if ltSalesHeaderTemp.FindSet() then
                 repeat
                     ltSalesHEader.Init();
@@ -699,13 +726,14 @@ codeunit 60050 "FK Func"
 
 
     [TryFunction]
-    local procedure InsertToSales(ImportType: Option Invoice,Credit; var pSalesHeader: Record "Sales Header" temporary; var pSalesLine: Record "Sales Line" temporary; var pFileName: Text[100])
+    local procedure InsertToSales(ImportType: Option Invoice,Credit; var pSalesHeader: Record "Sales Header" temporary; var pSalesLine: Record "Sales Line" temporary; var pFileName: Text[100]; pIsManual: Boolean)
     var
         CSVBuffer, TempCSVBuffer : Record "CSV Buffer" temporary;
         ltSalesHeaderTemp: Record "Sales Header" temporary;
         ltSalesLineTemp: Record "Sales Line" temporary;
         ltItem: Record Item;
         ltLocation: Record location;
+        InterfaceSetup: Record "FK Interface Setup";
         ltUnitOfMeasure: Record "Unit of Measure";
         ltVatprod: record "VAT Product Posting Group";
         UploadResult, CSVFileName : text;
@@ -717,6 +745,17 @@ codeunit 60050 "FK Func"
         ltCheckAlready: Boolean;
         ltSalesDocType: Enum "Sales Document Type";
     begin
+        if not pIsManual then begin
+            if ImportType = ImportType::Invoice then begin
+                InterfaceSetup.TestField("Sales Invoice Path");
+                InterfaceSetup.TestField("Sales Invoice Succ. Path");
+                InterfaceSetup.TestField("Sales Invoice Err Path");
+            end else begin
+                InterfaceSetup.TestField("Sales Credit Path");
+                InterfaceSetup.TestField("Sales Credit Succ. Path");
+                InterfaceSetup.TestField("Sales Credit Err Path");
+            end;
+        end;
         if UploadIntoStream('File Name', '', '', CSVFileName, CSVInStrem) then begin
             pFileName := CSVFileName;
             CSVBuffer.reset();
@@ -905,13 +944,13 @@ codeunit 60050 "FK Func"
         end;
     end;
 
-    procedure ImportToCashReceipt()
+    procedure ImportToCashReceipt(pIsManual: Boolean)
     var
         ltGenJournalTemp: Record "Gen. Journal Line" temporary;
         ltGenJournalLine: Record "Gen. Journal Line";
         ltFileName: Text;
     begin
-        if InsertToICashReceipt(ltGenJournalTemp, ltFileName) then begin
+        if InsertToICashReceipt(ltGenJournalTemp, ltFileName, pIsManual) then begin
             if ltGenJournalTemp.FindSet() then
                 repeat
                     ltGenJournalLine.Init();
@@ -924,7 +963,7 @@ codeunit 60050 "FK Func"
     end;
 
     [TryFunction]
-    local procedure InsertToICashReceipt(var pGenJournalLine: Record "Gen. Journal Line" temporary; var pFileName: Text[100])
+    local procedure InsertToICashReceipt(var pGenJournalLine: Record "Gen. Journal Line" temporary; var pFileName: Text[100]; pIsManual: Boolean)
     var
         GenJournalLIne: Record "Gen. Journal Line" temporary;
         CSVBuffer, TempCSVBuffer : Record "CSV Buffer" temporary;
@@ -944,8 +983,11 @@ codeunit 60050 "FK Func"
         InterfaceSetup.TestField("Cash Receipt Batch Name");
         ltTemplateName := InterfaceSetup."Cash Receipt Temp. Name";
         ltBatchName := InterfaceSetup."Cash Receipt Batch Name";
-
-
+        if not pIsManual then begin
+            InterfaceSetup.TestField("Cash Receipt Path");
+            InterfaceSetup.TestField("Cash Receipt Success Path");
+            InterfaceSetup.TestField("Cash Receipt Error Path");
+        end;
         GenJournalTemplate.GET(ltTemplateName);
         ltLineNo := GetLastLineItemJournal(ltTemplateName, ltBatchName);
         if UploadIntoStream('File Name', '', '', CSVFileName, CSVInStrem) then begin
@@ -1034,7 +1076,7 @@ codeunit 60050 "FK Func"
     end;
 
     [TryFunction]
-    local procedure InsertToItemJournal(ImportType: Option Positive,Negative; var pItemJournalTemp: Record "Item Journal Line" temporary; var pFileName: Text[100])
+    local procedure InsertToItemJournal(ImportType: Option Positive,Negative; var pItemJournalTemp: Record "Item Journal Line" temporary; var pFileName: Text[100]; pIsManual: Boolean)
     var
         ItemJournal: Record "Item Journal Line" temporary;
         CSVBuffer, TempCSVBuffer : Record "CSV Buffer" temporary;
@@ -1054,14 +1096,25 @@ codeunit 60050 "FK Func"
             InterfaceSetup.TestField("Item Journal Batch Name (Pos.)");
             ltTemplateName := InterfaceSetup."Item Journal Temp. Name (pos.)";
             ltBatchName := InterfaceSetup."Item Journal Batch Name (Pos.)";
+            if not pIsManual then begin
+                InterfaceSetup.TestField("Item Journal Positive Path");
+                InterfaceSetup.TestField("Item Journal Pos. Success Path");
+                InterfaceSetup.TestField("Item Journal Pos. Error Path");
+            end;
         end;
         if ImportType = ImportType::Negative then begin
             InterfaceSetup.TestField("Item Journal Temp. Name (Neg.)");
             InterfaceSetup.TestField("Item Journal Batch Name (Neg.)");
             ltTemplateName := InterfaceSetup."Item Journal Temp. Name (Neg.)";
             ltBatchName := InterfaceSetup."Item Journal Batch Name (Neg.)";
+            if not pIsManual then begin
+                InterfaceSetup.TestField("Item Journal Nagative Path");
+                InterfaceSetup.TestField("Item Journal Neg. Success Path");
+                InterfaceSetup.TestField("Item Journal Neg. Error Path");
+            end;
 
         end;
+
         ITemJournalTemplate.GET(ltTemplateName);
         ltLineNo := GetLastLineItemJournal(ltTemplateName, ltBatchName);
         if UploadIntoStream('File Name', '', '', CSVFileName, CSVInStrem) then begin
@@ -1131,7 +1184,7 @@ codeunit 60050 "FK Func"
     end;
 
     [TryFunction]
-    local procedure InsertToItemJournalReclass(var pItemJournalTemp: Record "Item Journal Line" temporary; var pFileName: Text[100])
+    local procedure InsertToItemJournalReclass(var pItemJournalTemp: Record "Item Journal Line" temporary; var pFileName: Text[100]; pIsManual: Boolean)
     var
         ItemJournal: Record "Item Journal Line" temporary;
         CSVBuffer, TempCSVBuffer : Record "CSV Buffer" temporary;
@@ -1150,6 +1203,11 @@ codeunit 60050 "FK Func"
 
         InterfaceSetup.TestField("Item Journal Temp. Name (Rec.)");
         InterfaceSetup.TestField("Item Journal Batch Name (Rec.)");
+        if not pIsManual then begin
+            InterfaceSetup.TestField("Item Journal Reclass Path");
+            InterfaceSetup.TestField("Item Journal Rec. Success Path");
+            InterfaceSetup.TestField("Item Journal Rec. Error Path");
+        end;
         ltTemplateName := InterfaceSetup."Item Journal Temp. Name (Rec.)";
         ltBatchName := InterfaceSetup."Item Journal Batch Name (Rec.)";
         ITemJournalTemplate.GET(ltTemplateName);

@@ -302,7 +302,7 @@ page 60058 "FK Inteface Setup Entry"
                 var
                     FKFunc: Codeunit "FK Func";
                 begin
-                    FKFunc.ImportItemJournalPositive();
+                    FKFunc.ImportItemJournalPositive(true);
                 end;
 
             }
@@ -320,7 +320,7 @@ page 60058 "FK Inteface Setup Entry"
                 var
                     FKFunc: Codeunit "FK Func";
                 begin
-                    FKFunc.ImportItemJournalNegative();
+                    FKFunc.ImportItemJournalNegative(true);
                 end;
 
             }
@@ -338,7 +338,7 @@ page 60058 "FK Inteface Setup Entry"
                 var
                     FKFunc: Codeunit "FK Func";
                 begin
-                    FKFunc.ImportItemJournalReclass();
+                    FKFunc.ImportItemJournalReclass(true);
                 end;
 
             }
@@ -356,7 +356,7 @@ page 60058 "FK Inteface Setup Entry"
                 var
                     FKFunc: Codeunit "FK Func";
                 begin
-                    FKFunc.ImportPO();
+                    FKFunc.ImportPO(true);
                 end;
 
             }
@@ -374,7 +374,7 @@ page 60058 "FK Inteface Setup Entry"
                 var
                     FKFunc: Codeunit "FK Func";
                 begin
-                    FKFunc.ImportReturnOrder();
+                    FKFunc.ImportReturnOrder(true);
                 end;
 
             }
@@ -392,7 +392,7 @@ page 60058 "FK Inteface Setup Entry"
                 var
                     FKFunc: Codeunit "FK Func";
                 begin
-                    FKFunc.ImportUpdateGRN();
+                    FKFunc.ImportUpdateGRN(true);
                 end;
 
             }
@@ -410,7 +410,7 @@ page 60058 "FK Inteface Setup Entry"
                 var
                     FKFunc: Codeunit "FK Func";
                 begin
-                    FKFunc.ImportUpdateReturnShip();
+                    FKFunc.ImportUpdateReturnShip(true);
                 end;
 
             }
@@ -429,7 +429,7 @@ page 60058 "FK Inteface Setup Entry"
                 var
                     FKFunc: Codeunit "FK Func";
                 begin
-                    FKFunc.ImportToSalesInvoice();
+                    FKFunc.ImportToSalesInvoice(true);
                 end;
 
             }
@@ -447,7 +447,7 @@ page 60058 "FK Inteface Setup Entry"
                 var
                     FKFunc: Codeunit "FK Func";
                 begin
-                    FKFunc.ImportToSalesCreditMemo();
+                    FKFunc.ImportToSalesCreditMemo(true);
                 end;
 
             }
@@ -465,7 +465,7 @@ page 60058 "FK Inteface Setup Entry"
                 var
                     FKFunc: Codeunit "FK Func";
                 begin
-                    FKFunc.ImportToCashReceipt();
+                    FKFunc.ImportToCashReceipt(true);
                 end;
 
             }
