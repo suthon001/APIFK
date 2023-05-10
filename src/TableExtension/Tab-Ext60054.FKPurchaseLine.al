@@ -12,5 +12,15 @@ tableextension 60054 "FK Purchase Line" extends "Purchase Line"
             DataClassification = CustomerContent;
             Editable = false;
         }
+        field(60051; "Temp. Lot No."; Code[50])
+        {
+            Caption = 'Temp. Lot No.';
+            DataClassification = ToBeClassified;
+        }
+        field(60052; "Temp. Expire Date"; date)
+        {
+            Caption = 'Temp. Expire Date';
+            DataClassification = ToBeClassified;
+        }
     }
 }

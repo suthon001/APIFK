@@ -28,8 +28,8 @@ table 60050 "API Setup Header"
                             begin
                                 rec."Page No." := page::"Customer Card";
                                 rec."Table ID" := Database::Customer;
-                                rec."Sub Page No." := 0;
-                                rec."Sub Table ID" := 0;
+                                rec."Sub Page No." := Page::"Ship-to Address";
+                                rec."Sub Table ID" := Database::"Ship-to Address";
                                 rec."Serivce Name" := 'customerlists';
                             end;
                         "Page Name"::Vendor:

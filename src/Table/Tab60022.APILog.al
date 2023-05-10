@@ -63,7 +63,7 @@ table 60052 "FK API Log"
             Editable = false;
 
         }
-        field(10; "Document No."; Code[30])
+        field(10; "Document No."; Code[100])
         {
             Caption = 'Document No.';
             DataClassification = CustomerContent;

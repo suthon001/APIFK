@@ -7,6 +7,7 @@ page 60053 "FK API Log Entry"
     Caption = 'API Log Entry';
     PageType = List;
     SourceTable = "FK API Log";
+    SourceTableView = sorting("Entry No.") order(descending);
     UsageCategory = History;
     InsertAllowed = false;
     ModifyAllowed = false;

@@ -3,6 +3,1289 @@
 /// </summary>
 codeunit 60050 "FK Func"
 {
+
+
+    local procedure SelectoptionGenLine(pValue: Text): Enum "Gen. Journal Account Type"
+    var
+
+        GenLineType: Enum "Gen. Journal Account Type";
+    begin
+        GenLineType := Enum::"Gen. Journal Account Type".FromInteger(GenLineType.Ordinals.Get(GenLineType.Names.IndexOf(pValue)));
+        exit(GenLineType);
+    end;
+
+    local procedure SelectoptionSales(pValue: Text): Enum "Sales Line Type"
+    var
+
+        SalesLineType: Enum "Sales Line Type";
+    begin
+        SalesLineType := Enum::"Sales Line Type".FromInteger(SalesLineType.Ordinals.Get(SalesLineType.Names.IndexOf(pValue)));
+        exit(SalesLineType);
+    end;
+
+    local procedure SelectoptionPurchase(pValue: Text): Enum "Purchase Line Type"
+    var
+
+        PurchaseLineType: Enum "Purchase Line Type";
+    begin
+        PurchaseLineType := Enum::"Purchase Line Type".FromInteger(PurchaseLineType.Ordinals.Get(PurchaseLineType.Names.IndexOf(pValue)));
+        exit(PurchaseLineType);
+    end;
+
+
+    procedure ImportItemJournalPositive()
+    var
+        ltItemJournalTemp: Record "Item Journal Line" temporary;
+        ltItemJournal: Record "Item Journal Line";
+        ltFileName: Text;
+    begin
+        if InsertToITemJournal(0, ltItemJournalTemp, ltFileName) then begin
+            if ltItemJournalTemp.FindSet() then
+                repeat
+                    ltItemJournal.Init();
+                    ltItemJournal.TransferFields(ltItemJournalTemp);
+                    ltItemJournal.Insert();
+                    InsertLot(ltItemJournal, ltItemJournal."Temp. Lot No.", ltItemJournal."Temp. Expire Date");
+                until ltItemJournalTemp.Next() = 0;
+            InsertLogTransaction(Database::"Item Journal Line", 'POSITIVE', CurrentDateTime(), 0, '', ltFileName, 0);
+        end else
+            InsertLogTransaction(Database::"Item Journal Line", 'POSITIVE', CurrentDateTime(), 1, GetLastErrorText(), ltFileName, 0);
+    end;
+
+
+    procedure ImportItemJournalNegative()
+    var
+        ltItemJournalTemp: Record "Item Journal Line" temporary;
+        ltItemJournal: Record "Item Journal Line";
+        ltFileName: Text;
+    begin
+        if InsertToITemJournal(1, ltItemJournalTemp, ltFileName) then begin
+            if ltItemJournalTemp.FindSet() then
+                repeat
+                    ltItemJournal.Init();
+                    ltItemJournal.TransferFields(ltItemJournalTemp);
+                    ltItemJournal.Insert();
+                    InsertLot(ltItemJournal, ltItemJournal."Temp. Lot No.", ltItemJournal."Temp. Expire Date");
+                until ltItemJournalTemp.Next() = 0;
+            InsertLogTransaction(Database::"Item Journal Line", 'NEGATIVE', CurrentDateTime(), 0, '', ltFileName, 0);
+        end else
+            InsertLogTransaction(Database::"Item Journal Line", 'NEGATIVE', CurrentDateTime(), 1, GetLastErrorText(), ltFileName, 0);
+
+    end;
+
+    procedure ImportItemJournalReclass()
+    var
+        ltItemJournalTemp: Record "Item Journal Line" temporary;
+        ltItemJournal: Record "Item Journal Line";
+        ltFileName: Text;
+    begin
+        if InsertToItemJournalReclass(ltItemJournalTemp, ltFileName) then begin
+            if ltItemJournalTemp.FindSet() then
+                repeat
+                    ltItemJournal.Init();
+                    ltItemJournal.TransferFields(ltItemJournalTemp);
+                    ltItemJournal.Insert();
+                    InsertLot(ltItemJournal, ltItemJournal."Temp. Lot No.", ltItemJournal."Temp. Expire Date");
+                until ltItemJournalTemp.Next() = 0;
+            InsertLogTransaction(Database::"Item Journal Line", 'RECLASS', CurrentDateTime(), 0, '', ltFileName, 0);
+        end else
+            InsertLogTransaction(Database::"Item Journal Line", 'RECLASS', CurrentDateTime(), 1, GetLastErrorText(), ltFileName, 0);
+
+    end;
+
+    procedure ImportUpdateGRN()
+    var
+        ltPurchaseHeaderTemp: Record "Purchase Header" temporary;
+        ltPurchaseLineTemp: Record "Purchase Line" temporary;
+        ltPurchaseHeader: Record "Purchase Header";
+        ltPurchaseLine: Record "Purchase Line";
+        ltFileName: Text;
+    begin
+        if updateOrder(0, ltPurchaseHeaderTemp, ltPurchaseLineTemp, ltFileName) then begin
+            if ltPurchaseHeaderTemp.FindSet() then
+                repeat
+                    ltPurchaseHeader.GET(ltPurchaseHeaderTemp."Document Type", ltPurchaseHeaderTemp."No.");
+                    ltPurchaseHeader.Validate("Posting Date", ltPurchaseHeaderTemp."Posting Date");
+                    ltPurchaseHeader."Vendor Invoice No." := ltPurchaseHeaderTemp."Vendor Invoice No.";
+                    ltPurchaseHeader."Ref. GR No. Intranet" := ltPurchaseHeaderTemp."Ref. GR No. Intranet";
+                    ltPurchaseHeader.Modify();
+
+
+                    ltPurchaseLineTemp.reset();
+                    ltPurchaseLineTemp.SetRange("Document Type", ltPurchaseHeaderTemp."Document Type");
+                    ltPurchaseLineTemp.SetRange("Document No.", ltPurchaseHeaderTemp."No.");
+                    if ltPurchaseLineTemp.FindSet() then begin
+                        repeat
+                            ltPurchaseLine.reset();
+                            ltPurchaseLine.SetRange("Document Type", ltPurchaseLineTemp."Document Type");
+                            ltPurchaseLine.SetRange("Document No.", ltPurchaseLineTemp."Document No.");
+                            ltPurchaseLine.SetRange("No.", ltPurchaseLineTemp."No.");
+                            ltPurchaseLine.SetRange("Location Code", ltPurchaseLineTemp."Location Code");
+                            if ltPurchaseLine.FindFirst() then begin
+                                ltPurchaseLine.Validate("Qty. to Receive", ltPurchaseLineTemp.Quantity);
+                                ltPurchaseLine.Modify();
+                                InsertLotPurchase(ltPurchaseLine, ltPurchaseLine."Temp. Lot No.", ltPurchaseLine."Temp. Expire Date");
+                            end;
+                        until ltPurchaseLineTemp.Next() = 0;
+                    end;
+
+                until ltPurchaseHeaderTemp.Next() = 0;
+            InsertLogTransaction(Database::"Purchase Header", 'PURCHASE GRN', CurrentDateTime(), 0, '', ltFileName, 1);
+        end else
+            InsertLogTransaction(Database::"Purchase Header", 'PURCHASE GRN', CurrentDateTime(), 1, GetLastErrorText(), ltFileName, 1);
+    end;
+
+    procedure ImportUpdateReturnShip()
+    var
+        ltPurchaseHeaderTemp: Record "Purchase Header" temporary;
+        ltPurchaseLineTemp: Record "Purchase Line" temporary;
+        ltPurchaseHeader: Record "Purchase Header";
+        ltPurchaseLine: Record "Purchase Line";
+        ltFileName: Text;
+    begin
+        if updateOrder(1, ltPurchaseHeaderTemp, ltPurchaseLineTemp, ltFileName) then begin
+            if ltPurchaseHeaderTemp.FindSet() then
+                repeat
+                    ltPurchaseHeader.GET(ltPurchaseHeaderTemp."Document Type", ltPurchaseHeaderTemp."No.");
+                    ltPurchaseHeader.Validate("Posting Date", ltPurchaseHeaderTemp."Posting Date");
+                    ltPurchaseHeader."Vendor Cr. Memo No." := ltPurchaseHeaderTemp."Vendor Cr. Memo No.";
+                    ltPurchaseHeader."Ref. GR No. Intranet" := ltPurchaseHeaderTemp."Ref. GR No. Intranet";
+                    ltPurchaseHeader.Modify();
+
+
+                    ltPurchaseLineTemp.reset();
+                    ltPurchaseLineTemp.SetRange("Document Type", ltPurchaseHeaderTemp."Document Type");
+                    ltPurchaseLineTemp.SetRange("Document No.", ltPurchaseHeaderTemp."No.");
+                    if ltPurchaseLineTemp.FindSet() then begin
+                        repeat
+                            ltPurchaseLine.reset();
+                            ltPurchaseLine.SetRange("Document Type", ltPurchaseLineTemp."Document Type");
+                            ltPurchaseLine.SetRange("Document No.", ltPurchaseLineTemp."Document No.");
+                            ltPurchaseLine.SetRange("No.", ltPurchaseLineTemp."No.");
+                            ltPurchaseLine.SetRange("Location Code", ltPurchaseLineTemp."Location Code");
+                            if ltPurchaseLine.FindFirst() then begin
+                                ltPurchaseLine.Validate("Return Qty. to Ship", ltPurchaseLineTemp.Quantity);
+                                ltPurchaseLine.Modify();
+                                InsertLotPurchase(ltPurchaseLine, ltPurchaseLine."Temp. Lot No.", ltPurchaseLine."Temp. Expire Date");
+                            end;
+                        until ltPurchaseLineTemp.Next() = 0;
+                    end;
+
+                until ltPurchaseHeaderTemp.Next() = 0;
+            InsertLogTransaction(Database::"Purchase Header", 'RETURN SHIP', CurrentDateTime(), 0, '', ltFileName, 1);
+        end else
+            InsertLogTransaction(Database::"Purchase Header", 'RETURN SHIP', CurrentDateTime(), 1, GetLastErrorText(), ltFileName, 1);
+    end;
+
+    local procedure InsertLotPurchase(pPurchaseLine: Record "Purchase Line"; pLotNo: code[50]; pExpireDate: Date)
+    var
+        ltItem: Record Item;
+        TempReservEntry: Record "Reservation Entry" temporary;
+        CreateReservEntry: Codeunit "Create Reserv. Entry";
+        ReservStatus: Enum "Reservation Status";
+    begin
+        if ltItem.GET(pPurchaseLine."No.") then begin
+            IF ltItem."Item Tracking Code" <> '' then
+                if pLotNo <> '' then begin
+                    TempReservEntry.Init();
+                    TempReservEntry."Entry No." := GetLastReserveEntry();
+                    TempReservEntry."Lot No." := pLotNo;
+                    TempReservEntry.Quantity := pPurchaseLine.Quantity;
+                    if pExpireDate <> 0D then
+                        TempReservEntry."Expiration Date" := pExpireDate
+                    else
+                        TempReservEntry."Expiration Date" := Today();
+                    TempReservEntry.Insert();
+
+                    CreateReservEntry.SetDates(0D, TempReservEntry."Expiration Date");
+                    CreateReservEntry.CreateReservEntryFor(
+                      Database::"Purchase Line", pPurchaseLine."Document Type".AsInteger(),
+                      pPurchaseLine."Document No.", '', 0, pPurchaseLine."Line No.", pPurchaseLine."Qty. per Unit of Measure",
+                      TempReservEntry.Quantity, TempReservEntry.Quantity * pPurchaseLine."Qty. per Unit of Measure", TempReservEntry);
+                    CreateReservEntry.CreateEntry(
+                      pPurchaseLine."No.", pPurchaseLine."Variant Code", pPurchaseLine."Location Code", '', pPurchaseLine."Expected Receipt Date", 0D, 0, ReservStatus::Surplus);
+                end;
+
+        end;
+    end;
+
+    [TryFunction]
+    local procedure updateOrder(ImportType: Option GRN,Return; var pPurchaseHeader: Record "Purchase Header" temporary; var pPurchaseLine: Record "Purchase Line" temporary; var pFileName: Text[100])
+    var
+        CSVBuffer, TempCSVBuffer : Record "CSV Buffer" temporary;
+        ltPurchaseHeader: Record "Purchase Header" temporary;
+        ltPurchaseLine: Record "Purchase Line" temporary;
+        ltPurchaseHeaderUpdate: Record "Purchase Header";
+        ltItem: Record Item;
+        ltLocation: Record location;
+        ltUnitOfMeasure: Record "Unit of Measure";
+        ltVatprod: record "VAT Product Posting Group";
+        UploadResult, CSVFileName : text;
+        CSVInStrem: InStream;
+        LastField: Integer;
+        ltDate: Date;
+        ltDicimal: Decimal;
+        ltInteger: Integer;
+        ltCheckAlready: Boolean;
+        ltPurchaseDocType: Enum "Purchase Document Type";
+    begin
+        if UploadIntoStream('File Name', '', '', CSVFileName, CSVInStrem) then begin
+            pFileName := CSVFileName;
+            CSVBuffer.reset();
+            CSVBuffer.DeleteAll();
+            CSVBuffer.LoadDataFromStream(CSVInStrem, ',');
+            CSVBuffer.SetFilter("Line No.", '>%1', 1);
+            if CSVBuffer.FindSet() then begin
+                repeat
+                    case CSVBuffer."Field No." of
+                        1:
+                            begin
+                                TempCSVBuffer.Copy(CSVBuffer, true);
+                                TempCSVBuffer.SetCurrentKey("Line No.", "Field No.");
+                                if TempCSVBuffer.FindLast() then
+                                    LastField := TempCSVBuffer."Field No.";
+
+                                if ImportType = ImportType::GRN then
+                                    ltPurchaseDocType := ltPurchaseDocType::Order
+                                else
+                                    ltPurchaseDocType := ltPurchaseDocType::"Return Order";
+                                ltPurchaseHeaderUpdate.get(ltPurchaseDocType, CSVBuffer.Value);
+                                if not ltPurchaseHeader.GET(ltPurchaseDocType, CSVBuffer.Value) then begin
+                                    ltPurchaseHeader.Init();
+                                    ltPurchaseHeader."Document Type" := ltPurchaseDocType;
+                                    ltPurchaseHeader."No." := CSVBuffer.Value;
+                                    ltPurchaseHeader.Insert(true);
+                                    ltPurchaseHeader."Buy-from Vendor No." := ltPurchaseHeaderUpdate."Buy-from Vendor No.";
+                                end else
+                                    ltCheckAlready := true;
+                            end;
+                        2:
+                            begin
+                                if not ltCheckAlready then
+                                    if Evaluate(ltDate, CSVBuffer.Value) then
+                                        ltPurchaseHeader.Validate("Posting Date", ltDate);
+                            end;
+
+                        3:
+                            begin
+                                if not ltCheckAlready then begin
+                                    if ImportType = ImportType::GRN then
+                                        ltPurchaseHeader.Validate("Vendor Invoice No.", CSVBuffer.Value)
+                                    else
+                                        ltPurchaseHeader.Validate("Vendor Cr. Memo No.", CSVBuffer.Value);
+                                end;
+                            end;
+                        4:
+                            begin
+                                if not ltCheckAlready then
+                                    ltPurchaseHeader.Validate("Ref. GR No. Intranet", CSVBuffer.Value);
+                                ltPurchaseHeader.Modify();
+                            end;
+
+
+                        5:
+                            begin
+                                ltInteger := ltInteger + 1;
+                                ltPurchaseLine.init();
+                                ltPurchaseLine."Document Type" := ltPurchaseHeader."Document Type";
+                                ltPurchaseLine."Document No." := ltPurchaseHeader."No.";
+                                ltPurchaseLine."Line No." := ltInteger;
+                                ltPurchaseLine."Buy-from Vendor No." := ltPurchaseHeader."Buy-from Vendor No.";
+                                ltPurchaseLine."Pay-to Vendor No." := ltPurchaseHeader."Pay-to Vendor No.";
+                                ltPurchaseLine.Insert();
+                                ltPurchaseLine.Type := SelectoptionPurchase(CSVBuffer.Value);
+                                ltItem.GET(CSVBuffer.Value);
+                                ltPurchaseLine."No." := CSVBuffer.Value;
+
+                            end;
+                        6:
+                            begin
+                                if CSVBuffer.Value <> '' then
+                                    ltLocation.get(CSVBuffer.Value);
+                                ltPurchaseLine."Location Code" := CSVBuffer.Value;
+
+                            end;
+                        7:
+                            begin
+                                if Evaluate(ltDicimal, CSVBuffer.Value) then
+                                    ltPurchaseLine.Quantity := ltDicimal;
+
+                            end;
+                        8:
+                            begin
+                                ltPurchaseLine."Temp. Lot No." := CSVBuffer.Value;
+
+                            end;
+                        9:
+                            begin
+                                if Evaluate(ltDate, CSVBuffer.Value) then
+                                    ltPurchaseLine."Temp. Expire Date" := ltDate;
+
+                            end;
+                    end;
+
+                    if CSVBuffer."Field No." = LastField then begin
+                        ltCheckAlready := false;
+                        ltPurchaseLine.Modify();
+                    end;
+
+                until CSVBuffer.Next() = 0;
+                pPurchaseHeader.copy(ltPurchaseHeader, true);
+                pPurchaseLine.copy(ltPurchaseLine, true);
+            end;
+        end;
+    end;
+
+    procedure ImportPO()
+    var
+        ltPurchaseHeaderTemp: Record "Purchase Header" temporary;
+        ltPurchaseLineTemp: Record "Purchase Line" temporary;
+        ltPurchaseHeader: Record "Purchase Header";
+        ltPurchaseLine: Record "Purchase Line";
+        ltFileName: Text;
+    begin
+        if InsertToPurchase(0, ltPurchaseHeaderTemp, ltPurchaseLineTemp, ltFileName) then begin
+            if ltPurchaseHeaderTemp.FindSet() then
+                repeat
+                    ltPurchaseHeader.Init();
+                    ltPurchaseHeader.TransferFields(ltPurchaseHeaderTemp);
+                    ltPurchaseHeader.Insert();
+
+                    ltPurchaseLineTemp.reset();
+                    ltPurchaseLineTemp.SetRange("Document Type", ltPurchaseHeaderTemp."Document Type");
+                    ltPurchaseLineTemp.SetRange("Document No.", ltPurchaseHeaderTemp."No.");
+                    if ltPurchaseLineTemp.FindSet() then begin
+                        repeat
+                            ltPurchaseLine.Init();
+                            ltPurchaseLine.Copy(ltPurchaseLineTemp);
+                            ltPurchaseLine.Insert();
+                            ltPurchaseLine.Validate(Quantity, ltPurchaseLineTemp.Quantity);
+                            if ltPurchaseLineTemp."Location Code" <> '' then
+                                ltPurchaseLine.Validate("Location Code", ltPurchaseLineTemp."Location Code");
+                            if ltPurchaseLineTemp."Unit of Measure Code" <> '' then
+                                ltPurchaseLine.Validate("Unit of Measure Code", ltPurchaseLineTemp."Unit of Measure Code");
+                            ltPurchaseLine.Validate("Direct Unit Cost", ltPurchaseLineTemp."Direct Unit Cost");
+                            if ltPurchaseLineTemp."Line Discount Amount" <> 0 then
+                                ltPurchaseLine.Validate("Line Discount Amount", ltPurchaseLineTemp."Line Discount Amount");
+                            if ltPurchaseLineTemp."VAT Prod. Posting Group" <> '' then
+                                ltPurchaseLine.Validate("VAT Prod. Posting Group", ltPurchaseLineTemp."VAT Prod. Posting Group");
+                            ltPurchaseLine.Modify();
+                        until ltPurchaseLineTemp.Next() = 0;
+                    end;
+                    ltPurchaseHeader.Status := ltPurchaseHeader.Status::Released;
+                    ltPurchaseHeader.Modify();
+                until ltPurchaseHeaderTemp.Next() = 0;
+            InsertLogTransaction(Database::"Purchase Header", 'PURCHASE ORDER', CurrentDateTime(), 0, '', ltFileName, 0);
+        end else
+            InsertLogTransaction(Database::"Purchase Header", 'PURCHASE ORDER', CurrentDateTime(), 1, GetLastErrorText(), ltFileName, 0);
+    end;
+
+    procedure ImportReturnOrder()
+    var
+        ltPurchaseHeaderTemp: Record "Purchase Header" temporary;
+        ltPurchaseLineTemp: Record "Purchase Line" temporary;
+        ltPurchaseHeader: Record "Purchase Header";
+        ltPurchaseLine: Record "Purchase Line";
+        ltFileName: Text;
+    begin
+        if InsertToPurchase(1, ltPurchaseHeaderTemp, ltPurchaseLineTemp, ltFileName) then begin
+            if ltPurchaseHeaderTemp.FindSet() then
+                repeat
+                    ltPurchaseHeader.Init();
+                    ltPurchaseHeader.TransferFields(ltPurchaseHeaderTemp);
+                    ltPurchaseHeader.Insert();
+
+                    ltPurchaseLineTemp.reset();
+                    ltPurchaseLineTemp.SetRange("Document Type", ltPurchaseHeaderTemp."Document Type");
+                    ltPurchaseLineTemp.SetRange("Document No.", ltPurchaseHeaderTemp."No.");
+                    if ltPurchaseLineTemp.FindSet() then begin
+                        repeat
+                            ltPurchaseLine.Init();
+                            ltPurchaseLine.Copy(ltPurchaseLineTemp);
+                            ltPurchaseLine.Insert();
+                            ltPurchaseLine.Validate(Quantity, ltPurchaseLineTemp.Quantity);
+                            if ltPurchaseLineTemp."Location Code" <> '' then
+                                ltPurchaseLine.Validate("Location Code", ltPurchaseLineTemp."Location Code");
+                            if ltPurchaseLineTemp."Unit of Measure Code" <> '' then
+                                ltPurchaseLine.Validate("Unit of Measure Code", ltPurchaseLineTemp."Unit of Measure Code");
+                            ltPurchaseLine.Validate("Direct Unit Cost", ltPurchaseLineTemp."Direct Unit Cost");
+                            if ltPurchaseLineTemp."Line Discount Amount" <> 0 then
+                                ltPurchaseLine.Validate("Line Discount Amount", ltPurchaseLineTemp."Line Discount Amount");
+                            if ltPurchaseLineTemp."VAT Prod. Posting Group" <> '' then
+                                ltPurchaseLine.Validate("VAT Prod. Posting Group", ltPurchaseLineTemp."VAT Prod. Posting Group");
+                            ltPurchaseLine.Modify();
+                        until ltPurchaseLineTemp.Next() = 0;
+                    end;
+                    ltPurchaseHeader.Status := ltPurchaseHeader.Status::Released;
+                    ltPurchaseHeader.Modify();
+                until ltPurchaseHeaderTemp.Next() = 0;
+            InsertLogTransaction(Database::"Purchase Header", 'RETURN ORDER', CurrentDateTime(), 0, '', ltFileName, 0);
+        end else
+            InsertLogTransaction(Database::"Purchase Header", 'RETURN ORDER', CurrentDateTime(), 1, GetLastErrorText(), ltFileName, 0);
+    end;
+
+
+    [TryFunction]
+    local procedure InsertToPurchase(ImportType: Option PO,Return; var pPurchaseHeader: Record "Purchase Header" temporary; var pPurchaseLine: Record "Purchase Line" temporary; var pFileName: Text[100])
+    var
+        CSVBuffer, TempCSVBuffer : Record "CSV Buffer" temporary;
+        ltPurchaseHeader: Record "Purchase Header" temporary;
+        ltPurchaseLine: Record "Purchase Line" temporary;
+        ltItem: Record Item;
+        ltLocation: Record location;
+        ltUnitOfMeasure: Record "Unit of Measure";
+        ltVatprod: record "VAT Product Posting Group";
+        UploadResult, CSVFileName : text;
+        CSVInStrem: InStream;
+        LastField: Integer;
+        ltDate: Date;
+        ltDicimal: Decimal;
+        ltInteger: Integer;
+        ltCheckAlready: Boolean;
+        ltPurchaseDocType: Enum "Purchase Document Type";
+    begin
+        if UploadIntoStream('File Name', '', '', CSVFileName, CSVInStrem) then begin
+            pFileName := CSVFileName;
+            CSVBuffer.reset();
+            CSVBuffer.DeleteAll();
+            CSVBuffer.LoadDataFromStream(CSVInStrem, ',');
+            CSVBuffer.SetFilter("Line No.", '>%1', 1);
+            if CSVBuffer.FindSet() then begin
+                repeat
+                    case CSVBuffer."Field No." of
+                        1:
+                            begin
+                                TempCSVBuffer.Copy(CSVBuffer, true);
+                                TempCSVBuffer.SetCurrentKey("Line No.", "Field No.");
+                                if TempCSVBuffer.FindLast() then
+                                    LastField := TempCSVBuffer."Field No.";
+                            end;
+                        2:
+                            begin
+                                if ImportType = ImportType::PO then
+                                    ltPurchaseDocType := ltPurchaseDocType::Order
+                                else
+                                    ltPurchaseDocType := ltPurchaseDocType::"Return Order";
+
+                                if not ltPurchaseHeader.GET(ltPurchaseDocType, CSVBuffer.Value) then begin
+                                    ltPurchaseHeader.Init();
+                                    ltPurchaseHeader."Document Type" := ltPurchaseDocType;
+                                    ltPurchaseHeader."No." := CSVBuffer.Value;
+                                    ltPurchaseHeader.Insert(true);
+                                end else
+                                    ltCheckAlready := true;
+                            end;
+
+                        3:
+                            begin
+                                if not ltCheckAlready then
+                                    ltPurchaseHeader.Validate("Buy-from Vendor No.", CSVBuffer.Value);
+                            end;
+                        4:
+                            begin
+                                if not ltCheckAlready then
+                                    ltPurchaseHeader.Validate("Vendor No. Intranet", CSVBuffer.Value);
+                            end;
+                        5:
+                            begin
+                                if not ltCheckAlready then
+                                    if Evaluate(ltDate, CSVBuffer.Value) then
+                                        ltPurchaseHeader.Validate("Order Date", ltDate);
+                            end;
+                        6:
+                            begin
+                                if not ltCheckAlready then
+                                    if Evaluate(ltDate, CSVBuffer.Value) then
+                                        ltPurchaseHeader.Validate("Posting Date", ltDate);
+                            end;
+                        7:
+                            begin
+                                if not ltCheckAlready then
+                                    if Evaluate(ltDate, CSVBuffer.Value) then
+                                        ltPurchaseHeader.Validate("Expected Receipt Date", ltDate);
+                            end;
+                        8:
+                            begin
+                                if not ltCheckAlready then
+                                    ltPurchaseHeader."Your Reference" := CSVBuffer.Value;
+                            end;
+                        11:
+                            begin
+                                if not ltCheckAlready then
+                                    if CSVBuffer.Value <> '' then
+                                        ltPurchaseHeader.Validate("Shortcut Dimension 1 Code", CSVBuffer.Value);
+                            end;
+
+                        12:
+                            begin
+                                if not ltCheckAlready then begin
+                                    if CSVBuffer.Value <> '' then
+                                        ltPurchaseHeader.Validate("Shortcut Dimension 2 Code", CSVBuffer.Value);
+                                    ltPurchaseHeader.Modify();
+                                end;
+                            end;
+
+                        13:
+                            begin
+                                ltPurchaseLine.init();
+                                ltPurchaseLine."Document Type" := ltPurchaseHeader."Document Type";
+                                ltPurchaseLine."Document No." := ltPurchaseHeader."No.";
+                                Evaluate(ltInteger, CSVBuffer.Value);
+                                ltPurchaseLine."Line No." := ltInteger;
+                                ltPurchaseLine."Buy-from Vendor No." := ltPurchaseHeader."Buy-from Vendor No.";
+                                ltPurchaseLine."Pay-to Vendor No." := ltPurchaseHeader."Pay-to Vendor No.";
+                                ltPurchaseLine.Insert();
+
+                            end;
+                        14:
+                            begin
+
+                                ltPurchaseLine.Type := ltPurchaseLine.Type::Item;
+                            end;
+
+                        15:
+                            begin
+                                ltItem.GET(CSVBuffer.Value);
+                                ltPurchaseLine."No." := CSVBuffer.Value;
+                                ltPurchaseLine.Description := ltItem.Description;
+                                ltPurchaseLine."Description 2" := ltItem."Description 2";
+                                ltPurchaseLine."Unit of Measure Code" := ltItem."Purch. Unit of Measure";
+                            end;
+                        16:
+                            begin
+                                if Evaluate(ltDicimal, CSVBuffer.Value) then
+                                    ltPurchaseLine.Quantity := ltDicimal;
+
+                            end;
+                        17:
+                            begin
+                                if CSVBuffer.Value <> '' then
+                                    ltUnitOfMeasure.get(CSVBuffer.Value);
+                                ltPurchaseLine."Unit of Measure Code" := CSVBuffer.Value;
+
+                            end;
+                        18:
+                            begin
+                                if CSVBuffer.Value <> '' then
+                                    ltLocation.get(CSVBuffer.Value);
+                                ltPurchaseLine."Location Code" := CSVBuffer.Value;
+
+                            end;
+                        19:
+                            begin
+                                if Evaluate(ltDicimal, CSVBuffer.Value) then
+                                    ltPurchaseLine."Direct Unit Cost" := ltDicimal;
+
+                            end;
+                        22:
+                            begin
+                                if Evaluate(ltDicimal, CSVBuffer.Value) then
+                                    ltPurchaseLine."Line Discount Amount" := ltDicimal;
+
+                            end;
+                        23:
+                            begin
+                                if CSVBuffer.Value <> '' then
+                                    ltVatprod.get(CSVBuffer.Value);
+                                ltPurchaseLine."VAT Prod. Posting Group" := CSVBuffer.Value;
+
+                            end;
+
+                    end;
+
+                    if CSVBuffer."Field No." = LastField then begin
+                        ltCheckAlready := false;
+                        ltPurchaseLine.Modify();
+                    end;
+
+                until CSVBuffer.Next() = 0;
+                pPurchaseHeader.copy(ltPurchaseHeader, true);
+                pPurchaseLine.copy(ltPurchaseLine, true);
+            end;
+        end;
+    end;
+
+    procedure ImportToSalesCreditMemo()
+    var
+        ltSalesHeaderTemp: Record "Sales Header" temporary;
+        ltSalesLineTemp: Record "Sales Line" temporary;
+        ltSalesHEader: Record "Sales Header";
+        ltSalesLine: Record "Sales Line";
+        ltFileName: Text;
+    begin
+        if InsertToSales(1, ltSalesHeaderTemp, ltSalesLineTemp, ltFileName) then begin
+            if ltSalesHeaderTemp.FindSet() then
+                repeat
+                    ltSalesHEader.Init();
+                    ltSalesHEader.TransferFields(ltSalesHeaderTemp);
+                    ltSalesHEader.Insert();
+
+                    ltSalesLineTemp.reset();
+                    ltSalesLineTemp.SetRange("Document Type", ltSalesHeaderTemp."Document Type");
+                    ltSalesLineTemp.SetRange("Document No.", ltSalesHeaderTemp."No.");
+                    if ltSalesLineTemp.FindSet() then begin
+                        repeat
+                            ltSalesLine.Init();
+                            ltSalesLine.Copy(ltSalesLineTemp);
+                            ltSalesLine.Insert();
+                            ltSalesLine.Validate(Quantity, ltSalesLineTemp.Quantity);
+                            if ltSalesLineTemp."Location Code" <> '' then
+                                ltSalesLine.Validate("Location Code", ltSalesLineTemp."Location Code");
+                            if ltSalesLineTemp."Unit of Measure Code" <> '' then
+                                ltSalesLine.Validate("Unit of Measure Code", ltSalesLineTemp."Unit of Measure Code");
+                            ltSalesLine.Validate("Unit Price", ltSalesLineTemp."Unit Price");
+                            if ltSalesLineTemp."Line Discount Amount" <> 0 then
+                                ltSalesLine.Validate("Line Discount Amount", ltSalesLineTemp."Line Discount Amount");
+                            if ltSalesLineTemp."VAT Prod. Posting Group" <> '' then
+                                ltSalesLine.Validate("VAT Prod. Posting Group", ltSalesLineTemp."VAT Prod. Posting Group");
+                            if ltSalesLineTemp."Inv. Discount Amount" <> 0 then
+                                ltSalesLine.Validate("Inv. Discount Amount", ltSalesLineTemp."Inv. Discount Amount");
+                            ltSalesLine.Modify();
+                        until ltSalesLineTemp.Next() = 0;
+                    end;
+                    ltSalesHEader.Status := ltSalesHEader.Status::Released;
+                    ltSalesHEader.Modify();
+                until ltSalesHeaderTemp.Next() = 0;
+            InsertLogTransaction(Database::"Sales Header", 'SALES CREDIT', CurrentDateTime(), 0, '', ltFileName, 0);
+        end else
+            InsertLogTransaction(Database::"Sales Header", 'SALES CREDIT', CurrentDateTime(), 1, GetLastErrorText(), ltFileName, 0);
+    end;
+
+    procedure ImportToSalesInvoice()
+    var
+        ltSalesHeaderTemp: Record "Sales Header" temporary;
+        ltSalesLineTemp: Record "Sales Line" temporary;
+        ltSalesHEader: Record "Sales Header";
+        ltSalesLine: Record "Sales Line";
+        ltFileName: Text;
+    begin
+        if InsertToSales(0, ltSalesHeaderTemp, ltSalesLineTemp, ltFileName) then begin
+            if ltSalesHeaderTemp.FindSet() then
+                repeat
+                    ltSalesHEader.Init();
+                    ltSalesHEader.TransferFields(ltSalesHeaderTemp);
+                    ltSalesHEader.Insert();
+
+                    ltSalesLineTemp.reset();
+                    ltSalesLineTemp.SetRange("Document Type", ltSalesHeaderTemp."Document Type");
+                    ltSalesLineTemp.SetRange("Document No.", ltSalesHeaderTemp."No.");
+                    if ltSalesLineTemp.FindSet() then begin
+                        repeat
+                            ltSalesLine.Init();
+                            ltSalesLine.Copy(ltSalesLineTemp);
+                            ltSalesLine.Insert();
+                            ltSalesLine.Validate(Quantity, ltSalesLineTemp.Quantity);
+                            if ltSalesLineTemp."Location Code" <> '' then
+                                ltSalesLine.Validate("Location Code", ltSalesLineTemp."Location Code");
+                            if ltSalesLineTemp."Unit of Measure Code" <> '' then
+                                ltSalesLine.Validate("Unit of Measure Code", ltSalesLineTemp."Unit of Measure Code");
+                            ltSalesLine.Validate("Unit Price", ltSalesLineTemp."Unit Price");
+                            if ltSalesLineTemp."Line Discount Amount" <> 0 then
+                                ltSalesLine.Validate("Line Discount Amount", ltSalesLineTemp."Line Discount Amount");
+                            if ltSalesLineTemp."VAT Prod. Posting Group" <> '' then
+                                ltSalesLine.Validate("VAT Prod. Posting Group", ltSalesLineTemp."VAT Prod. Posting Group");
+                            if ltSalesLineTemp."Inv. Discount Amount" <> 0 then
+                                ltSalesLine.Validate("Inv. Discount Amount", ltSalesLineTemp."Inv. Discount Amount");
+                            ltSalesLine.Modify();
+                        until ltSalesLineTemp.Next() = 0;
+                    end;
+                    ltSalesHEader.Status := ltSalesHEader.Status::Released;
+                    ltSalesHEader.Modify();
+                until ltSalesHeaderTemp.Next() = 0;
+            InsertLogTransaction(Database::"Sales Header", 'SALES INVOICE', CurrentDateTime(), 0, '', ltFileName, 0);
+        end else
+            InsertLogTransaction(Database::"Sales Header", 'SALES INVOICE', CurrentDateTime(), 1, GetLastErrorText(), ltFileName, 0);
+    end;
+
+
+    [TryFunction]
+    local procedure InsertToSales(ImportType: Option Invoice,Credit; var pSalesHeader: Record "Sales Header" temporary; var pSalesLine: Record "Sales Line" temporary; var pFileName: Text[100])
+    var
+        CSVBuffer, TempCSVBuffer : Record "CSV Buffer" temporary;
+        ltSalesHeaderTemp: Record "Sales Header" temporary;
+        ltSalesLineTemp: Record "Sales Line" temporary;
+        ltItem: Record Item;
+        ltLocation: Record location;
+        ltUnitOfMeasure: Record "Unit of Measure";
+        ltVatprod: record "VAT Product Posting Group";
+        UploadResult, CSVFileName : text;
+        CSVInStrem: InStream;
+        LastField: Integer;
+        ltDate: Date;
+        ltDicimal: Decimal;
+        ltInteger: Integer;
+        ltCheckAlready: Boolean;
+        ltSalesDocType: Enum "Sales Document Type";
+    begin
+        if UploadIntoStream('File Name', '', '', CSVFileName, CSVInStrem) then begin
+            pFileName := CSVFileName;
+            CSVBuffer.reset();
+            CSVBuffer.DeleteAll();
+            CSVBuffer.LoadDataFromStream(CSVInStrem, ',');
+            CSVBuffer.SetFilter("Line No.", '>%1', 1);
+            if CSVBuffer.FindSet() then begin
+                repeat
+                    case CSVBuffer."Field No." of
+                        1:
+                            begin
+                                TempCSVBuffer.Copy(CSVBuffer, true);
+                                TempCSVBuffer.SetCurrentKey("Line No.", "Field No.");
+                                if TempCSVBuffer.FindLast() then
+                                    LastField := TempCSVBuffer."Field No.";
+                            end;
+                        2:
+                            begin
+                                if ImportType = ImportType::Invoice then
+                                    ltSalesDocType := ltSalesDocType::Invoice
+                                else
+                                    ltSalesDocType := ltSalesDocType::"Credit Memo";
+
+                                if not ltSalesHeaderTemp.GET(ltSalesDocType, CSVBuffer.Value) then begin
+                                    ltSalesHeaderTemp.Init();
+                                    ltSalesHeaderTemp."Document Type" := ltSalesDocType;
+                                    ltSalesHeaderTemp."No." := CSVBuffer.Value;
+                                    ltSalesHeaderTemp.Insert(true);
+                                end else
+                                    ltCheckAlready := true;
+                            end;
+
+                        3:
+                            begin
+                                if not ltCheckAlready then
+                                    ltSalesHeaderTemp.Validate("Sell-to Customer No.", CSVBuffer.Value);
+                            end;
+                        6:
+                            begin
+                                if not ltCheckAlready then
+                                    ltSalesHeaderTemp.Validate("Ship-to Code", CSVBuffer.Value);
+                            end;
+
+
+                        7:
+                            begin
+                                if not ltCheckAlready then
+                                    ltSalesHeaderTemp.Validate("Ship-to Name", CSVBuffer.Value);
+                            end;
+                        8:
+                            begin
+                                if not ltCheckAlready then
+                                    ltSalesHeaderTemp.Validate("Ship-to address", CSVBuffer.Value);
+                            end;
+                        9:
+                            begin
+                                if not ltCheckAlready then
+                                    ltSalesHeaderTemp.Validate("Ship-to address 2", CSVBuffer.Value);
+                            end;
+                        10:
+                            begin
+                                if not ltCheckAlready then
+                                    ltSalesHeaderTemp.Validate("Ship-to City", CSVBuffer.Value);
+                            end;
+
+                        11:
+                            begin
+                                if not ltCheckAlready then
+                                    ltSalesHeaderTemp.Validate("Ship-to Post Code", CSVBuffer.Value);
+                            end;
+
+                        12:
+                            begin
+                                if not ltCheckAlready then
+                                    if Evaluate(ltDate, CSVBuffer.Value) then
+                                        ltSalesHeaderTemp.Validate("posting Date", ltDate);
+                            end;
+
+                        13:
+                            begin
+                                if not ltCheckAlready then
+                                    ltSalesHeaderTemp.Validate("Payment Method Code", CSVBuffer.Value);
+                            end;
+                        14:
+                            begin
+                                if not ltCheckAlready then
+                                    ltSalesHeaderTemp.Validate("Your Reference", CSVBuffer.Value);
+                            end;
+
+                        15:
+                            begin
+                                if not ltCheckAlready then
+                                    ltSalesHeaderTemp.Validate("External Document No.", CSVBuffer.Value);
+                            end;
+
+
+                        16:
+                            begin
+                                ltSalesLineTemp.init();
+                                ltSalesLineTemp."Document Type" := ltSalesHeaderTemp."Document Type";
+                                ltSalesLineTemp."Document No." := ltSalesHeaderTemp."No.";
+                                Evaluate(ltInteger, CSVBuffer.Value);
+                                ltSalesLineTemp."Line No." := ltInteger;
+                                ltSalesLineTemp."Sell-to Customer No." := ltSalesHeaderTemp."Sell-to Customer No.";
+                                ltSalesLineTemp."Bill-to Customer No." := ltSalesHeaderTemp."Bill-to Customer No.";
+                                ltSalesLineTemp.Insert();
+
+                            end;
+                        17:
+                            begin
+
+                                ltSalesLineTemp.Type := SelectoptionSales(CSVBuffer.Value);
+                            end;
+
+                        18:
+                            begin
+                                ltItem.GET(CSVBuffer.Value);
+                                ltSalesLineTemp."No." := CSVBuffer.Value;
+                                ltSalesLineTemp.Description := ltItem.Description;
+                                ltSalesLineTemp."Description 2" := ltItem."Description 2";
+                                ltSalesLineTemp."Unit of Measure Code" := ltItem."Sales Unit of Measure";
+                            end;
+                        19:
+                            begin
+
+                                ltSalesLineTemp.Description := CSVBuffer.Value;
+                            end;
+                        20:
+                            begin
+                                if Evaluate(ltDicimal, CSVBuffer.Value) then
+                                    ltSalesLineTemp.Quantity := ltDicimal;
+
+                            end;
+                        21:
+                            begin
+                                if CSVBuffer.Value <> '' then
+                                    ltUnitOfMeasure.get(CSVBuffer.Value);
+                                ltSalesLineTemp."Unit of Measure Code" := CSVBuffer.Value;
+
+                            end;
+                        22:
+                            begin
+                                if CSVBuffer.Value <> '' then
+                                    ltLocation.get(CSVBuffer.Value);
+                                ltSalesLineTemp."Location Code" := CSVBuffer.Value;
+
+                            end;
+                        23:
+                            begin
+                                if Evaluate(ltDicimal, CSVBuffer.Value) then
+                                    ltSalesLineTemp."Unit Price" := ltDicimal;
+
+                            end;
+
+                        26:
+                            begin
+                                if CSVBuffer.Value <> '' then
+                                    ltVatprod.get(CSVBuffer.Value);
+                                ltSalesLineTemp."VAT Prod. Posting Group" := CSVBuffer.Value;
+
+                            end;
+                        27:
+                            begin
+                                if Evaluate(ltDicimal, CSVBuffer.Value) then
+                                    ltSalesLineTemp."Line Discount Amount" := ltDicimal;
+
+                            end;
+                        28:
+                            begin
+                                if Evaluate(ltDicimal, CSVBuffer.Value) then
+                                    ltSalesLineTemp."Inv. Discount Amount" := ltDicimal;
+
+                            end;
+
+                    end;
+
+                    if CSVBuffer."Field No." = LastField then begin
+                        ltCheckAlready := false;
+                        ltSalesLineTemp.Modify();
+                    end;
+
+                until CSVBuffer.Next() = 0;
+                pSalesHeader.copy(ltSalesHeaderTemp, true);
+                pSalesLine.copy(ltSalesLineTemp, true);
+            end;
+        end;
+    end;
+
+    procedure ImportToCashReceipt()
+    var
+        ltGenJournalTemp: Record "Gen. Journal Line" temporary;
+        ltGenJournalLine: Record "Gen. Journal Line";
+        ltFileName: Text;
+    begin
+        if InsertToICashReceipt(ltGenJournalTemp, ltFileName) then begin
+            if ltGenJournalTemp.FindSet() then
+                repeat
+                    ltGenJournalLine.Init();
+                    ltGenJournalLine.TransferFields(ltGenJournalTemp);
+                    ltGenJournalLine.Insert();
+                until ltGenJournalTemp.Next() = 0;
+            InsertLogTransaction(Database::"Gen. Journal Line", 'CASH RECEIPT', CurrentDateTime(), 0, '', ltFileName, 0);
+        end else
+            InsertLogTransaction(Database::"Gen. Journal Line", 'CASH RECEIPT', CurrentDateTime(), 1, GetLastErrorText(), ltFileName, 0);
+    end;
+
+    [TryFunction]
+    local procedure InsertToICashReceipt(var pGenJournalLine: Record "Gen. Journal Line" temporary; var pFileName: Text[100])
+    var
+        GenJournalLIne: Record "Gen. Journal Line" temporary;
+        CSVBuffer, TempCSVBuffer : Record "CSV Buffer" temporary;
+        InterfaceSetup: Record "FK Interface Setup";
+        GenJournalTemplate: Record "Gen. Journal Template";
+        UploadResult, CSVFileName : text;
+        CSVInStrem: InStream;
+        ltLineNo: Integer;
+        ltDate: Date;
+        ltDicimal: Decimal;
+        TotalRec, LastField : Integer;
+        ltTemplateName, ltBatchName : code[30];
+    begin
+        InterfaceSetup.GET();
+
+        InterfaceSetup.TestField("Cash Receipt Temp. Name");
+        InterfaceSetup.TestField("Cash Receipt Batch Name");
+        ltTemplateName := InterfaceSetup."Cash Receipt Temp. Name";
+        ltBatchName := InterfaceSetup."Cash Receipt Batch Name";
+
+
+        GenJournalTemplate.GET(ltTemplateName);
+        ltLineNo := GetLastLineItemJournal(ltTemplateName, ltBatchName);
+        if UploadIntoStream('File Name', '', '', CSVFileName, CSVInStrem) then begin
+            pFileName := CSVFileName;
+            CSVBuffer.reset();
+            CSVBuffer.DeleteAll();
+            CSVBuffer.LoadDataFromStream(CSVInStrem, ',');
+            CSVBuffer.SetFilter("Line No.", '>%1', 1);
+            if CSVBuffer.FindSet() then begin
+                repeat
+                    case CSVBuffer."Field No." of
+                        1:
+                            begin
+                                TempCSVBuffer.Copy(CSVBuffer, true);
+                                TempCSVBuffer.SetCurrentKey("Line No.", "Field No.");
+                                if TempCSVBuffer.FindLast() then
+                                    LastField := TempCSVBuffer."Field No.";
+
+                                ltLineNo := ltLineNo + 10000;
+                                GenJournalLIne.Init();
+                                GenJournalLIne."Journal Template Name" := ltTemplateName;
+                                GenJournalLIne."Journal Batch Name" := ltBatchName;
+                                GenJournalLIne."Line No." := ltLineNo;
+                                GenJournalLIne."Source Code" := GenJournalTemplate."Source Code";
+                                GenJournalLIne.Insert(true);
+                                TotalRec := TotalRec + 1;
+                            end;
+
+
+                        4:
+                            begin
+                                if Evaluate(ltDate, CSVBuffer.Value) then
+                                    GenJournalLIne.Validate("Posting Date", ltDate);
+                            end;
+                        5:
+                            begin
+                                if Evaluate(ltDate, CSVBuffer.Value) then
+                                    GenJournalLIne.Validate("Document Date", ltDate);
+                            end;
+                        6:
+                            begin
+                                GenJournalLIne."Document Type" := GenJournalLIne."Document Type"::Payment;
+                            end;
+                        7:
+                            GenJournalLIne.Validate("Document No.", CSVBuffer.Value);
+                        8:
+                            begin
+                                GenJournalLIne.validate("External Document No.", CSVBuffer.Value);
+                            end;
+                        9:
+                            begin
+
+                                GenJournalLIne.validate("Account Type", SelectoptionGenLine(CSVBuffer.Value));
+                            end;
+                        10:
+                            begin
+                                GenJournalLIne.Validate("Account No.", CSVBuffer.Value);
+                            end;
+                        11:
+                            begin
+                                GenJournalLIne.Validate("Description", CSVBuffer.Value);
+                            end;
+                        12:
+                            if CSVBuffer.Value <> '' then
+                                GenJournalLIne.Validate("Currency Code", CSVBuffer.Value);
+                        13:
+                            if Evaluate(ltDicimal, CSVBuffer.Value) then
+                                GenJournalLIne.Validate("Amount", ltDicimal);
+
+                        15:
+                            begin
+                                if CSVBuffer.Value <> '' then begin
+                                    GenJournalLIne."Applies-to Doc. Type" := GenJournalLIne."Applies-to Doc. Type"::Invoice;
+                                    GenJournalLIne.Validate("Applies-to Doc. No.", CSVBuffer.Value);
+                                end;
+                            end;
+                    end;
+                    if CSVBuffer."Field No." = LastField then
+                        GenJournalLIne.Modify();
+
+
+                until CSVBuffer.Next() = 0;
+                pGenJournalLine.copy(GenJournalLIne, true);
+            end;
+        end;
+    end;
+
+    [TryFunction]
+    local procedure InsertToItemJournal(ImportType: Option Positive,Negative; var pItemJournalTemp: Record "Item Journal Line" temporary; var pFileName: Text[100])
+    var
+        ItemJournal: Record "Item Journal Line" temporary;
+        CSVBuffer, TempCSVBuffer : Record "CSV Buffer" temporary;
+        InterfaceSetup: Record "FK Interface Setup";
+        ITemJournalTemplate: Record "Item Journal Template";
+        UploadResult, CSVFileName : text;
+        CSVInStrem: InStream;
+        ltLineNo: Integer;
+        ltDate: Date;
+        ltDicimal: Decimal;
+        TotalRec, LastField : Integer;
+        ltTemplateName, ltBatchName : code[30];
+    begin
+        InterfaceSetup.GET();
+        if ImportType = ImportType::Positive then begin
+            InterfaceSetup.TestField("Item Journal Temp. Name (pos.)");
+            InterfaceSetup.TestField("Item Journal Batch Name (Pos.)");
+            ltTemplateName := InterfaceSetup."Item Journal Temp. Name (pos.)";
+            ltBatchName := InterfaceSetup."Item Journal Batch Name (Pos.)";
+        end;
+        if ImportType = ImportType::Negative then begin
+            InterfaceSetup.TestField("Item Journal Temp. Name (Neg.)");
+            InterfaceSetup.TestField("Item Journal Batch Name (Neg.)");
+            ltTemplateName := InterfaceSetup."Item Journal Temp. Name (Neg.)";
+            ltBatchName := InterfaceSetup."Item Journal Batch Name (Neg.)";
+
+        end;
+        ITemJournalTemplate.GET(ltTemplateName);
+        ltLineNo := GetLastLineItemJournal(ltTemplateName, ltBatchName);
+        if UploadIntoStream('File Name', '', '', CSVFileName, CSVInStrem) then begin
+            pFileName := CSVFileName;
+            CSVBuffer.reset();
+            CSVBuffer.DeleteAll();
+            CSVBuffer.LoadDataFromStream(CSVInStrem, ',');
+            CSVBuffer.SetFilter("Line No.", '>%1', 1);
+            if CSVBuffer.FindSet() then begin
+                repeat
+                    case CSVBuffer."Field No." of
+                        1:
+                            begin
+                                TempCSVBuffer.Copy(CSVBuffer, true);
+                                TempCSVBuffer.SetCurrentKey("Line No.", "Field No.");
+                                if TempCSVBuffer.FindLast() then
+                                    LastField := TempCSVBuffer."Field No.";
+
+                                ltLineNo := ltLineNo + 10000;
+                                ItemJournal.Init();
+                                ItemJournal."Journal Template Name" := ltTemplateName;
+                                ItemJournal."Journal Batch Name" := ltBatchName;
+                                ItemJournal."Line No." := ltLineNo;
+                                ItemJournal."Source Code" := ITemJournalTemplate."Source Code";
+                                if ImportType = ImportType::Positive then
+                                    ItemJournal."Entry Type" := ItemJournal."Entry Type"::"Positive Adjmt.";
+                                if ImportType = ImportType::Negative then
+                                    ItemJournal."Entry Type" := ItemJournal."Entry Type"::"Negative Adjmt.";
+                                ItemJournal.Insert(true);
+                                if Evaluate(ltDate, CSVBuffer.Value) then
+                                    ItemJournal.Validate("Posting Date", ltDate);
+                                TotalRec := TotalRec + 1;
+                            end;
+                        3:
+                            ItemJournal.Validate("Document No.", CSVBuffer.Value);
+
+                        4:
+                            ItemJournal.Validate("Item No.", CSVBuffer.Value);
+                        5:
+                            ItemJournal.Validate("Location Code", CSVBuffer.Value);
+                        6:
+                            begin
+                                if Evaluate(ltDicimal, CSVBuffer.Value) then
+                                    ItemJournal.Validate(Quantity, ltDicimal);
+                            end;
+                        7:
+                            ItemJournal."Temp. Lot No." := CSVBuffer.Value;
+                        8:
+                            begin
+                                if Evaluate(ltDate, CSVBuffer.Value) then
+                                    ItemJournal."Temp. Expire Date" := ltDate
+                            end;
+                        9:
+                            ItemJournal.Validate("Reason Code", CSVBuffer.Value);
+
+                        10:
+                            ItemJournal.Validate("Gen. Bus. Posting Group", CSVBuffer.Value);
+                    end;
+                    if CSVBuffer."Field No." = LastField then
+                        ItemJournal.Modify();
+
+
+                until CSVBuffer.Next() = 0;
+                pItemJournalTemp.copy(ItemJournal, true);
+            end;
+        end;
+    end;
+
+    [TryFunction]
+    local procedure InsertToItemJournalReclass(var pItemJournalTemp: Record "Item Journal Line" temporary; var pFileName: Text[100])
+    var
+        ItemJournal: Record "Item Journal Line" temporary;
+        CSVBuffer, TempCSVBuffer : Record "CSV Buffer" temporary;
+        InterfaceSetup: Record "FK Interface Setup";
+        ITemJournalTemplate: Record "Item Journal Template";
+        UploadResult, CSVFileName : text;
+        CSVInStrem: InStream;
+        ltLineNo: Integer;
+        ltDate: Date;
+        ltDicimal: Decimal;
+
+        TotalRec, LastField : Integer;
+        ltTemplateName, ltBatchName : code[30];
+    begin
+        InterfaceSetup.GET();
+
+        InterfaceSetup.TestField("Item Journal Temp. Name (Rec.)");
+        InterfaceSetup.TestField("Item Journal Batch Name (Rec.)");
+        ltTemplateName := InterfaceSetup."Item Journal Temp. Name (Rec.)";
+        ltBatchName := InterfaceSetup."Item Journal Batch Name (Rec.)";
+        ITemJournalTemplate.GET(ltTemplateName);
+        ltLineNo := GetLastLineItemJournal(ltTemplateName, ltBatchName);
+        if UploadIntoStream('File Name', '', '', CSVFileName, CSVInStrem) then begin
+            pFileName := CSVFileName;
+            CSVBuffer.reset();
+            CSVBuffer.DeleteAll();
+            CSVBuffer.LoadDataFromStream(CSVInStrem, ',');
+            CSVBuffer.SetFilter("Line No.", '>%1', 1);
+            if CSVBuffer.FindSet() then begin
+                repeat
+                    case CSVBuffer."Field No." of
+                        1:
+                            begin
+                                TempCSVBuffer.Copy(CSVBuffer, true);
+                                TempCSVBuffer.SetCurrentKey("Line No.", "Field No.");
+                                if TempCSVBuffer.FindLast() then
+                                    LastField := TempCSVBuffer."Field No.";
+
+                                ltLineNo := ltLineNo + 10000;
+                                ItemJournal.Init();
+                                ItemJournal."Journal Template Name" := ltTemplateName;
+                                ItemJournal."Journal Batch Name" := ltBatchName;
+                                ItemJournal."Line No." := ltLineNo;
+                                ItemJournal."Source Code" := ITemJournalTemplate."Source Code";
+                                ItemJournal."Entry Type" := ItemJournal."Entry Type"::Transfer;
+                                ItemJournal.Insert(true);
+                                if Evaluate(ltDate, CSVBuffer.Value) then
+                                    ItemJournal.Validate("Posting Date", ltDate);
+                                TotalRec := TotalRec + 1;
+                            end;
+                        2:
+                            ItemJournal.Validate("Document No.", CSVBuffer.Value);
+
+                        3:
+                            ItemJournal.Validate("Item No.", CSVBuffer.Value);
+                        4:
+                            ItemJournal.Validate("Location Code", CSVBuffer.Value);
+                        5:
+                            ItemJournal.Validate("New Location Code", CSVBuffer.Value);
+                        6:
+                            begin
+                                if Evaluate(ltDicimal, CSVBuffer.Value) then
+                                    ItemJournal.Validate(Quantity, ltDicimal);
+                            end;
+                        7:
+                            ItemJournal."Temp. Lot No." := CSVBuffer.Value;
+                        8:
+                            begin
+                                if Evaluate(ltDate, CSVBuffer.Value) then
+                                    ItemJournal."Temp. Expire Date" := ltDate;
+                            end;
+                        9:
+                            ItemJournal.Validate("Reason Code", CSVBuffer.Value);
+                    end;
+
+                    if CSVBuffer."Field No." = LastField then
+                        ItemJournal.Modify();
+
+                until CSVBuffer.Next() = 0;
+                pItemJournalTemp.copy(ItemJournal, true);
+            end;
+        end;
+    end;
+
+    local procedure InsertLogTransaction(pTableID: Integer; PageName: Text; pDateTime: DateTime; pStatus: Option Successfully,Error; pMsgError: Text; pFileName: Text; pMethodType: Option "Insert","Update","Delete")
+    var
+        apiLog: Record "FK API Log";
+    begin
+        apiLog.Init();
+        apiLog."Entry No." := GetLastEntryLog();
+        apiLog."Method Type" := pMethodType;
+        apiLog."Page Name" := PageName;
+        apiLog."No." := pTableID;
+        apiLog."Date Time" := pDateTime;
+        apiLog.Status := pStatus;
+        apiLog.Insert(true);
+        apiLog."Interface By" := CopyStr(USERID(), 1, 100);
+        apiLog."Last Error" := copystr(pMsgError, 1, 2047);
+        apiLog."Document No." := COPYSTR(pFileName, 1, 100);
+        apiLog.Modify();
+    end;
+
+    local procedure InsertLot(pITemJournal: Record "Item Journal Line"; pLotNo: code[50]; pExpireDate: Date)
+    var
+        ltItem: Record Item;
+        TempReservEntry: Record "Reservation Entry" temporary;
+        CreateReservEntry: Codeunit "Create Reserv. Entry";
+        ReservStatus: Enum "Reservation Status";
+    begin
+        ltItem.GET(pITemJournal."Item No.");
+        IF ltItem."Item Tracking Code" <> '' then
+            if pLotNo <> '' then begin
+                TempReservEntry.Init();
+                TempReservEntry."Entry No." := GetLastReserveEntry();
+                TempReservEntry."Lot No." := pLotNo;
+                TempReservEntry.Quantity := pITemJournal.Quantity;
+                if pExpireDate <> 0D then
+                    TempReservEntry."Expiration Date" := pExpireDate
+                else
+                    TempReservEntry."Expiration Date" := Today();
+                TempReservEntry.Insert();
+
+                CreateReservEntry.SetDates(0D, TempReservEntry."Expiration Date");
+                CreateReservEntry.CreateReservEntryFor(Database::"Item Journal Line", pITemJournal."Entry Type".AsInteger(), pITemJournal."Journal Template Name", pITemJournal."Journal Batch Name",
+                    0, pITemJournal."Line No.", pITemJournal."Qty. per Unit of Measure", TempReservEntry.Quantity, TempReservEntry.Quantity * pITemJournal."Qty. per Unit of Measure", TempReservEntry);
+                CreateReservEntry.CreateEntry(pITemJournal."Item No.", pITemJournal."Variant Code", pITemJournal."Location Code", '', 0D, 0D, 0, ReservStatus::Surplus);
+            end;
+
+    end;
+
+    local procedure GetLastReserveEntry(): Integer
+    var
+        ReservationEntry: Record "Reservation Entry";
+    begin
+        ReservationEntry.reset();
+        ReservationEntry.SetCurrentKey("Entry No.");
+        if ReservationEntry.FindLast() then
+            exit(ReservationEntry."Entry No." + 1);
+        exit(1);
+    end;
+
+    local procedure GetLastLineItemJournal(pJournalTemplate: code[10]; pJournalBatch: code[10]): Integer
+    var
+        ItemJournal: Record "Item Journal Line";
+    begin
+        ItemJournal.reset();
+        ItemJournal.SetCurrentKey("Journal Template Name", "Journal Batch Name", "Line No.");
+        ItemJournal.SetRange("Journal Template Name", pJournalTemplate);
+        ItemJournal.SetRange("Journal Batch Name", pJournalBatch);
+        if ItemJournal.FindLast() then
+            exit(ItemJournal."Line No.");
+        exit(10000);
+    end;
+
     [EventSubscriber(ObjectType::Table, Database::"Purchase Header", 'OnAfterCopyBuyFromVendorFieldsFromVendor', '', false, false)]
     local procedure OnAfterCopyBuyFromVendorFieldsFromVendor(Vendor: Record Vendor; var PurchaseHeader: Record "Purchase Header")
     begin
@@ -42,11 +1325,11 @@ codeunit 60050 "FK Func"
     /// <param name="pDocumentNo">Text.</param>
     /// <param name="pJsonFormat">Boolean.</param>
     procedure ExportTestTimeOut(pPageNO: Integer; pPageNOSubform: Integer; pDocumentType: Enum "Sales Document Type"; pApiName: Text;
-                                                                                                       pPageName: Integer;
-                                                                                                       pTableID: Integer;
-                                                                                                       pSubTableID: Integer;
-                                                                                                       pDocumentNo: Text;
-                                                                                                       pJsonFormat: Boolean)
+                                                                                              pPageName: Integer;
+                                                                                              pTableID: Integer;
+                                                                                              pSubTableID: Integer;
+                                                                                              pDocumentNo: Text;
+                                                                                              pJsonFormat: Boolean)
     var
         //  PageControl, PageControlDetail : Record "Page Control Field";
         APIMapping, APIMappingLine : Record "API Setup Line";
@@ -940,19 +2223,19 @@ codeunit 60050 "FK Func"
             CreateShiptoCode(ltDocNo, pJsonObject, SelectJsonTokenText(pJsonObject, '$.shiptocode'));
 
 
-        IF APIMappingHeader."Sub Table ID" <> 0 then
-            InsertTotableLine(pJsonObject, APIMappingHeader."Sub Table ID", APIMappingHeader."Page Name", APIMappingHeader."Sub Page No.", ltIndexof, ltDocNo)
-        else
-            if APIMappingHeader."Table ID" = Database::"Item Journal Line" then
-                if pJsonObject.SelectToken('$.reservelines', ltJsonTokenReserve) then begin
-                    ltFieldRef := ltRecordRef.FieldIndex(1);
-                    TemplateName := format(ltFieldRef.Value);
-                    ltFieldRef := ltRecordRef.FieldIndex(2);
-                    BatchName := format(ltFieldRef.Value);
-                    ltFieldRef := ltRecordRef.FieldIndex(3);
-                    Evaluate(ltLineNo, format(ltFieldRef.Value));
-                    ItemJournalInsertReserveLine(TemplateName, BatchName, ltLineNo, ltJsonTokenReserve);
-                end;
+        // IF APIMappingHeader."Sub Table ID" <> 0 then
+        //     InsertTotableLine(pJsonObject, APIMappingHeader."Sub Table ID", APIMappingHeader."Page Name", APIMappingHeader."Sub Page No.", ltIndexof, ltDocNo)
+        // else
+        //     if APIMappingHeader."Table ID" = Database::"Item Journal Line" then
+        //         if pJsonObject.SelectToken('$.reservelines', ltJsonTokenReserve) then begin
+        //             ltFieldRef := ltRecordRef.FieldIndex(1);
+        //             TemplateName := format(ltFieldRef.Value);
+        //             ltFieldRef := ltRecordRef.FieldIndex(2);
+        //             BatchName := format(ltFieldRef.Value);
+        //             ltFieldRef := ltRecordRef.FieldIndex(3);
+        //             Evaluate(ltLineNo, format(ltFieldRef.Value));
+        //             ItemJournalInsertReserveLine(TemplateName, BatchName, ltLineNo, ltJsonTokenReserve);
+        //         end;
         ltRecordRef.Close();
     end;
 
@@ -1011,7 +2294,9 @@ codeunit 60050 "FK Func"
         end;
     end;
 
-    local procedure InsertTotableLine(pJsonObject: JsonObject; subtableID: Integer; pPageID: Enum "FK Api Page Type"; pSubPageID: Integer; pDocumentType: Integer; pDocumentNo: code[30])
+    local procedure InsertTotableLine(pJsonObject: JsonObject; subtableID: Integer; pPageID: Enum "FK Api Page Type"; pSubPageID: Integer;
+                                                                                                 pDocumentType: Integer;
+                                                                                                 pDocumentNo: code[30])
     var
         ltJsonObjectDetail: JsonObject;
         APIMappingLine: Record "API Setup Line";
@@ -1543,8 +2828,8 @@ codeunit 60050 "FK Func"
                 pTableID: Integer;
                 pApiName: Text;
                 pPageName: Enum "FK Api Page Type";
-                pDocumentNo: Text;
-                pJsonFormat: Boolean)
+                               pDocumentNo: Text;
+                               pJsonFormat: Boolean)
     var
 
         APIMappingLine: Record "API Setup Line";
@@ -1605,19 +2890,29 @@ codeunit 60050 "FK Func"
                     until APIMappingLine.Next() = 0;
                     ltJsonArray.Add(ltJsonObject);
                 end;
+                CheckFirstLineInt := 0;
                 if pTableID = Database::Customer then begin
                     CLEAR(ltJsonArrayReserve);
-                    ltJsonObjectReserve.Add('code', 'TEST Code');
-                    ltJsonObjectReserve.Add('$name', 'TEST name');
-                    ltJsonObjectReserve.Add('$address', 'Address');
-                    ltJsonObjectReserve.Add('$address2', 'Address 2');
-                    ltJsonObjectReserve.Add('$city', 'City');
-                    ltJsonObjectReserve.Add('$postcode', 'Post Code');
-                    ltJsonObjectReserve.Add('$contact', 'contact');
-                    ltJsonObjectReserve.Add('$locationcode', 'Location Code');
-                    ltJsonArrayReserve.Add(ltJsonObjectReserve);
+                    CLEAR(ltJsonObjectReserve);
+                    APIMappingLine.reset();
+                    APIMappingLine.SetCurrentKey("Page Name", "Line Type", "Field No.");
+                    APIMappingLine.SetRange("Page Name", pPageName);
+                    APIMappingLine.SetRange("Line Type", APIMappingLine."Line Type"::Line);
+                    APIMappingLine.SetRange(Include, true);
+                    APIMappingLine.SetFilter("Service Name", '<>%1', '');
+                    if APIMappingLine.FindFirst() then begin
+                        repeat
+                            CheckFirstLineInt := CheckFirstLineInt + 1;
+                            if CheckFirstLineInt = 1 then
+                                ltJsonObjectReserve.Add(APIMappingLine."Service Name", 'Value' + APIMappingLine."Service Name")
+                            else
+                                ltJsonObjectReserve.Add('$' + APIMappingLine."Service Name", 'Value' + APIMappingLine."Service Name");
+                        until APIMappingLine.next = 0;
+                        ltJsonArrayReserve.Add(ltJsonObjectReserve);
+                    end;
                     ltJsonObject.Add('?shiptodetail', ltJsonArrayReserve);
                 end;
+
 
             until ltRecordRef.Next() = 0;
         end;

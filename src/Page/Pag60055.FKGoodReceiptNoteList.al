@@ -219,7 +219,7 @@ page 60055 "FK Good ReceiptNote List"
                     Image = ReceiptLines;
                     ApplicationArea = all;
                     RunObject = Page "Whse. Receipt Lines";
-                    RunPageLink = "Source Type" = CONST(39), "Source Subtype" = FIELD("Document Type"), "Source No." = FIELD("No.");
+                    RunPageLink = "Source Type" = CONST(39), "Source Subtype" = CONST(1), "Source No." = FIELD("No.");
                     RunPageView = SORTING("Source Type", "Source Subtype", "Source No.", "Source Line No.");
                 }
             }
