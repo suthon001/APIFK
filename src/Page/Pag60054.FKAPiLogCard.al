@@ -37,6 +37,11 @@ page 60054 "FK APi Log Card"
                     ApplicationArea = all;
                     ToolTip = 'Specifies the value of the Status field.';
                 }
+                field("Is Manual"; Rec."Is Manual")
+                {
+                    ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the Is Manual field.';
+                }
                 field("Interface By"; Rec."Interface By")
                 {
                     ApplicationArea = all;
@@ -49,10 +54,23 @@ page 60054 "FK APi Log Card"
                     ToolTip = 'Specifies the value of the Date Time field.';
                 }
             }
-            group(lasterrTrans)
+
+            group(JsonLog)
             {
                 Caption = 'Log';
-                Visible = NOT showlog;
+                Visible = showlog;
+                field(ltJsonLog; ltJsonLog)
+                {
+                    Caption = 'Json Log';
+                    MultiLine = true;
+                    Editable = false;
+                    ApplicationArea = all;
+                }
+
+            }
+            group(lasterrTrans)
+            {
+                Caption = 'Response';
                 field(lasterrTrans2; ltResponse)
                 {
                     ApplicationArea = all;
@@ -61,43 +79,6 @@ page 60054 "FK APi Log Card"
                     Editable = false;
                     Caption = 'Response';
                 }
-            }
-            group(JsonLog)
-            {
-                Caption = 'Log';
-                Visible = showlog;
-
-                grid(mygrid)
-                {
-                    group(Json)
-                    {
-
-                        ShowCaption = false;
-                        field(ltJsonLog; ltJsonLog)
-                        {
-                            Caption = 'Json Log';
-                            MultiLine = true;
-                            Editable = false;
-                            ApplicationArea = all;
-
-
-                        }
-                    }
-                    group(lasterr)
-                    {
-                        ShowCaption = false;
-                        field(ltResponse; ltResponse)
-                        {
-                            ApplicationArea = all;
-                            ToolTip = 'Specifies the value of the Last Error field.';
-                            MultiLine = true;
-                            Editable = false;
-                            Caption = 'Response';
-                        }
-                    }
-                }
-
-
             }
         }
     }

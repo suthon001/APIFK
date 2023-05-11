@@ -82,6 +82,12 @@ table 60052 "FK API Log"
             Editable = false;
             DataClassification = CustomerContent;
         }
+        field(13; "Is Manual"; Boolean)
+        {
+            Caption = 'Is Manual';
+            Editable = false;
+            DataClassification = CustomerContent;
+        }
 
     }
     keys

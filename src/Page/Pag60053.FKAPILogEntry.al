@@ -51,6 +51,11 @@ page 60053 "FK API Log Entry"
                     ToolTip = 'Specifies the value of the Page Name field.';
                     ApplicationArea = all;
                 }
+                field("Is Manual"; Rec."Is Manual")
+                {
+                    ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the Is Manual field.';
+                }
                 field("Interface By"; Rec."Interface By")
                 {
                     ApplicationArea = all;

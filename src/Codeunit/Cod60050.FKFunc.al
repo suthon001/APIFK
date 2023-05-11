@@ -1288,18 +1288,15 @@ codeunit 60050 "FK Func"
         apiLog.Status := pStatus;
         apiLog.Insert(true);
         apiLog."Interface By" := CopyStr(USERID(), 1, 100);
+        apiLog."Is Manual" := pIsManual;
         if pMsgError <> '' then begin
-            if pIsManual then
-                pMsgError := pMsgError + ' : Imported by Manual'
-            else
-                pMsgError := pMsgError + ' : Imported by job queue';
             apiLog.Response.CreateOutStream(ltOutStream, TEXTENCODING::UTF8);
             ltOutStream.WriteText(pMsgError);
         end else begin
             if pIsManual then
-                pMsgError := 'Imported by Manual'
+                pMsgError := 'Manual Import'
             else
-                pMsgError := 'Imported by job queue';
+                pMsgError := 'Automatic Import';
             apiLog.Response.CreateOutStream(ltOutStream, TEXTENCODING::UTF8);
             ltOutStream.WriteText(pMsgError);
         end;
@@ -2671,11 +2668,11 @@ codeunit 60050 "FK Func"
             ltOutStream2.WriteText(pMsgError);
         end else begin
             ltRecordRef.Open(pTableID);
+            ltFieldRef := ltRecordRef.FieldIndex(1);
             ltFieldRef.SetRange(pDocumentNo);
             if ltRecordRef.FindFirst() then begin
                 ltPageControl.reset();
                 ltPageControl.SetCurrentKey(PageNo, FieldNo);
-                ltPageControl.SetRange(Visible, 'true');
                 if pTableID = Database::Customer then
                     ltPageControl.SetRange(PageNo, PAGE::"Customer Card");
                 if pTableID = Database::Vendor then
