@@ -51,16 +51,6 @@ page 60053 "FK API Log Entry"
                     ToolTip = 'Specifies the value of the Page Name field.';
                     ApplicationArea = all;
                 }
-                field("Last Error"; Rec."Last Error")
-                {
-                    ToolTip = 'Specifies the value of the Last Error field.';
-                    ApplicationArea = all;
-                }
-                field("Last Error Code"; Rec."Last Error Code")
-                {
-                    ToolTip = 'Specifies the value of the Last Error Code field.';
-                    ApplicationArea = all;
-                }
                 field("Interface By"; Rec."Interface By")
                 {
                     ApplicationArea = all;

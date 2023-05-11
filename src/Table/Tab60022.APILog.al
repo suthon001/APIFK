@@ -31,11 +31,10 @@ table 60052 "FK API Log"
             Caption = 'Json Msg.';
             DataClassification = CustomerContent;
         }
-        field(5; "Last Error"; Text[2047])
+        field(5; "Response"; Blob)
         {
-            Caption = 'Last Error';
+            Caption = 'Response';
             DataClassification = CustomerContent;
-            Editable = false;
         }
         field(6; "Page Name"; Text[50])
         {
@@ -113,6 +112,16 @@ table 60052 "FK API Log"
         CalcFields("Json Msg.");
         "Json Msg.".CreateInStream(InStream, TEXTENCODING::UTF8);
         exit(TypeHelper.TryReadAsTextWithSepAndFieldErrMsg(InStream, TypeHelper.LFSeparator(), FieldName("Json Msg.")));
+    end;
+
+    procedure GetResponse() JsonLog: Text
+    var
+        TypeHelper: Codeunit "Type Helper";
+        InStream: InStream;
+    begin
+        CalcFields(Response);
+        Response.CreateInStream(InStream, TEXTENCODING::UTF8);
+        exit(TypeHelper.TryReadAsTextWithSepAndFieldErrMsg(InStream, TypeHelper.LFSeparator(), FieldName(Response)));
     end;
 
 }

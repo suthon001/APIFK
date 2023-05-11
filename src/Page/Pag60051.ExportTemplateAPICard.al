@@ -69,21 +69,21 @@ page 60051 "FK API Mapping Card"
     {
         area(Processing)
         {
-            action(TESTSENDAPI)
-            {
-                Caption = 'TEST SEND';
-                Image = GetEntries;
-                Promoted = true;
-                PromotedCategory = Process;
-                ApplicationArea = Basic, Suite;
-                Visible = false;
-                trigger OnAction()
-                var
-                    FKFunc: Codeunit "FK Func";
-                begin
-                    FKFunc.purchaseorder(TESTSEND)
-                end;
-            }
+            // action(TESTSENDAPI)
+            // {
+            //     Caption = 'TEST SEND';
+            //     Image = GetEntries;
+            //     Promoted = true;
+            //     PromotedCategory = Process;
+            //     ApplicationArea = Basic, Suite;
+            //     Visible = false;
+            //     trigger OnAction()
+            //     var
+            //         FKFunc: Codeunit "FK Func";
+            //     begin
+            //         FKFunc.purchaseorder(TESTSEND)
+            //     end;
+            // }
             action(GeneralDeteil)
             {
                 Caption = 'Generate Detail';

@@ -49,13 +49,29 @@ page 60054 "FK APi Log Card"
                     ToolTip = 'Specifies the value of the Date Time field.';
                 }
             }
+            group(lasterrTrans)
+            {
+                Caption = 'Log';
+                Visible = NOT showlog;
+                field(lasterrTrans2; ltResponse)
+                {
+                    ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the Last Error field.';
+                    MultiLine = true;
+                    Editable = false;
+                    Caption = 'Response';
+                }
+            }
             group(JsonLog)
             {
                 Caption = 'Log';
+                Visible = showlog;
+
                 grid(mygrid)
                 {
                     group(Json)
                     {
+
                         ShowCaption = false;
                         field(ltJsonLog; ltJsonLog)
                         {
@@ -63,19 +79,24 @@ page 60054 "FK APi Log Card"
                             MultiLine = true;
                             Editable = false;
                             ApplicationArea = all;
+
+
                         }
                     }
                     group(lasterr)
                     {
                         ShowCaption = false;
-                        field("Last Error"; Rec."Last Error")
+                        field(ltResponse; ltResponse)
                         {
                             ApplicationArea = all;
                             ToolTip = 'Specifies the value of the Last Error field.';
                             MultiLine = true;
+                            Editable = false;
+                            Caption = 'Response';
                         }
                     }
                 }
+
 
             }
         }
@@ -83,8 +104,16 @@ page 60054 "FK APi Log Card"
     trigger OnAfterGetRecord()
     begin
         ltJsonLog := rec.GetJsonLog();
+        ltResponse := rec.GetResponse();
+        showlog := false;
+        if rec."No." in [Database::Customer, Database::Vendor, Database::Item] then
+            showlog := true;
     end;
 
+
+
     var
-        ltJsonLog: Text;
+        ltJsonLog, ltResponse : Text;
+        showlog: Boolean;
+
 }
