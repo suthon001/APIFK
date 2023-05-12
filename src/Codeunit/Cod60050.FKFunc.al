@@ -1290,13 +1290,12 @@ codeunit 60050 "FK Func"
         apiLog."Interface By" := CopyStr(USERID(), 1, 100);
         apiLog."Is Manual" := pIsManual;
         if pMsgError <> '' then begin
-            apiLog.Response.CreateOutStream(ltOutStream, TEXTENCODING::UTF8);
-            ltOutStream.WriteText(pMsgError);
+            apiLog."Last Error" := pMsgError;
         end else begin
             if pIsManual then
-                pMsgError := 'Manual Import'
+                pMsgError := 'Manual Import is successfully'
             else
-                pMsgError := 'Automatic Import';
+                pMsgError := 'Automatic Import is successfully';
             apiLog.Response.CreateOutStream(ltOutStream, TEXTENCODING::UTF8);
             ltOutStream.WriteText(pMsgError);
         end;
@@ -2260,13 +2259,12 @@ codeunit 60050 "FK Func"
 
 
         if not HasAlready then begin
-            ltFieldRef := ltRecordRef.FIELD(APIMappingLine."Field No.");
+            ltFieldRef := ltRecordRef.FieldIndex(1);
             ltFieldRef.Validate(ltDocNo);
             ltRecordRef.Insert(true);
             APIMappingLine.SetRange("Is Primary", false);
-            if APIMappingHeader."Table ID" = Database::Customer then begin
+            if APIMappingHeader."Table ID" = Database::Customer then
                 APIMappingLine.SetFilter("Field No.", '<>%1', 12);
-            end;
             if APIMappingLine.FindSet() then begin
                 repeat
                     ltFieldRef := ltRecordRef.FIELD(APIMappingLine."Field No.");
@@ -2287,9 +2285,8 @@ codeunit 60050 "FK Func"
             end;
         end;
         ltRecordRef.Close();
-
         if APIMappingHeader."Table ID" = Database::Customer then
-            CreateShiptoCode(ltDocNo, pJsonObject, SelectJsonTokenText(pJsonObject, '$.shiptocode'), pPageName);
+            CreateShiptoCode(ltDocNo, pJsonObject, pPageName);
 
 
         // IF APIMappingHeader."Sub Table ID" <> 0 then
@@ -2306,9 +2303,10 @@ codeunit 60050 "FK Func"
         //             ItemJournalInsertReserveLine(TemplateName, BatchName, ltLineNo, ltJsonTokenReserve);
         //         end;
 
+
     end;
 
-    local procedure CreateShiptoCode(pCustomerCode: code[30]; pJsonObject: JsonObject; pShiptoCode: code[20]; pPageName: Enum "FK Api Page Type")
+    local procedure CreateShiptoCode(pCustomerCode: code[30]; pJsonObject: JsonObject; pPageName: Enum "FK Api Page Type")
     var
         Customer: Record Customer;
         ltJsonObjectDetail: JsonObject;
@@ -2322,28 +2320,28 @@ codeunit 60050 "FK Func"
         ltLineNo, ltIndexofDetail : Integer;
         ltDate: Date;
         ltCheckLine: JsonToken;
+        ShiptoCode: Code[20];
 
     begin
         if pJsonObject.SelectToken('$.shiptodetail', ltJsonToken) then begin
             ltJsonArray := ltJsonToken.AsArray();
             foreach ltJsonTokenDetail in ltJsonArray do begin
                 ltJsonObjectDetail := ltJsonTokenDetail.AsObject();
-                ltRecordRef.Open(Database::"Ship-to Address");
-                ltRecordRef.Init();
                 if SelectJsonTokenText(ltJsonObjectDetail, '$.code') <> '' then begin
+                    ltRecordRef.Open(Database::"Ship-to Address");
+                    ltRecordRef.Init();
+                    ShiptoCode := SelectJsonTokenText(ltJsonObjectDetail, '$.code');
+                    ltFieldRef := ltRecordRef.FieldIndex(1);
+                    ltFieldRef.Validate(pCustomerCode);
+                    ltFieldRef := ltRecordRef.FieldIndex(2);
+                    ltFieldRef.Validate(ShiptoCode);
+                    ltRecordRef.Insert(true);
                     APIMappingLine.reset();
                     APIMappingLine.SetCurrentKey("Page Name", "Line Type", "Field No.");
                     APIMappingLine.SetRange("Page Name", pPageName);
                     APIMappingLine.SetRange("Line Type", APIMappingLine."Line Type"::Line);
                     APIMappingLine.SetRange(Include, true);
                     APIMappingLine.SetFilter("Service Name", '<>%1', '');
-                    APIMappingLine.SetRange("Is Primary", true);
-                    if APIMappingLine.FindSet() then
-                        repeat
-                            ltFieldRef := ltRecordRef.FIELD(APIMappingLine."Field No.");
-                            ltFieldRef.Validate(SelectJsonTokenText(pJsonObject, '$.' + APIMappingLine."Service Name"));
-                        until APIMappingLine.Next() = 0;
-                    ltRecordRef.Insert(true);
                     APIMappingLine.SetRange("Is Primary", false);
                     if APIMappingLine.FindSet() then
                         repeat
@@ -2366,9 +2364,9 @@ codeunit 60050 "FK Func"
                 end;
             end;
         end;
-        if pShiptoCode <> '' then begin
+        if ShiptoCode <> '' then begin
             if Customer.GET(pCustomerCode) then begin
-                Customer."Ship-to Code" := pShiptoCode;
+                Customer."Ship-to Code" := ShiptoCode;
                 Customer.Modify();
             end;
         end;
@@ -2638,13 +2636,9 @@ codeunit 60050 "FK Func"
     local procedure insertlog(pTableID: integer; PageName: text; pjsonObject: JsonObject; pDateTime: DateTime; pMsgError: Text; pStatus: Option Successfully,"Error"; pNoOfAPI: Integer; pMsgErrorCode: text; pDocumentNo: Code[30]; pMethodType: Option "Insert","Update","Delete")
     var
         apiLog: Record "FK API Log";
+        APIMappingLine: Record "API Setup Line";
         JsonText: Text;
         ltOutStream, ltOutStream2 : OutStream;
-        ltJsonObject: JsonObject;
-        ltRecordRef: RecordRef;
-        ltFieldRef: FieldRef;
-        ltPageControl: Record "Page Control Field";
-        ltField: Record Field;
         ltMsg: Text;
     begin
         JsonText := '';
@@ -2663,35 +2657,11 @@ codeunit 60050 "FK Func"
         apiLog."Document No." := pDocumentNo;
         apiLog."Json Msg.".CreateOutStream(ltOutStream, TEXTENCODING::UTF8);
         ltOutStream.WriteText(JsonText);
-        if pMsgError <> '' then begin
+        if pMsgError <> '' then
+            apiLog."Last Error" := pMsgError
+        else begin
             apiLog.Response.CreateOutStream(ltOutStream2, TEXTENCODING::UTF8);
-            ltOutStream2.WriteText(pMsgError);
-        end else begin
-            ltRecordRef.Open(pTableID);
-            ltFieldRef := ltRecordRef.FieldIndex(1);
-            ltFieldRef.SetRange(pDocumentNo);
-            if ltRecordRef.FindFirst() then begin
-                ltPageControl.reset();
-                ltPageControl.SetCurrentKey(PageNo, FieldNo);
-                if pTableID = Database::Customer then
-                    ltPageControl.SetRange(PageNo, PAGE::"Customer Card");
-                if pTableID = Database::Vendor then
-                    ltPageControl.SetRange(PageNo, PAGE::"Vendor Card");
-                if pTableID = Database::item then
-                    ltPageControl.SetRange(PageNo, PAGE::"Item Card");
-                if ltPageControl.FindSet() then
-                    repeat
-                        if ltField.GET(pTableID, ltPageControl.FieldNo) then
-                            if (ltField.Class = ltField.Class::Normal) and (ltField.Type <> ltField.Type::BLOB) then begin
-                                ltFieldRef := ltRecordRef.Field(ltPageControl.FieldNo);
-                                ltJsonObject.Add(ltField.FieldName, format(ltFieldRef.Value));
-                            end;
-                    until ltPageControl.Next() = 0;
-                ltJsonObject.WriteTo(ltMsg);
-                apiLog.Response.CreateOutStream(ltOutStream2, TEXTENCODING::UTF8);
-                ltOutStream2.WriteText(ltMsg);
-            end;
-            ltRecordRef.Close();
+            ltOutStream2.WriteText(JsonText);
         end;
         apiLog.Modify();
     end;
@@ -2729,8 +2699,7 @@ codeunit 60050 "FK Func"
                 pJsonObject.Add('page', apiLog."Page Name");
                 pJsonObject.Add('tableID', apiLog."No.");
                 pJsonObject.Add('dateTime', apiLog."Date Time");
-                ltErr := apiLog.GetResponse();
-                pJsonObject.Add('lastError', ltErr);
+                pJsonObject.Add('lastError', apiLog."Last Error");
                 pJsonArray.Add(pJsonObject);
             until apiLog.Next() = 0;
             pJsonObjectBuill.Add('status', 'Error');

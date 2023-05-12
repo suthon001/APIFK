@@ -68,16 +68,27 @@ page 60054 "FK APi Log Card"
                 }
 
             }
-            group(lasterrTrans)
+            group(Response)
             {
                 Caption = 'Response';
-                field(lasterrTrans2; ltResponse)
+                field(ltResponse; ltResponse)
                 {
                     ApplicationArea = all;
                     ToolTip = 'Specifies the value of the Last Error field.';
                     MultiLine = true;
                     Editable = false;
                     Caption = 'Response';
+                }
+            }
+            group(LastErr)
+            {
+                Caption = 'Error Log';
+                field("Last Error"; Rec."Last Error")
+                {
+                    ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the Last Error field.';
+                    MultiLine = true;
+                    Editable = false;
                 }
             }
         }

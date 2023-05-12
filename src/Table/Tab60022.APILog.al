@@ -88,6 +88,12 @@ table 60052 "FK API Log"
             Editable = false;
             DataClassification = CustomerContent;
         }
+        field(14; "Last Error"; Text[2047])
+        {
+            Caption = 'Last Error';
+            Editable = false;
+            DataClassification = CustomerContent;
+        }
 
     }
     keys
