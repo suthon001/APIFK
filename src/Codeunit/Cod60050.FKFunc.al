@@ -3,7 +3,15 @@
 /// </summary>
 codeunit 60050 "FK Func"
 {
-
+    local procedure CheckLot(pItemNo: code[20]; pLotNo: code[50])
+    var
+        ltITem: Record Item;
+    begin
+        if pLotNo <> '' then begin
+            ltITem.GET(pItemNo);
+            ltITem.TestField("Item Tracking Code");
+        end;
+    end;
 
     local procedure SelectoptionGenLine(pValue: Text): Enum "Gen. Journal Account Type"
     var
@@ -33,6 +41,10 @@ codeunit 60050 "FK Func"
     end;
 
 
+    /// <summary>
+    /// ImportItemJournalPositive.
+    /// </summary>
+    /// <param name="pIsManual">Boolean.</param>
     procedure ImportItemJournalPositive(pIsManual: Boolean)
     var
         ltItemJournalTemp: Record "Item Journal Line" temporary;
@@ -53,6 +65,10 @@ codeunit 60050 "FK Func"
     end;
 
 
+    /// <summary>
+    /// ImportItemJournalNegative.
+    /// </summary>
+    /// <param name="pIsManual">Boolean.</param>
     procedure ImportItemJournalNegative(pIsManual: Boolean)
     var
         ltItemJournalTemp: Record "Item Journal Line" temporary;
@@ -93,6 +109,10 @@ codeunit 60050 "FK Func"
 
     end;
 
+    /// <summary>
+    /// ImportUpdateGRN.
+    /// </summary>
+    /// <param name="pIsManual">Boolean.</param>
     procedure ImportUpdateGRN(pIsManual: Boolean)
     var
         ltPurchaseHeaderTemp: Record "Purchase Header" temporary;
@@ -326,6 +346,7 @@ codeunit 60050 "FK Func"
                         8:
                             begin
                                 ltPurchaseLine."Temp. Lot No." := CSVBuffer.Value;
+                                CheckLot(ltPurchaseLine."No.", ltPurchaseLine."Temp. Lot No.");
 
                             end;
                         9:
@@ -1161,7 +1182,10 @@ codeunit 60050 "FK Func"
                                     ItemJournal.Validate(Quantity, ltDicimal);
                             end;
                         7:
-                            ItemJournal."Temp. Lot No." := CSVBuffer.Value;
+                            begin
+                                ItemJournal."Temp. Lot No." := CSVBuffer.Value;
+                                CheckLot(ItemJournal."Item No.", ItemJournal."Temp. Lot No.");
+                            end;
                         8:
                             begin
                                 if Evaluate(ltDate, CSVBuffer.Value) then
@@ -1255,7 +1279,10 @@ codeunit 60050 "FK Func"
                                     ItemJournal.Validate(Quantity, ltDicimal);
                             end;
                         7:
-                            ItemJournal."Temp. Lot No." := CSVBuffer.Value;
+                            begin
+                                ItemJournal."Temp. Lot No." := CSVBuffer.Value;
+                                CheckLot(ItemJournal."Item No.", ItemJournal."Temp. Lot No.");
+                            end;
                         8:
                             begin
                                 if Evaluate(ltDate, CSVBuffer.Value) then
@@ -3092,4 +3119,5 @@ codeunit 60050 "FK Func"
     var
         gvNo: Text;
         FKApiPageType: Enum "FK Api Page Type";
+
 }
