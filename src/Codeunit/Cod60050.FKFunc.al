@@ -1641,7 +1641,6 @@ codeunit 60050 "FK Func"
         ltPageName: Text;
         ltNoofAPI: Integer;
     begin
-
         ltPageName := UpperCase('Customer');
         ltNoofAPI := GetNoOfAPI(ltPageName);
         ltDateTime := CurrentDateTime();
@@ -1649,10 +1648,37 @@ codeunit 60050 "FK Func"
         ltJsonArray := ltJsonToken.AsArray();
         foreach ltJsonToken2 in ltJsonArray do begin
             ltJsonObject2 := ltJsonToken2.AsObject();
-            if not InsertTotable(FKApiPageType::Customer, Database::Customer, ltJsonObject2) then
+            if not InsertTotable(FKApiPageType::Customer, Database::Customer, ltJsonObject2, false) then
                 Insertlog(Database::Customer, ltPageName, ltJsonObject2, ltDateTime, GetLastErrorText(), 1, ltNoofAPI, GetLastErrorCode(), SelectJsonTokenText(ltJsonObject2, '$.no'), 0)
             else
                 Insertlog(Database::Customer, ltPageName, ltJsonObject2, ltDateTime, '', 0, ltNoofAPI, '', SelectJsonTokenText(ltJsonObject2, '$.no'), 0);
+
+        end;
+        exit(ReuturnErrorAPI(ltPageName, ltNoofAPI));
+    end;
+
+    procedure createshiptoaddress(customerlists: BigText): Text;
+    var
+        ltJsonObject, ltJsonObjectDetail, ltJsonObject2 : JsonObject;
+        ltJsonToken, ltJsonToken2 : JsonToken;
+        ltJsonArray: JsonArray;
+        ltDateTime: DateTime;
+        ltPageName: Text;
+        ltNoofAPI: Integer;
+        ltDocNo: Text[100];
+    begin
+        ltPageName := UpperCase('SHIP TO ADDRESS');
+        ltNoofAPI := GetNoOfAPI(ltPageName);
+        ltDateTime := CurrentDateTime();
+        ltJsonToken.ReadFrom(Format(customerlists).Replace('\', ''));
+        ltJsonArray := ltJsonToken.AsArray();
+        foreach ltJsonToken2 in ltJsonArray do begin
+            ltJsonObject2 := ltJsonToken2.AsObject();
+            ltDocNo := SelectJsonTokenText(ltJsonObject2, '$.no') + ' : ' + SelectJsonTokenText(ltJsonObject2, '$.shiptocode');
+            if not InsertTotable(FKApiPageType::Customer, Database::Customer, ltJsonObject2, true) then
+                Insertlog(Database::"Ship-to Address", ltPageName, ltJsonObject2, ltDateTime, GetLastErrorText(), 1, ltNoofAPI, GetLastErrorCode(), ltDocNo, 0)
+            else
+                Insertlog(Database::"Ship-to Address", ltPageName, ltJsonObject2, ltDateTime, '', 0, ltNoofAPI, '', ltDocNo, 0);
 
         end;
         exit(ReuturnErrorAPI(ltPageName, ltNoofAPI));
@@ -1710,7 +1736,7 @@ codeunit 60050 "FK Func"
         ltJsonArray := ltJsonToken.AsArray();
         foreach ltJsonToken2 in ltJsonArray do begin
             ltJsonObject2 := ltJsonToken2.AsObject();
-            if not InsertTotable(FKApiPageType::Item, Database::Item, ltJsonObject2) then
+            if not InsertTotable(FKApiPageType::Item, Database::Item, ltJsonObject2, false) then
                 Insertlog(Database::Item, ltPageName, ltJsonObject2, ltDateTime, GetLastErrorText(), 1, ltNoofAPI, GetLastErrorCode(), SelectJsonTokenText(ltJsonObject2, '$.no'), 0)
             else
                 Insertlog(Database::Item, ltPageName, ltJsonObject2, ltDateTime, '', 0, ltNoofAPI, '', SelectJsonTokenText(ltJsonObject2, '$.no'), 0);
@@ -1767,7 +1793,7 @@ codeunit 60050 "FK Func"
         ltJsonArray := ltJsonToken.AsArray();
         foreach ltJsonToken2 in ltJsonArray do begin
             ltJsonObject2 := ltJsonToken2.AsObject();
-            if not InsertTotable(FKApiPageType::Vendor, Database::vendor, ltJsonObject2) then
+            if not InsertTotable(FKApiPageType::Vendor, Database::vendor, ltJsonObject2, false) then
                 Insertlog(Database::Vendor, ltPageName, ltJsonObject2, ltDateTime, GetLastErrorText(), 1, ltNoofAPI, GetLastErrorCode(), SelectJsonTokenText(ltJsonObject2, '$.no'), 0)
             else
                 Insertlog(Database::Vendor, ltPageName, ltJsonObject2, ltDateTime, '', 0, ltNoofAPI, '', SelectJsonTokenText(ltJsonObject2, '$.no'), 0);
@@ -2251,7 +2277,7 @@ codeunit 60050 "FK Func"
 
 
     [TryFunction]
-    local procedure InsertTotable(pPageName: Enum "FK Api Page Type"; pTableID: Integer; pJsonObject: JsonObject)
+    local procedure InsertTotable(pPageName: Enum "FK Api Page Type"; pTableID: Integer; pJsonObject: JsonObject; pShipto: Boolean)
     var
         APIMappingHeader: Record "API Setup Header";
         APIMappingLine: Record "API Setup Line";
@@ -2280,15 +2306,15 @@ codeunit 60050 "FK Func"
         if APIMappingLine.FindSet() then
             ltDocNo := SelectJsonTokenText(pJsonObject, '$.' + APIMappingLine."Service Name");
 
-        if pTableID = Database::Customer then
-            if ltCustomer.GET(ltDocNo) then
-                HasAlready := true;
+        if pShipto then begin
+            ltCustomer.GET(ltDocNo);
+            HasAlready := true;
+        end;
 
 
         if not HasAlready then begin
             ltFieldRef := ltRecordRef.FieldIndex(1);
             ltFieldRef.Validate(ltDocNo);
-            ltRecordRef.Insert(true);
             APIMappingLine.SetRange("Is Primary", false);
             if APIMappingHeader."Table ID" = Database::Customer then
                 APIMappingLine.SetFilter("Field No.", '<>%1', 12);
@@ -2308,7 +2334,7 @@ codeunit 60050 "FK Func"
                         end else
                             ltFieldRef.Validate(SelectJsonTokenText(pJsonObject, '$.' + APIMappingLine."Service Name"));
                 until APIMappingLine.Next() = 0;
-                ltRecordRef.Modify(true);
+                ltRecordRef.Insert(true);
             end;
         end;
         ltRecordRef.Close();
@@ -2660,7 +2686,7 @@ codeunit 60050 "FK Func"
         exit(1);
     end;
 
-    local procedure insertlog(pTableID: integer; PageName: text; pjsonObject: JsonObject; pDateTime: DateTime; pMsgError: Text; pStatus: Option Successfully,"Error"; pNoOfAPI: Integer; pMsgErrorCode: text; pDocumentNo: Code[30]; pMethodType: Option "Insert","Update","Delete")
+    local procedure insertlog(pTableID: integer; PageName: text; pjsonObject: JsonObject; pDateTime: DateTime; pMsgError: Text; pStatus: Option Successfully,"Error"; pNoOfAPI: Integer; pMsgErrorCode: text; pDocumentNo: Code[100]; pMethodType: Option "Insert","Update","Delete")
     var
         apiLog: Record "FK API Log";
         APIMappingLine: Record "API Setup Line";
