@@ -1648,7 +1648,7 @@ codeunit 60050 "FK Func"
         ltJsonArray := ltJsonToken.AsArray();
         foreach ltJsonToken2 in ltJsonArray do begin
             ltJsonObject2 := ltJsonToken2.AsObject();
-            if not InsertTotable(FKApiPageType::Customer, Database::Customer, ltJsonObject2, false) then
+            if not InsertTotable(FKApiPageType::Customer, Database::Customer, ltJsonObject2) then
                 Insertlog(Database::Customer, ltPageName, ltJsonObject2, ltDateTime, GetLastErrorText(), 1, ltNoofAPI, GetLastErrorCode(), SelectJsonTokenText(ltJsonObject2, '$.no'), 0)
             else
                 Insertlog(Database::Customer, ltPageName, ltJsonObject2, ltDateTime, '', 0, ltNoofAPI, '', SelectJsonTokenText(ltJsonObject2, '$.no'), 0);
@@ -1736,7 +1736,7 @@ codeunit 60050 "FK Func"
         ltJsonArray := ltJsonToken.AsArray();
         foreach ltJsonToken2 in ltJsonArray do begin
             ltJsonObject2 := ltJsonToken2.AsObject();
-            if not InsertTotable(FKApiPageType::Item, Database::Item, ltJsonObject2, false) then
+            if not InsertTotable(FKApiPageType::Item, Database::Item, ltJsonObject2) then
                 Insertlog(Database::Item, ltPageName, ltJsonObject2, ltDateTime, GetLastErrorText(), 1, ltNoofAPI, GetLastErrorCode(), SelectJsonTokenText(ltJsonObject2, '$.no'), 0)
             else
                 Insertlog(Database::Item, ltPageName, ltJsonObject2, ltDateTime, '', 0, ltNoofAPI, '', SelectJsonTokenText(ltJsonObject2, '$.no'), 0);
@@ -1793,7 +1793,7 @@ codeunit 60050 "FK Func"
         ltJsonArray := ltJsonToken.AsArray();
         foreach ltJsonToken2 in ltJsonArray do begin
             ltJsonObject2 := ltJsonToken2.AsObject();
-            if not InsertTotable(FKApiPageType::Vendor, Database::vendor, ltJsonObject2, false) then
+            if not InsertTotable(FKApiPageType::Vendor, Database::vendor, ltJsonObject2) then
                 Insertlog(Database::Vendor, ltPageName, ltJsonObject2, ltDateTime, GetLastErrorText(), 1, ltNoofAPI, GetLastErrorCode(), SelectJsonTokenText(ltJsonObject2, '$.no'), 0)
             else
                 Insertlog(Database::Vendor, ltPageName, ltJsonObject2, ltDateTime, '', 0, ltNoofAPI, '', SelectJsonTokenText(ltJsonObject2, '$.no'), 0);
@@ -2277,7 +2277,7 @@ codeunit 60050 "FK Func"
 
 
     [TryFunction]
-    local procedure InsertTotable(pPageName: Enum "FK Api Page Type"; pTableID: Integer; pJsonObject: JsonObject; pShipto: Boolean)
+    local procedure InsertTotable(pPageName: Enum "FK Api Page Type"; pTableID: Integer; pJsonObject: JsonObject)
     var
         APIMappingHeader: Record "API Setup Header";
         APIMappingLine: Record "API Setup Line";
@@ -2306,37 +2306,30 @@ codeunit 60050 "FK Func"
         if APIMappingLine.FindSet() then
             ltDocNo := SelectJsonTokenText(pJsonObject, '$.' + APIMappingLine."Service Name");
 
-        if pShipto then begin
-            ltCustomer.GET(ltDocNo);
-            HasAlready := true;
+        ltFieldRef := ltRecordRef.FieldIndex(1);
+        ltFieldRef.Validate(ltDocNo);
+        APIMappingLine.SetRange("Is Primary", false);
+        if APIMappingHeader."Table ID" = Database::Customer then
+            APIMappingLine.SetFilter("Field No.", '<>%1', 12);
+        if APIMappingLine.FindSet() then begin
+            repeat
+                ltFieldRef := ltRecordRef.FIELD(APIMappingLine."Field No.");
+                if ltFieldRef.Type IN [ltFieldRef.Type::Integer, ltFieldRef.Type::Decimal, ltFieldRef.Type::Option] then
+                    if ltFieldRef.Type = ltFieldRef.Type::Option then begin
+                        ltIndexofDetail := SelectOption(ltFieldRef.OptionCaption, SelectJsonTokenText(pJsonObject, '$.' + APIMappingLine."Service Name"));
+                        ltFieldRef.validate(ltIndexofDetail);
+                    end else
+                        ltFieldRef.validate(SelectJsonTokenInterger(pJsonObject, '$.' + APIMappingLine."Service Name"))
+                else
+                    if ltFieldRef.Type = ltFieldRef.Type::Date then begin
+                        Evaluate(ltDate, SelectJsonTokenText(pJsonObject, '$.' + APIMappingLine."Service Name"));
+                        ltFieldRef.Validate(ltDate);
+                    end else
+                        ltFieldRef.Validate(SelectJsonTokenText(pJsonObject, '$.' + APIMappingLine."Service Name"));
+            until APIMappingLine.Next() = 0;
+            ltRecordRef.Insert(true);
         end;
 
-
-        if not HasAlready then begin
-            ltFieldRef := ltRecordRef.FieldIndex(1);
-            ltFieldRef.Validate(ltDocNo);
-            APIMappingLine.SetRange("Is Primary", false);
-            if APIMappingHeader."Table ID" = Database::Customer then
-                APIMappingLine.SetFilter("Field No.", '<>%1', 12);
-            if APIMappingLine.FindSet() then begin
-                repeat
-                    ltFieldRef := ltRecordRef.FIELD(APIMappingLine."Field No.");
-                    if ltFieldRef.Type IN [ltFieldRef.Type::Integer, ltFieldRef.Type::Decimal, ltFieldRef.Type::Option] then
-                        if ltFieldRef.Type = ltFieldRef.Type::Option then begin
-                            ltIndexofDetail := SelectOption(ltFieldRef.OptionCaption, SelectJsonTokenText(pJsonObject, '$.' + APIMappingLine."Service Name"));
-                            ltFieldRef.validate(ltIndexofDetail);
-                        end else
-                            ltFieldRef.validate(SelectJsonTokenInterger(pJsonObject, '$.' + APIMappingLine."Service Name"))
-                    else
-                        if ltFieldRef.Type = ltFieldRef.Type::Date then begin
-                            Evaluate(ltDate, SelectJsonTokenText(pJsonObject, '$.' + APIMappingLine."Service Name"));
-                            ltFieldRef.Validate(ltDate);
-                        end else
-                            ltFieldRef.Validate(SelectJsonTokenText(pJsonObject, '$.' + APIMappingLine."Service Name"));
-                until APIMappingLine.Next() = 0;
-                ltRecordRef.Insert(true);
-            end;
-        end;
         ltRecordRef.Close();
         if APIMappingHeader."Table ID" = Database::Customer then
             CreateShiptoCodeFromCustomer(ltDocNo, pJsonObject, pPageName);
