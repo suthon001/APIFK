@@ -1657,7 +1657,7 @@ codeunit 60050 "FK Func"
         exit(ReuturnErrorAPI(ltPageName, ltNoofAPI));
     end;
 
-    procedure createshiptoaddress(customerlists: BigText): Text;
+    procedure createshiptoaddress(shiptolists: BigText): Text;
     var
         ltJsonObject, ltJsonObjectDetail, ltJsonObject2 : JsonObject;
         ltJsonToken, ltJsonToken2 : JsonToken;
@@ -1670,12 +1670,12 @@ codeunit 60050 "FK Func"
         ltPageName := UpperCase('SHIP TO ADDRESS');
         ltNoofAPI := GetNoOfAPI(ltPageName);
         ltDateTime := CurrentDateTime();
-        ltJsonToken.ReadFrom(Format(customerlists).Replace('\', ''));
+        ltJsonToken.ReadFrom(Format(shiptolists).Replace('\', ''));
         ltJsonArray := ltJsonToken.AsArray();
         foreach ltJsonToken2 in ltJsonArray do begin
             ltJsonObject2 := ltJsonToken2.AsObject();
-            ltDocNo := SelectJsonTokenText(ltJsonObject2, '$.no') + ' : ' + SelectJsonTokenText(ltJsonObject2, '$.shiptocode');
-            if not InsertTotable(FKApiPageType::Customer, Database::Customer, ltJsonObject2, true) then
+            ltDocNo := SelectJsonTokenText(ltJsonObject2, '$.customerno') + ' : ' + SelectJsonTokenText(ltJsonObject2, '$.shiptocode');
+            if not CreateShiptoCode(ltJsonObject2) then
                 Insertlog(Database::"Ship-to Address", ltPageName, ltJsonObject2, ltDateTime, GetLastErrorText(), 1, ltNoofAPI, GetLastErrorCode(), ltDocNo, 0)
             else
                 Insertlog(Database::"Ship-to Address", ltPageName, ltJsonObject2, ltDateTime, '', 0, ltNoofAPI, '', ltDocNo, 0);
@@ -2339,7 +2339,7 @@ codeunit 60050 "FK Func"
         end;
         ltRecordRef.Close();
         if APIMappingHeader."Table ID" = Database::Customer then
-            CreateShiptoCode(ltDocNo, pJsonObject, pPageName);
+            CreateShiptoCodeFromCustomer(ltDocNo, pJsonObject, pPageName);
 
 
         // IF APIMappingHeader."Sub Table ID" <> 0 then
@@ -2359,7 +2359,52 @@ codeunit 60050 "FK Func"
 
     end;
 
-    local procedure CreateShiptoCode(pCustomerCode: code[30]; pJsonObject: JsonObject; pPageName: Enum "FK Api Page Type")
+    [TryFunction]
+    local procedure CreateShiptoCode(pJsonObject: JsonObject)
+    var
+        APIMappingLine: Record "API Setup Line";
+        ltFieldRef: FieldRef;
+        ltRecordRef: RecordRef;
+        ltField: Record Field;
+        ltIndexofDetail: Integer;
+        ltDate: Date;
+    begin
+
+        ltRecordRef.Open(Database::"Ship-to Address");
+        ltRecordRef.Init();
+        ltFieldRef := ltRecordRef.FieldIndex(1);
+        ltFieldRef.Validate(SelectJsonTokenText(pJsonObject, '$.customerno'));
+        ltFieldRef := ltRecordRef.FieldIndex(2);
+        ltFieldRef.Validate(SelectJsonTokenText(pJsonObject, '$.code'));
+        ltRecordRef.Insert(true);
+        APIMappingLine.reset();
+        APIMappingLine.SetCurrentKey("Page Name", "Line Type", "Field No.");
+        APIMappingLine.SetRange("Page Name", APIMappingLine."Page Name"::Customer);
+        APIMappingLine.SetRange("Line Type", APIMappingLine."Line Type"::Line);
+        APIMappingLine.SetRange(Include, true);
+        APIMappingLine.SetFilter("Service Name", '<>%1', '');
+        APIMappingLine.SetRange("Is Primary", false);
+        if APIMappingLine.FindSet() then
+            repeat
+                ltFieldRef := ltRecordRef.FIELD(APIMappingLine."Field No.");
+                if ltFieldRef.Type IN [ltFieldRef.Type::Integer, ltFieldRef.Type::Decimal, ltFieldRef.Type::Option] then
+                    if ltFieldRef.Type = ltFieldRef.Type::Option then begin
+                        ltIndexofDetail := SelectOption(ltFieldRef.OptionCaption, SelectJsonTokenText(pJsonObject, '$.' + APIMappingLine."Service Name"));
+                        ltFieldRef.validate(ltIndexofDetail);
+                    end else
+                        ltFieldRef.validate(SelectJsonTokenInterger(pJsonObject, '$.' + APIMappingLine."Service Name"))
+                else
+                    if ltFieldRef.Type = ltFieldRef.Type::Date then begin
+                        Evaluate(ltDate, SelectJsonTokenText(pJsonObject, '$.' + APIMappingLine."Service Name"));
+                        ltFieldRef.Validate(ltDate);
+                    end else
+                        ltFieldRef.Validate(SelectJsonTokenText(pJsonObject, '$.' + APIMappingLine."Service Name"));
+            until APIMappingLine.Next() = 0;
+        ltRecordRef.Modify();
+        ltRecordRef.Close();
+    end;
+
+    local procedure CreateShiptoCodeFromCustomer(pCustomerCode: code[30]; pJsonObject: JsonObject; pPageName: Enum "FK Api Page Type")
     var
         Customer: Record Customer;
         ltJsonObjectDetail: JsonObject;
@@ -2372,7 +2417,6 @@ codeunit 60050 "FK Func"
         ltField: Record Field;
         ltLineNo, ltIndexofDetail : Integer;
         ltDate: Date;
-        ltCheckLine: JsonToken;
         ShiptoCode: Code[20];
 
     begin
@@ -2401,16 +2445,16 @@ codeunit 60050 "FK Func"
                             ltFieldRef := ltRecordRef.FIELD(APIMappingLine."Field No.");
                             if ltFieldRef.Type IN [ltFieldRef.Type::Integer, ltFieldRef.Type::Decimal, ltFieldRef.Type::Option] then
                                 if ltFieldRef.Type = ltFieldRef.Type::Option then begin
-                                    ltIndexofDetail := SelectOption(ltFieldRef.OptionCaption, SelectJsonTokenText(pJsonObject, '$.' + APIMappingLine."Service Name"));
+                                    ltIndexofDetail := SelectOption(ltFieldRef.OptionCaption, SelectJsonTokenText(ltJsonObjectDetail, '$.' + APIMappingLine."Service Name"));
                                     ltFieldRef.validate(ltIndexofDetail);
                                 end else
-                                    ltFieldRef.validate(SelectJsonTokenInterger(pJsonObject, '$.' + APIMappingLine."Service Name"))
+                                    ltFieldRef.validate(SelectJsonTokenInterger(ltJsonObjectDetail, '$.' + APIMappingLine."Service Name"))
                             else
                                 if ltFieldRef.Type = ltFieldRef.Type::Date then begin
-                                    Evaluate(ltDate, SelectJsonTokenText(pJsonObject, '$.' + APIMappingLine."Service Name"));
+                                    Evaluate(ltDate, SelectJsonTokenText(ltJsonObjectDetail, '$.' + APIMappingLine."Service Name"));
                                     ltFieldRef.Validate(ltDate);
                                 end else
-                                    ltFieldRef.Validate(SelectJsonTokenText(pJsonObject, '$.' + APIMappingLine."Service Name"));
+                                    ltFieldRef.Validate(SelectJsonTokenText(ltJsonObjectDetail, '$.' + APIMappingLine."Service Name"));
                         until APIMappingLine.Next() = 0;
                     ltRecordRef.Modify();
                     ltRecordRef.Close();
@@ -2968,7 +3012,7 @@ codeunit 60050 "FK Func"
                 pApiName: Text;
                 pPageName: Enum "FK Api Page Type";
                                pDocumentNo: Text;
-                               pJsonFormat: Boolean)
+                               pJsonFormat: Boolean; pShiptoAddress: Boolean)
     var
 
         APIMappingLine: Record "API Setup Line";
@@ -3000,7 +3044,10 @@ codeunit 60050 "FK Func"
                 APIMappingLine.reset();
                 APIMappingLine.SetCurrentKey("Page Name", "Line Type", "Field No.");
                 APIMappingLine.SetRange("Page Name", pPageName);
-                APIMappingLine.SetRange("Line Type", APIMappingLine."Line Type"::Header);
+                if not pShiptoAddress then
+                    APIMappingLine.SetRange("Line Type", APIMappingLine."Line Type"::Header)
+                else
+                    APIMappingLine.SetRange("Line Type", APIMappingLine."Line Type"::Line);
                 APIMappingLine.SetRange(Include, true);
                 APIMappingLine.SetFilter("Service Name", '<>%1', '');
                 if APIMappingLine.FindSet() then begin

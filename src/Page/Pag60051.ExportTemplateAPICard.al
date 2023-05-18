@@ -101,7 +101,7 @@ page 60051 "FK API Mapping Card"
             }
             action(ExportTemplateString)
             {
-                Caption = 'Export Json String';
+                Caption = 'Export Ex. Json String';
                 Image = Export;
                 Promoted = true;
                 PromotedCategory = Process;
@@ -115,7 +115,7 @@ page 60051 "FK API Mapping Card"
                         Message('please generate detail befor export')
                     else begin
                         // if rec."Sub Table ID" = 0 then
-                        FKFunc.ExportJsonFormat(rec."Page No.", rec."Table ID", rec."Serivce Name", rec."Page Name", documentNoFilter, false)
+                        FKFunc.ExportJsonFormat(rec."Page No.", rec."Table ID", rec."Serivce Name", rec."Page Name", documentNoFilter, false, false);
                         // else begin
                         // if rec."Page Name" = rec."Page Name"::"Purchase Order" then
                         //     DocumentType := DocumentType::Order;
@@ -128,6 +128,27 @@ page 60051 "FK API Mapping Card"
 
                         // FKFunc.ExportJsonFormatMultitable(rec."Page No.", rec."Sub Page No.", DocumentType, rec."Serivce Name", rec."Page Name", rec."Table ID", rec."Sub Table ID", documentNoFilter, false);
                         //  end;
+                    end;
+                end;
+            }
+
+            action(ExportTemplateStringShiptoAddress)
+            {
+                Caption = 'Export Ship-to Address';
+                Visible = visableShiptoAddress;
+                Image = Export;
+                Promoted = true;
+                PromotedCategory = Process;
+                ApplicationArea = Basic, Suite;
+                trigger OnAction()
+                var
+                    FKFunc: Codeunit "FK Func";
+                begin
+                    if rec.apisetuplineexists() then
+                        Message('please generate detail befor export')
+                    else begin
+                        rec.TestField(rec."Sub Table ID");
+                        FKFunc.ExportJsonFormat(rec."sub Page No.", rec."Sub Table ID", 'shiptolists', rec."Page Name", documentNoFilter, false, true);
                     end;
                 end;
             }
@@ -183,9 +204,14 @@ page 60051 "FK API Mapping Card"
             // }
         }
     }
+    trigger OnOpenPage()
+    begin
+        visableShiptoAddress := rec."Page Name" = rec."Page Name"::Customer;
+    end;
 
     var
         TESTSEND: BigText;
         documentNoFilter: Text;
+        visableShiptoAddress: Boolean;
 
 }
