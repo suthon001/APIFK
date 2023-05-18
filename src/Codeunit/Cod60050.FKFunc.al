@@ -2288,7 +2288,6 @@ codeunit 60050 "FK Func"
         if not HasAlready then begin
             ltFieldRef := ltRecordRef.FieldIndex(1);
             ltFieldRef.Validate(ltDocNo);
-            ltRecordRef.Insert(true);
             APIMappingLine.SetRange("Is Primary", false);
             if APIMappingHeader."Table ID" = Database::Customer then
                 APIMappingLine.SetFilter("Field No.", '<>%1', 12);
@@ -2308,7 +2307,7 @@ codeunit 60050 "FK Func"
                         end else
                             ltFieldRef.Validate(SelectJsonTokenText(pJsonObject, '$.' + APIMappingLine."Service Name"));
                 until APIMappingLine.Next() = 0;
-                ltRecordRef.Modify(true);
+                ltRecordRef.Insert(true);
             end;
         end;
         ltRecordRef.Close();
