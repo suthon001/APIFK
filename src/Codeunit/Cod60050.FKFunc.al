@@ -2258,7 +2258,13 @@ codeunit 60050 "FK Func"
                                 Evaluate(ltDate, SelectJsonTokenText(pJsonObject, '$.' + APIMappingLine."Service Name"));
                                 ltFieldRef.Validate(ltDate);
                             end else
-                                ltFieldRef.Validate(SelectJsonTokenText(pJsonObject, '$.' + APIMappingLine."Service Name"));
+                                if ltFieldRef.Type = ltFieldRef.Type::Boolean then begin
+                                    if uppercase(SelectJsonTokenText(pJsonObject, '$.' + APIMappingLine."Service Name")) = 'NO' then
+                                        ltFieldRef.Validate(false)
+                                    else
+                                        ltFieldRef.Validate(true);
+                                end else
+                                    ltFieldRef.Validate(SelectJsonTokenText(pJsonObject, '$.' + APIMappingLine."Service Name"));
                     until APIMappingLine.Next() = 0;
 
                     ltRecordRef.Modify(true);
@@ -2325,7 +2331,13 @@ codeunit 60050 "FK Func"
                         Evaluate(ltDate, SelectJsonTokenText(pJsonObject, '$.' + APIMappingLine."Service Name"));
                         ltFieldRef.Validate(ltDate);
                     end else
-                        ltFieldRef.Validate(SelectJsonTokenText(pJsonObject, '$.' + APIMappingLine."Service Name"));
+                        if ltFieldRef.Type = ltFieldRef.Type::Boolean then begin
+                            if uppercase(SelectJsonTokenText(pJsonObject, '$.' + APIMappingLine."Service Name")) = 'NO' then
+                                ltFieldRef.Validate(false)
+                            else
+                                ltFieldRef.Validate(true);
+                        end else
+                            ltFieldRef.Validate(SelectJsonTokenText(pJsonObject, '$.' + APIMappingLine."Service Name"));
             until APIMappingLine.Next() = 0;
             ltRecordRef.Insert(true);
         end;
