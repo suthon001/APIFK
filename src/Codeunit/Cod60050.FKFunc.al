@@ -3,6 +3,19 @@
 /// </summary>
 codeunit 60050 "FK Func"
 {
+
+    local procedure ClearError(pTableID: Integer; pNo: Code[30])
+    var
+        ltRecRef: RecordRef;
+        ltFieldRef: FieldRef;
+    begin
+        ltRecRef.Open(pTableID);
+        ltFieldRef := ltRecRef.FieldIndex(1);
+        ltFieldRef.SetRange(pNo);
+        if ltRecRef.FindFirst() then
+            ltRecRef.Delete(true);
+    end;
+
     local procedure CheckLot(pItemNo: code[20]; pLotNo: code[50])
     var
         ltITem: Record Item;
@@ -1648,9 +1661,10 @@ codeunit 60050 "FK Func"
         ltJsonArray := ltJsonToken.AsArray();
         foreach ltJsonToken2 in ltJsonArray do begin
             ltJsonObject2 := ltJsonToken2.AsObject();
-            if not InsertTotable(FKApiPageType::Customer, Database::Customer, ltJsonObject2) then
-                Insertlog(Database::Customer, ltPageName, ltJsonObject2, ltDateTime, GetLastErrorText(), 1, ltNoofAPI, GetLastErrorCode(), SelectJsonTokenText(ltJsonObject2, '$.no'), 0)
-            else
+            if not InsertTotable(FKApiPageType::Customer, Database::Customer, ltJsonObject2) then begin
+                Insertlog(Database::Customer, ltPageName, ltJsonObject2, ltDateTime, GetLastErrorText(), 1, ltNoofAPI, GetLastErrorCode(), SelectJsonTokenText(ltJsonObject2, '$.no'), 0);
+                ClearError(Database::Customer, SelectJsonTokenText(ltJsonObject2, '$.no'));
+            end else
                 Insertlog(Database::Customer, ltPageName, ltJsonObject2, ltDateTime, '', 0, ltNoofAPI, '', SelectJsonTokenText(ltJsonObject2, '$.no'), 0);
 
         end;
@@ -1736,9 +1750,10 @@ codeunit 60050 "FK Func"
         ltJsonArray := ltJsonToken.AsArray();
         foreach ltJsonToken2 in ltJsonArray do begin
             ltJsonObject2 := ltJsonToken2.AsObject();
-            if not InsertTotable(FKApiPageType::Item, Database::Item, ltJsonObject2) then
-                Insertlog(Database::Item, ltPageName, ltJsonObject2, ltDateTime, GetLastErrorText(), 1, ltNoofAPI, GetLastErrorCode(), SelectJsonTokenText(ltJsonObject2, '$.no'), 0)
-            else
+            if not InsertTotable(FKApiPageType::Item, Database::Item, ltJsonObject2) then begin
+                Insertlog(Database::Item, ltPageName, ltJsonObject2, ltDateTime, GetLastErrorText(), 1, ltNoofAPI, GetLastErrorCode(), SelectJsonTokenText(ltJsonObject2, '$.no'), 0);
+                ClearError(Database::Item, SelectJsonTokenText(ltJsonObject2, '$.no'));
+            end else
                 Insertlog(Database::Item, ltPageName, ltJsonObject2, ltDateTime, '', 0, ltNoofAPI, '', SelectJsonTokenText(ltJsonObject2, '$.no'), 0);
         end;
         exit(ReuturnErrorAPI(ltPageName, ltNoofAPI));
@@ -1793,9 +1808,10 @@ codeunit 60050 "FK Func"
         ltJsonArray := ltJsonToken.AsArray();
         foreach ltJsonToken2 in ltJsonArray do begin
             ltJsonObject2 := ltJsonToken2.AsObject();
-            if not InsertTotable(FKApiPageType::Vendor, Database::vendor, ltJsonObject2) then
-                Insertlog(Database::Vendor, ltPageName, ltJsonObject2, ltDateTime, GetLastErrorText(), 1, ltNoofAPI, GetLastErrorCode(), SelectJsonTokenText(ltJsonObject2, '$.no'), 0)
-            else
+            if not InsertTotable(FKApiPageType::Vendor, Database::vendor, ltJsonObject2) then begin
+                Insertlog(Database::Vendor, ltPageName, ltJsonObject2, ltDateTime, GetLastErrorText(), 1, ltNoofAPI, GetLastErrorCode(), SelectJsonTokenText(ltJsonObject2, '$.no'), 0);
+                ClearError(Database::Vendor, SelectJsonTokenText(ltJsonObject2, '$.no'));
+            end else
                 Insertlog(Database::Vendor, ltPageName, ltJsonObject2, ltDateTime, '', 0, ltNoofAPI, '', SelectJsonTokenText(ltJsonObject2, '$.no'), 0);
         end;
         exit(ReuturnErrorAPI(ltPageName, ltNoofAPI));
@@ -2399,9 +2415,11 @@ codeunit 60050 "FK Func"
                     end else
                         ltFieldRef.validate(SelectJsonTokenInterger(pJsonObject, '$.' + APIMappingLine."Service Name"))
                 else
-                    if ltFieldRef.Type = ltFieldRef.Type::Date then begin
-                        Evaluate(ltDate, SelectJsonTokenText(pJsonObject, '$.' + APIMappingLine."Service Name"));
-                        ltFieldRef.Validate(ltDate);
+                    if ltFieldRef.Type = ltFieldRef.Type::Boolean then begin
+                        if uppercase(SelectJsonTokenText(pJsonObject, '$.' + APIMappingLine."Service Name")) = 'NO' then
+                            ltFieldRef.Validate(false)
+                        else
+                            ltFieldRef.Validate(true);
                     end else
                         ltFieldRef.Validate(SelectJsonTokenText(pJsonObject, '$.' + APIMappingLine."Service Name"));
             until APIMappingLine.Next() = 0;
