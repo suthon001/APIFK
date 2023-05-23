@@ -19,4 +19,35 @@ pageextension 60055 "FK Posted Purchase Receipt" extends "Posted Purchase Receip
             }
         }
     }
+    actions
+    {
+        modify("&Print")
+        {
+            Visible = false;
+        }
+        addafter("&Print")
+        {
+            action("Purchase Receipt")
+            {
+                Caption = 'Purchase Receipt';
+                Image = PrintReport;
+                ApplicationArea = all;
+
+                trigger OnAction()
+                var
+                    PurchaseHeader: Record "Purch. Rcpt. Header";
+                begin
+                    PurchaseHeader.reset();
+                    PurchaseHeader.SetRange("No.", rec."No.");
+                    REPORT.RunModal(REPORT::"TPP Purchase Receipt", true, false, PurchaseHeader);
+                end;
+
+            }
+        }
+        addafter(Category_Report)
+        {
+            actionref(reportpurchaseReceipt; "Purchase Receipt") { }
+        }
+
+    }
 }

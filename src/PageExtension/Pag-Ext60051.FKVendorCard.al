@@ -42,7 +42,11 @@ pageextension 60051 "FK Vendor Card" extends "Vendor Card"
                     ApplicationArea = all;
                     ToolTip = 'Specifies value of the field.';
                 }
-
+                field("TPP Default Address"; Rec."TPP Default Address")
+                {
+                    ApplicationArea = all;
+                    ToolTip = 'Specifies value of the field.';
+                }
                 field("Billing Address"; Rec."Billing Address")
                 {
                     ApplicationArea = all;

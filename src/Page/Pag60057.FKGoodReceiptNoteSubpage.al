@@ -504,12 +504,37 @@ page 60057 "FK Good ReceiptNote Subpage"
     end;
 
     /// <summary>
+    /// ForceTotalsCalculation.
+    /// </summary>
+    procedure ForceTotalsCalculation()
+    begin
+        DocumentTotals.PurchaseDocTotalsNotUpToDate();
+    end;
+
+    local procedure CheckSendLineInvoiceDiscountResetNotification()
+    var
+        IsHandled: Boolean;
+    begin
+
+
+        if rec."Line Amount" <> xRec."Line Amount" then
+            rec.SendLineInvoiceDiscountResetNotification();
+    end;
+    /// <summary>
     /// UpdateForm.
     /// </summary>
     /// <param name="SetSaveRecord">Boolean.</param>
     procedure UpdateForm(SetSaveRecord: Boolean)
     begin
         CurrPage.UPDATE(SetSaveRecord);
+    end;
+
+    /// <summary>
+    /// ClearTotalPurchaseHeader.
+    /// </summary>
+    procedure ClearTotalPurchaseHeader();
+    begin
+        Clear(TotalPurchaseHeader);
     end;
 
     [IntegrationEvent(false, false)]

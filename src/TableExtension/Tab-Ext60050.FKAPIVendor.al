@@ -140,6 +140,24 @@ tableextension 60050 "FK API Vendor" extends Vendor
             Caption = 'Vendor Direct';
             DataClassification = CustomerContent;
         }
+        field(60061; "TPP Default Address"; Boolean)
+        {
+            Caption = 'Default Address';
+            DataClassification = ToBeClassified;
+            trigger OnValidate()
+            begin
+                if xrec."TPP Default Address" <> rec."TPP Default Address" then
+                    if rec."TPP Default Address" then
+                        CopyAddresstoBillingAddress()
+                    else begin
+                        rec."Billing Address" := '';
+                        rec."Billing Address 2" := '';
+                        rec."Billing City" := '';
+                        rec."Billing Post Code" := '';
+                        rec."Billing Region Code" := '';
+                    end;
+            end;
+        }
         field(70000; "Already Send"; Boolean)
         {
             Caption = 'Already Send';
@@ -148,6 +166,15 @@ tableextension 60050 "FK API Vendor" extends Vendor
         }
 
     }
+    local procedure CopyAddresstoBillingAddress()
+    begin
+        rec."Billing Address" := rec.Address;
+        rec."Billing Address 2" := rec."Address 2";
+        rec."Billing City" := rec.City;
+        rec."Billing Post Code" := rec."Post Code";
+        rec."Billing Region Code" := rec."Country/Region Code";
+    end;
+
     var
         PostCode: Record "Post Code";
 }
