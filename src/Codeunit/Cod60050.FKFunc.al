@@ -4,6 +4,8 @@
 codeunit 60050 "FK Func"
 {
 
+
+
     local procedure ClearError(pTableID: Integer; pNo: Code[30])
     var
         ltRecRef: RecordRef;
@@ -12,6 +14,8 @@ codeunit 60050 "FK Func"
         ltRecRef.Open(pTableID);
         ltFieldRef := ltRecRef.FieldIndex(1);
         ltFieldRef.SetRange(pNo);
+        ltFieldRef := ltRecRef.Field(69999);
+        ltFieldRef.SetRange(false);
         if ltRecRef.FindFirst() then
             ltRecRef.Delete(true);
     end;
@@ -2330,6 +2334,7 @@ codeunit 60050 "FK Func"
 
         ltFieldRef := ltRecordRef.FieldIndex(1);
         ltFieldRef.Validate(ltDocNo);
+        ltRecordRef.Insert(true);
         APIMappingLine.SetRange("Is Primary", false);
         if APIMappingHeader."Table ID" = Database::Customer then
             APIMappingLine.SetFilter("Field No.", '<>%1', 12);
@@ -2355,7 +2360,9 @@ codeunit 60050 "FK Func"
                         end else
                             ltFieldRef.Validate(SelectJsonTokenText(pJsonObject, '$.' + APIMappingLine."Service Name"));
             until APIMappingLine.Next() = 0;
-            ltRecordRef.Insert(true);
+            ltFieldRef := ltRecordRef.FIELD(69999);
+            ltFieldRef.validate(true);
+            ltRecordRef.Modify()
         end;
 
         ltRecordRef.Close();

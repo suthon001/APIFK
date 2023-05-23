@@ -11,5 +11,17 @@ tableextension 60051 "FK Item" extends Item
             DataClassification = CustomerContent;
             Editable = false;
         }
+        field(69999; "Is Successfully"; Boolean)
+        {
+            Caption = 'Is Successfully';
+            DataClassification = CustomerContent;
+            Editable = false;
+        }
     }
+
+    trigger OnInsert()
+    begin
+        if not (CurrentClientType in [CurrentClientType::Api, CurrentClientType::OData, CurrentClientType::ODataV4]) then
+            rec."Is Successfully" := true;
+    end;
 }

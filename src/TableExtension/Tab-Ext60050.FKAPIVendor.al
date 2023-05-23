@@ -158,6 +158,12 @@ tableextension 60050 "FK API Vendor" extends Vendor
                     end;
             end;
         }
+        field(69999; "Is Successfully"; Boolean)
+        {
+            Caption = 'Is Successfully';
+            DataClassification = CustomerContent;
+            Editable = false;
+        }
         field(70000; "Already Send"; Boolean)
         {
             Caption = 'Already Send';
@@ -166,6 +172,12 @@ tableextension 60050 "FK API Vendor" extends Vendor
         }
 
     }
+    trigger OnInsert()
+    begin
+        if not (CurrentClientType in [CurrentClientType::Api, CurrentClientType::OData, CurrentClientType::ODataV4]) then
+            rec."Is Successfully" := true;
+    end;
+
     local procedure CopyAddresstoBillingAddress()
     begin
         rec."Billing Address" := rec.Address;
