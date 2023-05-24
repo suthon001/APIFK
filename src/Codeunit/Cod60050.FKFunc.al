@@ -77,8 +77,13 @@ codeunit 60050 "FK Func"
                     InsertLot(ltItemJournal, ltItemJournal."Temp. Lot No.", ltItemJournal."Temp. Expire Date");
                 until ltItemJournalTemp.Next() = 0;
             InsertLogTransaction(Database::"Item Journal Line", 'POSITIVE', CurrentDateTime(), 0, '', ltFileName, 0, pIsManual);
-        end else
+            if pIsManual then
+                MESSAGE('Import is successfully');
+        end else begin
             InsertLogTransaction(Database::"Item Journal Line", 'POSITIVE', CurrentDateTime(), 1, GetLastErrorText(), ltFileName, 0, pIsManual);
+            if pIsManual then
+                MESSAGE('%1', GetLastErrorText());
+        end;
     end;
 
 
@@ -101,8 +106,13 @@ codeunit 60050 "FK Func"
                     InsertLot(ltItemJournal, ltItemJournal."Temp. Lot No.", ltItemJournal."Temp. Expire Date");
                 until ltItemJournalTemp.Next() = 0;
             InsertLogTransaction(Database::"Item Journal Line", 'NEGATIVE', CurrentDateTime(), 0, '', ltFileName, 0, pIsManual);
-        end else
+            if pIsManual then
+                MESSAGE('Import is successfully');
+        end else begin
             InsertLogTransaction(Database::"Item Journal Line", 'NEGATIVE', CurrentDateTime(), 1, GetLastErrorText(), ltFileName, 0, pIsManual);
+            if pIsManual then
+                MESSAGE('%1', GetLastErrorText());
+        end;
 
     end;
 
@@ -121,8 +131,13 @@ codeunit 60050 "FK Func"
                     InsertLot(ltItemJournal, ltItemJournal."Temp. Lot No.", ltItemJournal."Temp. Expire Date");
                 until ltItemJournalTemp.Next() = 0;
             InsertLogTransaction(Database::"Item Journal Line", 'RECLASS', CurrentDateTime(), 0, '', ltFileName, 0, pIsManual);
-        end else
+            if pIsManual then
+                MESSAGE('Import is successfully');
+        end else begin
             InsertLogTransaction(Database::"Item Journal Line", 'RECLASS', CurrentDateTime(), 1, GetLastErrorText(), ltFileName, 0, pIsManual);
+            if pIsManual then
+                MESSAGE('%1', GetLastErrorText());
+        end;
 
     end;
 
@@ -168,8 +183,13 @@ codeunit 60050 "FK Func"
 
                 until ltPurchaseHeaderTemp.Next() = 0;
             InsertLogTransaction(Database::"Purchase Header", 'PURCHASE GRN', CurrentDateTime(), 0, '', ltFileName, 1, pIsManual);
-        end else
+            if pIsManual then
+                MESSAGE('Import is successfully');
+        end else begin
             InsertLogTransaction(Database::"Purchase Header", 'PURCHASE GRN', CurrentDateTime(), 1, GetLastErrorText(), ltFileName, 1, pIsManual);
+            if pIsManual then
+                MESSAGE('%1', GetLastErrorText());
+        end;
     end;
 
     procedure ImportUpdateReturnShip(pIsManual: Boolean)
@@ -210,8 +230,13 @@ codeunit 60050 "FK Func"
 
                 until ltPurchaseHeaderTemp.Next() = 0;
             InsertLogTransaction(Database::"Purchase Header", 'RETURN SHIP', CurrentDateTime(), 0, '', ltFileName, 1, pIsManual);
-        end else
+            if pIsManual then
+                MESSAGE('Import is successfully');
+        end else begin
             InsertLogTransaction(Database::"Purchase Header", 'RETURN SHIP', CurrentDateTime(), 1, GetLastErrorText(), ltFileName, 1, pIsManual);
+            if pIsManual then
+                MESSAGE('%1', GetLastErrorText());
+        end;
     end;
 
     local procedure InsertLotPurchase(pPurchaseLine: Record "Purchase Line"; pLotNo: code[50]; pExpireDate: Date)
@@ -426,8 +451,13 @@ codeunit 60050 "FK Func"
                     ltPurchaseHeader.Modify();
                 until ltPurchaseHeaderTemp.Next() = 0;
             InsertLogTransaction(Database::"Purchase Header", 'PURCHASE ORDER', CurrentDateTime(), 0, '', ltFileName, 0, pIsManual);
-        end else
+            if pIsManual then
+                MESSAGE('Import is successfully');
+        end else begin
             InsertLogTransaction(Database::"Purchase Header", 'PURCHASE ORDER', CurrentDateTime(), 1, GetLastErrorText(), ltFileName, 0, pIsManual);
+            if pIsManual then
+                MESSAGE('%1', GetLastErrorText());
+        end;
     end;
 
     procedure ImportReturnOrder(pIsManual: Boolean)
@@ -470,8 +500,13 @@ codeunit 60050 "FK Func"
                     ltPurchaseHeader.Modify();
                 until ltPurchaseHeaderTemp.Next() = 0;
             InsertLogTransaction(Database::"Purchase Header", 'RETURN ORDER', CurrentDateTime(), 0, '', ltFileName, 0, pIsManual);
-        end else
+            if pIsManual then
+                MESSAGE('Import is successfully');
+        end else begin
             InsertLogTransaction(Database::"Purchase Header", 'RETURN ORDER', CurrentDateTime(), 1, GetLastErrorText(), ltFileName, 0, pIsManual);
+            if pIsManual then
+                MESSAGE('%1', GetLastErrorText());
+        end;
     end;
 
 
@@ -712,8 +747,13 @@ codeunit 60050 "FK Func"
                     ltSalesHEader.Modify();
                 until ltSalesHeaderTemp.Next() = 0;
             InsertLogTransaction(Database::"Sales Header", 'SALES CREDIT', CurrentDateTime(), 0, '', ltFileName, 0, pIsManual);
-        end else
+            if pIsManual then
+                MESSAGE('Import is successfully');
+        end else begin
             InsertLogTransaction(Database::"Sales Header", 'SALES CREDIT', CurrentDateTime(), 1, GetLastErrorText(), ltFileName, 0, pIsManual);
+            if pIsManual then
+                Message('%1', GetLastErrorText());
+        end;
     end;
 
     procedure ImportToSalesInvoice(pIsManual: Boolean)
@@ -758,8 +798,13 @@ codeunit 60050 "FK Func"
                     ltSalesHEader.Modify();
                 until ltSalesHeaderTemp.Next() = 0;
             InsertLogTransaction(Database::"Sales Header", 'SALES INVOICE', CurrentDateTime(), 0, '', ltFileName, 0, pIsManual);
-        end else
+            if pIsManual then
+                MESSAGE('Import is successfully');
+        end else begin
             InsertLogTransaction(Database::"Sales Header", 'SALES INVOICE', CurrentDateTime(), 1, GetLastErrorText(), ltFileName, 0, pIsManual);
+            if pIsManual then
+                Message('%1', GetLastErrorText());
+        end;
     end;
 
 
@@ -996,8 +1041,13 @@ codeunit 60050 "FK Func"
                     ltGenJournalLine.Insert();
                 until ltGenJournalTemp.Next() = 0;
             InsertLogTransaction(Database::"Gen. Journal Line", 'CASH RECEIPT', CurrentDateTime(), 0, '', ltFileName, 0, pIsManual);
-        end else
+            if pIsManual then
+                MESSAGE('Import is successfully');
+        end else begin
             InsertLogTransaction(Database::"Gen. Journal Line", 'CASH RECEIPT', CurrentDateTime(), 1, GetLastErrorText(), ltFileName, 0, pIsManual);
+            if pIsManual then
+                Message('%1', GetLastErrorText());
+        end;
     end;
 
     [TryFunction]
