@@ -7,6 +7,8 @@ page 60056 "FK Good ReceiptNote Card"
     PageType = Document;
     RefreshOnActivate = true;
     SourceTable = "Purchase Header";
+    InsertAllowed = false;
+    DeleteAllowed = false;
     SourceTableView = sorting("Document Type", "No.") where("Document Type" = filter(Order), Status = filter(Released | "Pending Prepayment"));
     layout
     {
@@ -887,74 +889,7 @@ page 60056 "FK Good ReceiptNote Card"
                         PostDocument(CODEUNIT::"Purch.-Post (Yes/No)", "Navigate After Posting"::"Posted Document");
                     end;
                 }
-                action(Preview)
-                {
-                    ApplicationArea = Suite;
-                    Caption = 'Preview Posting';
-                    Image = ViewPostedOrder;
-                    ShortCutKey = 'Ctrl+Alt+F9';
-                    ToolTip = 'Review the different types of entries that will be created when you post the document or journal.';
 
-                    trigger OnAction()
-                    begin
-                        ShowPreview();
-                    end;
-                }
-                action("Post and &Print")
-                {
-                    ApplicationArea = Suite;
-                    Caption = 'Post and &Print';
-                    Ellipsis = true;
-                    Image = PostPrint;
-                    ShortCutKey = 'Shift+F9';
-                    ToolTip = 'Finalize and prepare to print the document or journal. The values and quantities are posted to the related accounts. A report request window where you can specify what to include on the print-out.';
-
-                    trigger OnAction()
-                    begin
-                        PostDocument(CODEUNIT::"Purch.-Post + Print", "Navigate After Posting"::"Do Nothing");
-                    end;
-                }
-                action(PostAndNew)
-                {
-                    ApplicationArea = Basic, Suite;
-                    Caption = 'Post and New';
-                    Ellipsis = true;
-                    Image = PostOrder;
-                    ShortCutKey = 'Alt+F9';
-                    ToolTip = 'Post the purchase document and create a new, empty one.';
-
-                    trigger OnAction()
-                    begin
-                        PostDocument(CODEUNIT::"Purch.-Post (Yes/No)", "Navigate After Posting"::"New Document");
-                    end;
-                }
-                action("Test Report")
-                {
-                    ApplicationArea = Suite;
-                    Caption = 'Test Report';
-                    Ellipsis = true;
-                    Image = TestReport;
-                    ToolTip = 'View a test report so that you can find and correct any errors before you perform the actual posting of the journal or document.';
-
-                    trigger OnAction()
-                    begin
-                        ReportPrint.PrintPurchHeader(Rec);
-                    end;
-                }
-                action("Post &Batch")
-                {
-                    ApplicationArea = Suite;
-                    Caption = 'Post &Batch';
-                    Ellipsis = true;
-                    Image = PostBatch;
-                    ToolTip = 'Post several documents at once. A report request window opens where you can specify which documents to post.';
-
-                    trigger OnAction()
-                    begin
-                        REPORT.RunModal(REPORT::"Batch Post Purchase Orders", true, true, Rec);
-                        CurrPage.Update(false);
-                    end;
-                }
 
                 group("Prepa&yment")
                 {
@@ -1138,18 +1073,7 @@ page 60056 "FK Good ReceiptNote Card"
                     actionref(Post_Promoted; Post)
                     {
                     }
-                    actionref(Preview_Promoted; Preview)
-                    {
-                    }
-                    actionref("Post and &Print_Promoted"; "Post and &Print")
-                    {
-                    }
-                    actionref(PostAndNew_Promoted; PostAndNew)
-                    {
-                    }
-                    actionref("Post &Batch_Promoted"; "Post &Batch")
-                    {
-                    }
+
                 }
                 group(Category_Category5)
                 {

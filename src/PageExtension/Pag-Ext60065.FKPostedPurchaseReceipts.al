@@ -1,19 +1,19 @@
 /// <summary>
-/// PageExtension FK Purchase Quote (ID 60060) extends Record Purchase Quote.
+/// PageExtension FK Posted Purchase Receipts (ID 60065) extends Record Posted Purchase Receipts.
 /// </summary>
-pageextension 60060 "FK Purchase Quote" extends "Purchase Quote"
+pageextension 60065 "FK Posted Purchase Receipts" extends "Posted Purchase Receipts"
 {
     actions
     {
-        modify(Print)
+        modify("&Print")
         {
             Visible = false;
         }
-        addafter(Print)
+        addafter("&Print")
         {
-            action("Purchase Quotes")
+            action("Purchase Receipt")
             {
-                Caption = 'Purchase Quote';
+                Caption = 'Purchase Receipt';
                 Image = PrintReport;
                 ApplicationArea = all;
                 Promoted = true;
@@ -22,14 +22,12 @@ pageextension 60060 "FK Purchase Quote" extends "Purchase Quote"
                 PromotedOnly = true;
                 trigger OnAction()
                 var
-                    PurchaseHeader: Record "Purchase Header";
+                    PurchaseHeader: Record "Purch. Rcpt. Header";
                 begin
                     PurchaseHeader.reset();
-                    PurchaseHeader.SetRange("Document Type", rec."Document Type");
                     PurchaseHeader.SetRange("No.", rec."No.");
-                    REPORT.RunModal(REPORT::"TPP Purchase Quote", true, false, PurchaseHeader);
+                    REPORT.RunModal(REPORT::"TPP Purchase Receipt", true, false, PurchaseHeader);
                 end;
-
             }
         }
 

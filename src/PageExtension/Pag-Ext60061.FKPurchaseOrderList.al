@@ -16,7 +16,10 @@ pageextension 60061 "FK Purchase Order List" extends "Purchase Order List"
                 Caption = 'Purchase Order';
                 Image = PrintReport;
                 ApplicationArea = all;
-
+                Promoted = true;
+                PromotedCategory = report;
+                PromotedIsBig = true;
+                PromotedOnly = true;
                 trigger OnAction()
                 var
                     PurchaseHeader: Record "Purchase Header";
@@ -29,10 +32,7 @@ pageextension 60061 "FK Purchase Order List" extends "Purchase Order List"
 
             }
         }
-        addafter(Category_Report)
-        {
-            actionref(reportpurchaseorder; "Purchase Order") { }
-        }
+
 
     }
 }

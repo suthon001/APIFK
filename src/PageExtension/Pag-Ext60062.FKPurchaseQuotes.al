@@ -16,7 +16,10 @@ pageextension 60062 "FK Purchase Quotes" extends "Purchase Quotes"
                 Caption = 'Purchase Quote';
                 Image = PrintReport;
                 ApplicationArea = all;
-
+                Promoted = true;
+                PromotedCategory = report;
+                PromotedIsBig = true;
+                PromotedOnly = true;
                 trigger OnAction()
                 var
                     PurchaseHeader: Record "Purchase Header";
@@ -29,10 +32,7 @@ pageextension 60062 "FK Purchase Quotes" extends "Purchase Quotes"
 
             }
         }
-        addafter(Category_Report)
-        {
-            actionref(reportpurchasequotes; "Purchase Quotes") { }
-        }
+
 
     }
 }

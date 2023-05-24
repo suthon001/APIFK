@@ -16,7 +16,10 @@ pageextension 60063 "FK Purchase Return Order" extends "Purchase Return Order"
                 Caption = 'Purchase Return Order';
                 Image = PrintReport;
                 ApplicationArea = all;
-
+                Promoted = true;
+                PromotedCategory = report;
+                PromotedIsBig = true;
+                PromotedOnly = true;
                 trigger OnAction()
                 var
                     PurchaseHeader: Record "Purchase Header";
@@ -29,10 +32,7 @@ pageextension 60063 "FK Purchase Return Order" extends "Purchase Return Order"
 
             }
         }
-        addafter(Category_Report)
-        {
-            actionref(reportpurchaseReturnOrder; "Purchase Return Order") { }
-        }
+
 
     }
 }

@@ -32,7 +32,10 @@ pageextension 60055 "FK Posted Purchase Receipt" extends "Posted Purchase Receip
                 Caption = 'Purchase Receipt';
                 Image = PrintReport;
                 ApplicationArea = all;
-
+                Promoted = true;
+                PromotedCategory = report;
+                PromotedIsBig = true;
+                PromotedOnly = true;
                 trigger OnAction()
                 var
                     PurchaseHeader: Record "Purch. Rcpt. Header";
@@ -43,10 +46,6 @@ pageextension 60055 "FK Posted Purchase Receipt" extends "Posted Purchase Receip
                 end;
 
             }
-        }
-        addafter(Category_Report)
-        {
-            actionref(reportpurchaseReceipt; "Purchase Receipt") { }
         }
 
     }
