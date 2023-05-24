@@ -48,7 +48,30 @@ pageextension 60059 "FK Purchase Order" extends "Purchase Order"
 
             }
         }
-
+        modify(Post)
+        {
+            Visible = false;
+        }
+        modify("Post &Batch")
+        {
+            Visible = false;
+        }
+        modify("Post and &Print")
+        {
+            Visible = false;
+        }
+        modify("Post and Print Prepmt. Cr. Mem&o")
+        {
+            Visible = false;
+        }
+        modify("Post and Print Prepmt. Invoic&e")
+        {
+            Visible = false;
+        }
+        modify(PostAndNew)
+        {
+            Visible = false;
+        }
 
     }
 }

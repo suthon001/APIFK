@@ -155,7 +155,11 @@ report 60051 "TPP Purchase Quote"
             {
 
             }
-            column(DimName2; DepartMentName)
+            column(DimName2; DimName2)
+            {
+
+            }
+            column(DimName1; DimName1)
             {
 
             }
@@ -240,36 +244,15 @@ report 60051 "TPP Purchase Quote"
 
 
                 GLSetup.GET;
-                IF "Shortcut Dimension 1 Code" <> '' THEN BEGIN
-                    IF DimValue.GET(GLSetup."Shortcut Dimension 1 Code", "Shortcut Dimension 1 Code") THEN
-                        DimName1 := DimValue.Name;
-                END;
-                IF "Shortcut Dimension 2 Code" <> '' THEN BEGIN
-                    IF DimValue.GET(GLSetup."Shortcut Dimension 2 Code", "Shortcut Dimension 2 Code") THEN
-                        DimName2 := DimValue.Name;
-                END;
-                //TPP.AP 02272020 ++
-                DimEntry.Reset();
-                DimEntry.SetRange("Dimension Set ID", "Dimension Set ID");
-                DimEntry.SetRange("Dimension Code", 'JOB');
-                if DimEntry.FindFirst() then
-                    DimEntry.CalcFields("Dimension Value Name");
+                CLEAR(DimName1);
+                Clear(DimName2);
+                IF DimValue.GET(GLSetup."Shortcut Dimension 1 Code", "Shortcut Dimension 1 Code") THEN
+                    DimName1 := DimValue.Name;
 
-                // DimensionValue.Reset();
-                // DimensionValue.SetRange("Code", "Location for Show");
-                // DimensionValue.SetRange("Dimension Code", 'LocationSh');
-                // if not DimensionValue.FindFirst() then
-                //     DimensionValue.Init();
 
-                Clear(DepartMentName);
-                DimEntryDepartment.Reset();
-                DimEntryDepartment.SetRange("Dimension Set ID", "Dimension Set ID");
-                DimEntryDepartment.SetRange("Dimension Code", 'DEPARTMENT');
-                if DimEntryDepartment.FindFirst() then begin
-                    DimEntryDepartment.CalcFields("Dimension Value Name");
-                    DepartMentName := DimEntryDepartment."Dimension Value Name";
-                end;
-                //TPP.AP 02272020 --
+                IF DimValue.GET(GLSetup."Shortcut Dimension 2 Code", "Shortcut Dimension 2 Code") THEN
+                    DimName2 := DimValue.Name;
+
 
             end;
 

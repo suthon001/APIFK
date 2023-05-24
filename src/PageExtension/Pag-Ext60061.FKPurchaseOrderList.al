@@ -32,7 +32,26 @@ pageextension 60061 "FK Purchase Order List" extends "Purchase Order List"
 
             }
         }
-
+        modify(Post)
+        {
+            Visible = false;
+        }
+        modify(PostAndPrint)
+        {
+            Visible = false;
+        }
+        modify(PostBatch)
+        {
+            Visible = false;
+        }
+        modify(PostedPurchaseInvoices)
+        {
+            Visible = false;
+        }
+        modify(PostedPurchasePrepmtInvoices)
+        {
+            Visible = false;
+        }
 
     }
 }

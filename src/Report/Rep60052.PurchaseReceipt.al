@@ -160,6 +160,10 @@ report 60052 "TPP Purchase Receipt"
 
                 trigger OnAfterGetRecord()
                 begin
+                    if (Type <> Type::" ") and (Quantity = 0) then
+                        CurrReport.Skip();
+                    if Correction then
+                        CurrReport.Skip();
 
                     if "No." <> '' then
                         LineNo += 1;

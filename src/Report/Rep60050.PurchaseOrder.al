@@ -3,8 +3,6 @@
 /// </summary>
 report 60050 "TPP Purchase Order"
 {
-
-
     DefaultLayout = RDLC;
     RDLCLayout = './LayoutReport/PurchaseOrder.rdl';
     Caption = 'Purcahse Order';
@@ -156,6 +154,14 @@ report 60050 "TPP Purchase Order"
 
             }
             column(Comment; Comment) { }
+            column(DimName2; DimName2)
+            {
+
+            }
+            column(DimName1; DimName1)
+            {
+
+            }
 
             dataitem("Purchase Line"; "Purchase Line")
             {
@@ -238,15 +244,12 @@ report 60050 "TPP Purchase Order"
                     RefPRNo := PurchLine."TPP Reference PR No.";
 
 
-                GLSetup.GET;
-                IF "Shortcut Dimension 1 Code" <> '' THEN BEGIN
-                    IF DimValue.GET(GLSetup."Shortcut Dimension 1 Code", "Shortcut Dimension 1 Code") THEN
-                        DimName1 := DimValue.Name;
-                END;
-                IF "Shortcut Dimension 2 Code" <> '' THEN BEGIN
-                    IF DimValue.GET(GLSetup."Shortcut Dimension 2 Code", "Shortcut Dimension 2 Code") THEN
-                        DimName2 := DimValue.Name;
-                END;
+                GLSetup.GET();
+                IF DimValue.GET(GLSetup."Shortcut Dimension 1 Code", "Shortcut Dimension 1 Code") THEN
+                    DimName1 := DimValue.Name;
+                IF DimValue.GET(GLSetup."Shortcut Dimension 2 Code", "Shortcut Dimension 2 Code") THEN
+                    DimName2 := DimValue.Name;
+
 
                 deliveryAddress := "Ship-to Address" + ' ' + "Ship-to Address 2" + ' ' + "Ship-to City" + ' ' + "Ship-to Post Code";
             end;

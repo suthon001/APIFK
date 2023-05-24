@@ -5,6 +5,25 @@ codeunit 60050 "FK Func"
 {
 
 
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post (Yes/No)", 'OnBeforeSelectPostOrderOption', '', false, false)]
+    local procedure OnBeforeSelectPostOrderOption(var PurchaseHeader: Record "Purchase Header"; var IsHandled: Boolean; var Result: Boolean)
+    var
+        ReceiveInvoiceQst: Label '&Receive';
+        Selection: Integer;
+    begin
+        if PurchaseHeader."Document Type" = PurchaseHeader."Document Type"::Order then begin
+            Selection := StrMenu(ReceiveInvoiceQst, 1);
+            IsHandled := true;
+            if Selection = 0 then
+                Result := false
+            else begin
+                Result := true;
+                PurchaseHeader.Receive := true;
+                PurchaseHeader.Invoice := false;
+            end;
+
+        end;
+    end;
 
     local procedure ClearError(pTableID: Integer; pNo: Code[30])
     var

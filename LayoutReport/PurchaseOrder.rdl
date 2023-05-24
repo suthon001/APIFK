@@ -19,7 +19,7 @@
             <TablixBody>
               <TablixColumns>
                 <TablixColumn>
-                  <Width>19.36725cm</Width>
+                  <Width>19.44663cm</Width>
                 </TablixColumn>
               </TablixColumns>
               <TablixRows>
@@ -40,7 +40,7 @@
                                     <Width>2.14038cm</Width>
                                   </TablixColumn>
                                   <TablixColumn>
-                                    <Width>5.92194cm</Width>
+                                    <Width>6.08228cm</Width>
                                   </TablixColumn>
                                   <TablixColumn>
                                     <Width>1.86143cm</Width>
@@ -674,7 +674,7 @@
                                                     <Style>
                                                       <FontFamily>Tahoma</FontFamily>
                                                       <FontSize>8pt</FontSize>
-                                                      <Format>#,0.00</Format>
+                                                      <Format>#,0;-#,0;''</Format>
                                                     </Style>
                                                   </TextRun>
                                                   <TextRun>
@@ -682,7 +682,7 @@
                                                     <Style>
                                                       <FontFamily>Tahoma</FontFamily>
                                                       <FontSize>8pt</FontSize>
-                                                      <Format>#,0.00</Format>
+                                                      <Format>#,0;-#,0;''</Format>
                                                     </Style>
                                                   </TextRun>
                                                 </TextRuns>
@@ -763,7 +763,7 @@
                                                     <Style>
                                                       <FontFamily>Tahoma</FontFamily>
                                                       <FontSize>8pt</FontSize>
-                                                      <Format>#,0.00</Format>
+                                                      <Format>#,0.00;-#,0.00;''</Format>
                                                     </Style>
                                                   </TextRun>
                                                   <TextRun>
@@ -771,7 +771,7 @@
                                                     <Style>
                                                       <FontFamily>Tahoma</FontFamily>
                                                       <FontSize>8pt</FontSize>
-                                                      <Format>#,0.00</Format>
+                                                      <Format>#,0.00;-#,0.00;''</Format>
                                                     </Style>
                                                   </TextRun>
                                                 </TextRuns>
@@ -788,7 +788,6 @@
                                               <LeftBorder>
                                                 <Color>Gray</Color>
                                                 <Style>Solid</Style>
-                                                <Width>1pt</Width>
                                               </LeftBorder>
                                               <VerticalAlign>Top</VerticalAlign>
                                               <PaddingLeft>2pt</PaddingLeft>
@@ -812,7 +811,7 @@
                                                     <Style>
                                                       <FontFamily>Tahoma</FontFamily>
                                                       <FontSize>8pt</FontSize>
-                                                      <Format>#,0.00</Format>
+                                                      <Format>#,0.00;-#,0.00;''</Format>
                                                     </Style>
                                                   </TextRun>
                                                   <TextRun>
@@ -820,7 +819,7 @@
                                                     <Style>
                                                       <FontFamily>Tahoma</FontFamily>
                                                       <FontSize>8pt</FontSize>
-                                                      <Format>#,0.00</Format>
+                                                      <Format>#,0.00;-#,0.00;''</Format>
                                                     </Style>
                                                   </TextRun>
                                                 </TextRuns>
@@ -861,7 +860,7 @@
                                                     <Style>
                                                       <FontFamily>Tahoma</FontFamily>
                                                       <FontSize>8pt</FontSize>
-                                                      <Format>#,0.00</Format>
+                                                      <Format>#,0.00;-#,0.00;''</Format>
                                                     </Style>
                                                   </TextRun>
                                                   <TextRun>
@@ -869,7 +868,7 @@
                                                     <Style>
                                                       <FontFamily>Tahoma</FontFamily>
                                                       <FontSize>8pt</FontSize>
-                                                      <Format>#,0.00</Format>
+                                                      <Format>#,0.00;-#,0.00;''</Format>
                                                     </Style>
                                                   </TextRun>
                                                 </TextRuns>
@@ -7371,13 +7370,13 @@
                                             <TablixBody>
                                               <TablixColumns>
                                                 <TablixColumn>
-                                                  <Width>5.54217cm</Width>
+                                                  <Width>5.59562cm</Width>
                                                 </TablixColumn>
                                                 <TablixColumn>
-                                                  <Width>6.68405cm</Width>
+                                                  <Width>6.7375cm</Width>
                                                 </TablixColumn>
                                                 <TablixColumn>
-                                                  <Width>6.63673cm</Width>
+                                                  <Width>6.69018cm</Width>
                                                 </TablixColumn>
                                               </TablixColumns>
                                               <TablixRows>
@@ -8029,7 +8028,7 @@
                               <Top>0.13229cm</Top>
                               <Left>0.34396cm</Left>
                               <Height>18.11404cm</Height>
-                              <Width>18.94233cm</Width>
+                              <Width>19.10267cm</Width>
                               <Style>
                                 <Border>
                                   <Style>None</Style>
@@ -8073,7 +8072,7 @@
             <Top>0cm</Top>
             <Left>0.10425cm</Left>
             <Height>18.24633cm</Height>
-            <Width>19.36725cm</Width>
+            <Width>19.44663cm</Width>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -8084,7 +8083,7 @@
         <Height>18.24633cm</Height>
         <Style />
       </Body>
-      <Width>19.57574cm</Width>
+      <Width>19.73449cm</Width>
       <Page>
         <PageHeader>
           <Height>10.3977cm</Height>
@@ -8095,10 +8094,10 @@
               <Source>Database</Source>
               <Value>=Convert.ToBase64String(First(Fields!CompPicture.Value, "DataSet_Result"))</Value>
               <MIMEType>image/bmp</MIMEType>
-              <Sizing>Fit</Sizing>
-              <Top>0.78493cm</Top>
+              <Sizing>FitProportional</Sizing>
+              <Top>1.83414cm</Top>
               <Left>0.80518cm</Left>
-              <Height>2.65908cm</Height>
+              <Height>1.60987cm</Height>
               <Width>5.18589cm</Width>
               <Style>
                 <Border>
@@ -8126,9 +8125,9 @@
               </Paragraphs>
               <rd:DefaultName>Textbox4</rd:DefaultName>
               <Top>4.64613cm</Top>
-              <Left>14.99641cm</Left>
+              <Left>14.46724cm</Left>
               <Height>0.70583cm</Height>
-              <Width>4.31476cm</Width>
+              <Width>5.12087cm</Width>
               <ZIndex>1</ZIndex>
               <Style>
                 <Border>
@@ -8146,7 +8145,7 @@
               <Top>4.35363cm</Top>
               <Left>0.3175cm</Left>
               <Height>0cm</Height>
-              <Width>18.99366cm</Width>
+              <Width>19.154cm</Width>
               <ZIndex>2</ZIndex>
               <Style>
                 <Border>
@@ -8290,7 +8289,7 @@
               <Top>4.64613cm</Top>
               <Left>9.50814cm</Left>
               <Height>0.70583cm</Height>
-              <Width>5.26469cm</Width>
+              <Width>4.92073cm</Width>
               <ZIndex>6</ZIndex>
               <Style>
                 <Border>
@@ -8326,7 +8325,7 @@
               <Top>5.35196cm</Top>
               <Left>9.50814cm</Left>
               <Height>0.70583cm</Height>
-              <Width>5.26469cm</Width>
+              <Width>4.92073cm</Width>
               <ZIndex>7</ZIndex>
               <Style>
                 <Border>
@@ -8362,7 +8361,7 @@
               <Top>6.05779cm</Top>
               <Left>9.50814cm</Left>
               <Height>0.70583cm</Height>
-              <Width>5.26469cm</Width>
+              <Width>4.94719cm</Width>
               <ZIndex>8</ZIndex>
               <Style>
                 <Border>
@@ -8398,7 +8397,7 @@
               <Top>6.76362cm</Top>
               <Left>9.50814cm</Left>
               <Height>0.70583cm</Height>
-              <Width>5.26469cm</Width>
+              <Width>4.92073cm</Width>
               <ZIndex>9</ZIndex>
               <Style>
                 <Border>
@@ -8434,7 +8433,7 @@
               <Top>7.46945cm</Top>
               <Left>9.50814cm</Left>
               <Height>0.70583cm</Height>
-              <Width>5.26469cm</Width>
+              <Width>4.92073cm</Width>
               <ZIndex>10</ZIndex>
               <Style>
                 <Border>
@@ -8465,32 +8464,10 @@
                     <TextAlign>Left</TextAlign>
                   </Style>
                 </Paragraph>
-              </Paragraphs>
-              <rd:DefaultName>Textbox4</rd:DefaultName>
-              <Top>5.35196cm</Top>
-              <Left>0.80518cm</Left>
-              <Height>0.86458cm</Height>
-              <Width>8.57963cm</Width>
-              <ZIndex>11</ZIndex>
-              <Style>
-                <Border>
-                  <Style>None</Style>
-                  <Width>0.5pt</Width>
-                </Border>
-                <VerticalAlign>Top</VerticalAlign>
-                <PaddingLeft>2pt</PaddingLeft>
-                <PaddingRight>2pt</PaddingRight>
-                <PaddingTop>2pt</PaddingTop>
-                <PaddingBottom>2pt</PaddingBottom>
-              </Style>
-            </Textbox>
-            <Textbox Name="Textbox74">
-              <KeepTogether>true</KeepTogether>
-              <Paragraphs>
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value>=First(Fields!BuyFromAdd.Value, "DataSet_Result")</Value>
+                      <Value />
                       <Style>
                         <FontFamily>Tahoma</FontFamily>
                         <FontSize>8pt</FontSize>
@@ -8503,6 +8480,13 @@
                 </Paragraph>
                 <Paragraph>
                   <TextRuns>
+                    <TextRun>
+                      <Value>=First(Fields!BuyFromAdd.Value, "DataSet_Result")</Value>
+                      <Style>
+                        <FontFamily>Tahoma</FontFamily>
+                        <FontSize>8pt</FontSize>
+                      </Style>
+                    </TextRun>
                     <TextRun>
                       <Value>=First(Fields!BuyFromAdd2.Value, "DataSet_Result")</Value>
                       <Style>
@@ -8517,11 +8501,11 @@
                 </Paragraph>
               </Paragraphs>
               <rd:DefaultName>Textbox4</rd:DefaultName>
-              <Top>6.28004cm</Top>
+              <Top>5.35196cm</Top>
               <Left>0.80518cm</Left>
-              <Height>1.18941cm</Height>
+              <Height>1.97285cm</Height>
               <Width>8.57963cm</Width>
-              <ZIndex>12</ZIndex>
+              <ZIndex>11</ZIndex>
               <Style>
                 <Border>
                   <Style>None</Style>
@@ -8557,7 +8541,7 @@
               <Left>3.36282cm</Left>
               <Height>0.70583cm</Height>
               <Width>6.02198cm</Width>
-              <ZIndex>13</ZIndex>
+              <ZIndex>12</ZIndex>
               <Style>
                 <Border>
                   <Style>None</Style>
@@ -8591,10 +8575,10 @@
               </Paragraphs>
               <rd:DefaultName>Textbox4</rd:DefaultName>
               <Top>5.35196cm</Top>
-              <Left>14.99641cm</Left>
+              <Left>14.46724cm</Left>
               <Height>0.70583cm</Height>
-              <Width>4.31476cm</Width>
-              <ZIndex>14</ZIndex>
+              <Width>5.12087cm</Width>
+              <ZIndex>13</ZIndex>
               <Style>
                 <Border>
                   <Style>None</Style>
@@ -8627,10 +8611,10 @@
               </Paragraphs>
               <rd:DefaultName>Textbox4</rd:DefaultName>
               <Top>6.05779cm</Top>
-              <Left>14.99641cm</Left>
+              <Left>14.46724cm</Left>
               <Height>0.70583cm</Height>
-              <Width>4.31476cm</Width>
-              <ZIndex>15</ZIndex>
+              <Width>5.12087cm</Width>
+              <ZIndex>14</ZIndex>
               <Style>
                 <Border>
                   <Style>None</Style>
@@ -8663,10 +8647,10 @@
               </Paragraphs>
               <rd:DefaultName>Textbox4</rd:DefaultName>
               <Top>6.76362cm</Top>
-              <Left>14.99641cm</Left>
+              <Left>14.46724cm</Left>
               <Height>0.70583cm</Height>
-              <Width>4.31476cm</Width>
-              <ZIndex>16</ZIndex>
+              <Width>5.12087cm</Width>
+              <ZIndex>15</ZIndex>
               <Style>
                 <Border>
                   <Style>None</Style>
@@ -8699,10 +8683,10 @@
               </Paragraphs>
               <rd:DefaultName>Textbox4</rd:DefaultName>
               <Top>7.46945cm</Top>
-              <Left>14.99641cm</Left>
+              <Left>14.46724cm</Left>
               <Height>0.70583cm</Height>
-              <Width>4.31476cm</Width>
-              <ZIndex>17</ZIndex>
+              <Width>5.12087cm</Width>
+              <ZIndex>16</ZIndex>
               <Style>
                 <Border>
                   <Style>None</Style>
@@ -8719,8 +8703,8 @@
               <Top>9.09215cm</Top>
               <Left>0.3175cm</Left>
               <Height>0cm</Height>
-              <Width>18.99366cm</Width>
-              <ZIndex>18</ZIndex>
+              <Width>19.154cm</Width>
+              <ZIndex>17</ZIndex>
               <Style>
                 <Border>
                   <Color>Gray</Color>
@@ -8763,8 +8747,8 @@
               <Top>9.26854cm</Top>
               <Left>0.4083cm</Left>
               <Height>0.70583cm</Height>
-              <Width>3.85518cm</Width>
-              <ZIndex>19</ZIndex>
+              <Width>3.24664cm</Width>
+              <ZIndex>18</ZIndex>
               <Style>
                 <Border>
                   <Style>None</Style>
@@ -8797,10 +8781,10 @@
               </Paragraphs>
               <rd:DefaultName>Textbox4</rd:DefaultName>
               <Top>9.26854cm</Top>
-              <Left>4.36931cm</Left>
+              <Left>3.73922cm</Left>
               <Height>0.70583cm</Height>
-              <Width>14.85011cm</Width>
-              <ZIndex>20</ZIndex>
+              <Width>15.4802cm</Width>
+              <ZIndex>19</ZIndex>
               <Style>
                 <Border>
                   <Style>None</Style>
@@ -8836,7 +8820,7 @@
               <Left>0.80518cm</Left>
               <Height>0.70583cm</Height>
               <Width>2.52236cm</Width>
-              <ZIndex>21</ZIndex>
+              <ZIndex>20</ZIndex>
               <Style>
                 <Border>
                   <Style>None</Style>
@@ -8872,7 +8856,7 @@
               <Left>7.02014cm</Left>
               <Height>1.23104cm</Height>
               <Width>12.29102cm</Width>
-              <ZIndex>22</ZIndex>
+              <ZIndex>21</ZIndex>
               <Style>
                 <Border>
                   <Style>None</Style>
@@ -8890,7 +8874,7 @@
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value>วันที่ต้องการสินค้า/Expected Receipt Date</Value>
+                      <Value>วันที่ต้องการสินค้า/Exp. Receipt Date</Value>
                       <Style>
                         <FontFamily>Tahoma</FontFamily>
                         <FontSize>8pt</FontSize>
@@ -8906,8 +8890,8 @@
               <Top>8.17528cm</Top>
               <Left>9.47595cm</Left>
               <Height>0.70583cm</Height>
-              <Width>5.94734cm</Width>
-              <ZIndex>23</ZIndex>
+              <Width>4.95292cm</Width>
+              <ZIndex>22</ZIndex>
               <Style>
                 <Border>
                   <Style>None</Style>
@@ -8941,10 +8925,10 @@
               </Paragraphs>
               <rd:DefaultName>Textbox4</rd:DefaultName>
               <Top>8.17528cm</Top>
-              <Left>14.99641cm</Left>
+              <Left>14.46724cm</Left>
               <Height>0.70583cm</Height>
-              <Width>4.22302cm</Width>
-              <ZIndex>24</ZIndex>
+              <Width>5.12087cm</Width>
+              <ZIndex>23</ZIndex>
               <Style>
                 <Border>
                   <Style>None</Style>
@@ -8982,7 +8966,7 @@
               <Left>7.02014cm</Left>
               <Height>2.61592cm</Height>
               <Width>8.72065cm</Width>
-              <ZIndex>25</ZIndex>
+              <ZIndex>24</ZIndex>
               <Style>
                 <Border>
                   <Style>None</Style>
@@ -9015,10 +8999,10 @@
               </Paragraphs>
               <rd:DefaultName>Textbox4</rd:DefaultName>
               <Top>1.83414cm</Top>
-              <Left>15.88882cm</Left>
+              <Left>16.20632cm</Left>
               <Height>1.06753cm</Height>
               <Width>3.24448cm</Width>
-              <ZIndex>26</ZIndex>
+              <ZIndex>25</ZIndex>
               <Style>
                 <Border>
                   <Style>None</Style>
@@ -9051,8 +9035,45 @@
               </Paragraphs>
               <rd:DefaultName>Textbox4</rd:DefaultName>
               <Top>0.93456cm</Top>
-              <Left>15.88882cm</Left>
+              <Left>16.20632cm</Left>
               <Height>1.01596cm</Height>
+              <Width>3.24448cm</Width>
+              <ZIndex>26</ZIndex>
+              <Style>
+                <Border>
+                  <Style>None</Style>
+                </Border>
+                <VerticalAlign>Middle</VerticalAlign>
+                <PaddingLeft>2pt</PaddingLeft>
+                <PaddingRight>2pt</PaddingRight>
+                <PaddingTop>2pt</PaddingTop>
+                <PaddingBottom>2pt</PaddingBottom>
+              </Style>
+            </Textbox>
+            <Textbox Name="Textbox75">
+              <KeepTogether>true</KeepTogether>
+              <Paragraphs>
+                <Paragraph>
+                  <TextRuns>
+                    <TextRun>
+                      <Value>="หน้า/page : " &amp; Globals!PageNumber &amp; "/" &amp; Globals!TotalPages</Value>
+                      <Style>
+                        <FontStyle>Normal</FontStyle>
+                        <FontFamily>Tahoma</FontFamily>
+                        <TextDecoration>None</TextDecoration>
+                        <Color>#808080</Color>
+                      </Style>
+                    </TextRun>
+                  </TextRuns>
+                  <Style>
+                    <TextAlign>Right</TextAlign>
+                  </Style>
+                </Paragraph>
+              </Paragraphs>
+              <rd:DefaultName>Textbox4</rd:DefaultName>
+              <Top>0.3175cm</Top>
+              <Left>16.20632cm</Left>
+              <Height>0.61706cm</Height>
               <Width>3.24448cm</Width>
               <ZIndex>27</ZIndex>
               <Style>
@@ -9336,6 +9357,12 @@ End Function
         </Field>
         <Field Name="Comment">
           <DataField>Comment</DataField>
+        </Field>
+        <Field Name="DimName2">
+          <DataField>DimName2</DataField>
+        </Field>
+        <Field Name="DimName1">
+          <DataField>DimName1</DataField>
         </Field>
         <Field Name="No">
           <DataField>No</DataField>

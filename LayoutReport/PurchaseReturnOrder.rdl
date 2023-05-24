@@ -677,7 +677,7 @@
                                                     <Style>
                                                       <FontFamily>Tahoma</FontFamily>
                                                       <FontSize>8pt</FontSize>
-                                                      <Format>#,0.00</Format>
+                                                      <Format>#,0;-#,0;''</Format>
                                                     </Style>
                                                   </TextRun>
                                                   <TextRun>
@@ -685,7 +685,7 @@
                                                     <Style>
                                                       <FontFamily>Tahoma</FontFamily>
                                                       <FontSize>8pt</FontSize>
-                                                      <Format>#,0.00</Format>
+                                                      <Format>#,0;-#,0;''</Format>
                                                     </Style>
                                                   </TextRun>
                                                 </TextRuns>
@@ -766,7 +766,7 @@
                                                     <Style>
                                                       <FontFamily>Tahoma</FontFamily>
                                                       <FontSize>8pt</FontSize>
-                                                      <Format>#,0.00</Format>
+                                                      <Format>#,0.00;-#,0.00;''</Format>
                                                     </Style>
                                                   </TextRun>
                                                   <TextRun>
@@ -774,7 +774,7 @@
                                                     <Style>
                                                       <FontFamily>Tahoma</FontFamily>
                                                       <FontSize>8pt</FontSize>
-                                                      <Format>#,0.00</Format>
+                                                      <Format>#,0.00;-#,0.00;''</Format>
                                                     </Style>
                                                   </TextRun>
                                                 </TextRuns>
@@ -815,7 +815,7 @@
                                                     <Style>
                                                       <FontFamily>Tahoma</FontFamily>
                                                       <FontSize>8pt</FontSize>
-                                                      <Format>#,0.00</Format>
+                                                      <Format>#,0.00;-#,0.00;''</Format>
                                                     </Style>
                                                   </TextRun>
                                                   <TextRun>
@@ -823,7 +823,7 @@
                                                     <Style>
                                                       <FontFamily>Tahoma</FontFamily>
                                                       <FontSize>8pt</FontSize>
-                                                      <Format>#,0.00</Format>
+                                                      <Format>#,0.00;-#,0.00;''</Format>
                                                     </Style>
                                                   </TextRun>
                                                 </TextRuns>
@@ -864,7 +864,7 @@
                                                     <Style>
                                                       <FontFamily>Tahoma</FontFamily>
                                                       <FontSize>8pt</FontSize>
-                                                      <Format>#,0.00</Format>
+                                                      <Format>#,0.00;-#,0.00;''</Format>
                                                     </Style>
                                                   </TextRun>
                                                   <TextRun>
@@ -872,7 +872,7 @@
                                                     <Style>
                                                       <FontFamily>Tahoma</FontFamily>
                                                       <FontSize>8pt</FontSize>
-                                                      <Format>#,0.00</Format>
+                                                      <Format>#,0.00;-#,0.00;''</Format>
                                                     </Style>
                                                   </TextRun>
                                                 </TextRuns>
@@ -9068,10 +9068,10 @@
               <Source>Database</Source>
               <Value>=Convert.ToBase64String(First(Fields!CompPicture.Value, "DataSet_Result"))</Value>
               <MIMEType>image/bmp</MIMEType>
-              <Sizing>Fit</Sizing>
-              <Top>0.74177cm</Top>
+              <Sizing>FitProportional</Sizing>
+              <Top>1.83414cm</Top>
               <Left>0.80518cm</Left>
-              <Height>2.65908cm</Height>
+              <Height>1.56671cm</Height>
               <Width>5.18589cm</Width>
               <Style>
                 <Border>
@@ -9374,32 +9374,10 @@
                     <TextAlign>Left</TextAlign>
                   </Style>
                 </Paragraph>
-              </Paragraphs>
-              <rd:DefaultName>Textbox4</rd:DefaultName>
-              <Top>5.35196cm</Top>
-              <Left>0.80518cm</Left>
-              <Height>0.70583cm</Height>
-              <Width>8.91463cm</Width>
-              <ZIndex>9</ZIndex>
-              <Style>
-                <Border>
-                  <Style>None</Style>
-                  <Width>0.5pt</Width>
-                </Border>
-                <VerticalAlign>Middle</VerticalAlign>
-                <PaddingLeft>2pt</PaddingLeft>
-                <PaddingRight>2pt</PaddingRight>
-                <PaddingTop>2pt</PaddingTop>
-                <PaddingBottom>2pt</PaddingBottom>
-              </Style>
-            </Textbox>
-            <Textbox Name="Textbox74">
-              <KeepTogether>true</KeepTogether>
-              <Paragraphs>
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value>=First(Fields!BuyFromAdd.Value, "DataSet_Result")</Value>
+                      <Value />
                       <Style>
                         <FontFamily>Tahoma</FontFamily>
                         <FontSize>8pt</FontSize>
@@ -9412,6 +9390,13 @@
                 </Paragraph>
                 <Paragraph>
                   <TextRuns>
+                    <TextRun>
+                      <Value>=First(Fields!BuyFromAdd.Value, "DataSet_Result")</Value>
+                      <Style>
+                        <FontFamily>Tahoma</FontFamily>
+                        <FontSize>8pt</FontSize>
+                      </Style>
+                    </TextRun>
                     <TextRun>
                       <Value>=First(Fields!BuyFromAdd2.Value, "DataSet_Result")</Value>
                       <Style>
@@ -9426,11 +9411,11 @@
                 </Paragraph>
               </Paragraphs>
               <rd:DefaultName>Textbox4</rd:DefaultName>
-              <Top>6.05779cm</Top>
+              <Top>5.35196cm</Top>
               <Left>0.80518cm</Left>
-              <Height>1.37638cm</Height>
+              <Height>2.01166cm</Height>
               <Width>8.91463cm</Width>
-              <ZIndex>10</ZIndex>
+              <ZIndex>9</ZIndex>
               <Style>
                 <Border>
                   <Style>None</Style>
@@ -9466,7 +9451,7 @@
               <Left>3.36282cm</Left>
               <Height>0.70583cm</Height>
               <Width>6.35698cm</Width>
-              <ZIndex>11</ZIndex>
+              <ZIndex>10</ZIndex>
               <Style>
                 <Border>
                   <Style>None</Style>
@@ -9503,7 +9488,7 @@
               <Left>15.39328cm</Left>
               <Height>0.70583cm</Height>
               <Width>3.73693cm</Width>
-              <ZIndex>12</ZIndex>
+              <ZIndex>11</ZIndex>
               <Style>
                 <Border>
                   <Style>None</Style>
@@ -9539,7 +9524,7 @@
               <Left>15.39328cm</Left>
               <Height>0.70583cm</Height>
               <Width>3.73693cm</Width>
-              <ZIndex>13</ZIndex>
+              <ZIndex>12</ZIndex>
               <Style>
                 <Border>
                   <Style>None</Style>
@@ -9557,7 +9542,7 @@
               <Left>0.3175cm</Left>
               <Height>0cm</Height>
               <Width>18.99366cm</Width>
-              <ZIndex>14</ZIndex>
+              <ZIndex>13</ZIndex>
               <Style>
                 <Border>
                   <Color>Gray</Color>
@@ -9601,7 +9586,7 @@
               <Left>0.80518cm</Left>
               <Height>0.70583cm</Height>
               <Width>2.52236cm</Width>
-              <ZIndex>15</ZIndex>
+              <ZIndex>14</ZIndex>
               <Style>
                 <Border>
                   <Style>None</Style>
@@ -9637,7 +9622,7 @@
               <Left>6.82964cm</Left>
               <Height>1.23104cm</Height>
               <Width>12.29102cm</Width>
-              <ZIndex>16</ZIndex>
+              <ZIndex>15</ZIndex>
               <Style>
                 <Border>
                   <Style>None</Style>
@@ -9674,7 +9659,7 @@
               <Left>6.82964cm</Left>
               <Height>2.61592cm</Height>
               <Width>8.72065cm</Width>
-              <ZIndex>17</ZIndex>
+              <ZIndex>16</ZIndex>
               <Style>
                 <Border>
                   <Style>None</Style>
@@ -9713,7 +9698,7 @@
               <Left>14.8834cm</Left>
               <Height>1.06753cm</Height>
               <Width>4.23726cm</Width>
-              <ZIndex>18</ZIndex>
+              <ZIndex>17</ZIndex>
               <Style>
                 <Border>
                   <Style>None</Style>
@@ -9749,6 +9734,43 @@
               <Left>14.8834cm</Left>
               <Height>1.01596cm</Height>
               <Width>4.23726cm</Width>
+              <ZIndex>18</ZIndex>
+              <Style>
+                <Border>
+                  <Style>None</Style>
+                </Border>
+                <VerticalAlign>Middle</VerticalAlign>
+                <PaddingLeft>2pt</PaddingLeft>
+                <PaddingRight>2pt</PaddingRight>
+                <PaddingTop>2pt</PaddingTop>
+                <PaddingBottom>2pt</PaddingBottom>
+              </Style>
+            </Textbox>
+            <Textbox Name="Textbox75">
+              <KeepTogether>true</KeepTogether>
+              <Paragraphs>
+                <Paragraph>
+                  <TextRuns>
+                    <TextRun>
+                      <Value>="หน้า/page : " &amp; Globals!PageNumber &amp; "/" &amp; Globals!TotalPages</Value>
+                      <Style>
+                        <FontStyle>Normal</FontStyle>
+                        <FontFamily>Tahoma</FontFamily>
+                        <TextDecoration>None</TextDecoration>
+                        <Color>#808080</Color>
+                      </Style>
+                    </TextRun>
+                  </TextRuns>
+                  <Style>
+                    <TextAlign>Right</TextAlign>
+                  </Style>
+                </Paragraph>
+              </Paragraphs>
+              <rd:DefaultName>Textbox4</rd:DefaultName>
+              <Top>0.28222cm</Top>
+              <Left>15.87618cm</Left>
+              <Height>0.61706cm</Height>
+              <Width>3.24448cm</Width>
               <ZIndex>19</ZIndex>
               <Style>
                 <Border>
