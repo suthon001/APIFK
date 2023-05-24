@@ -3,13 +3,11 @@
 /// </summary>
 report 60052 "TPP Purchase Receipt"
 {
-
-
     DefaultLayout = RDLC;
     RDLCLayout = './LayoutReport/PurchaseReceipt.rdl';
     Caption = 'Purchase Receipt';
     PreviewMode = PrintLayout;
-
+    Permissions = tabledata "Purch. Rcpt. Line" = rimd;
     dataset
     {
         dataitem("Purch. Rcpt. Header"; "Purch. Rcpt. Header")
@@ -130,6 +128,7 @@ report 60052 "TPP Purchase Receipt"
             {
                 DataItemLink = "Document No." = FIELD("No.");
                 DataItemTableView = SORTING("Document No.", "Line No.");
+                UseTemporary = true;
                 column(No; "No.")
                 {
                 }
@@ -167,7 +166,7 @@ report 60052 "TPP Purchase Receipt"
 
                     if "No." <> '' then
                         LineNo += 1;
-                    IF DataOFLine >= 17 THEN BEGIN
+                    IF DataOFLine >= 20 THEN BEGIN
                         Output := Output + 1;
                         FixLength := 0;
                         DataOFLine := 0;
@@ -205,7 +204,7 @@ report 60052 "TPP Purchase Receipt"
                 if PurchaseInvHeader.FindFirst() then
                     VendorInvNo := PurchaseInvHeader."Vendor Invoice No.";
                 //tpp.rozn.20200303--
-
+                InserttoTempLine("No.");
             end;
         }
     }
@@ -217,6 +216,52 @@ report 60052 "TPP Purchase Receipt"
         ComInfo.GET;
         ComInfo.CALCFIELDS(Picture);
 
+    end;
+
+    local procedure InserttoTempLine(pDocumentNo: code[30])
+    var
+        receiptline: Record "Purch. Rcpt. Line";
+        ltItemLedger: Record "Item Ledger Entry";
+        ltLineNo: Integer;
+        TotalLot: Text;
+    begin
+        receiptline.reset();
+        receiptline.SetRange("Document No.", pDocumentNo);
+        if receiptline.FindSet() then
+            repeat
+                TotalLot := '';
+                ltLineNo := ltLineNo + 1;
+                "Purch. Rcpt. Line".Init();
+                "Purch. Rcpt. Line".TransferFields(receiptline, false);
+                "Purch. Rcpt. Line"."Document No." := pDocumentNo;
+                "Purch. Rcpt. Line"."Line No." := ltLineNo;
+                "Purch. Rcpt. Line".Insert();
+                if receiptline.Type = receiptline.Type::Item then begin
+                    ltItemLedger.reset();
+                    ltItemLedger.SetRange("Document No.", pDocumentNo);
+                    ltItemLedger.SetRange("Document Line No.", receiptline."Line No.");
+                    ltItemLedger.SetFilter("Lot No.", '<>%1', '');
+                    ltItemLedger.SetRange(Correction, false);
+                    if ltItemLedger.FindSet() then
+                        repeat
+                            if TotalLot <> '' then
+                                TotalLot := TotalLot + ',';
+                            if StrPos(TotalLot, ltItemLedger."Lot No.") = 0 then
+                                TotalLot := TotalLot + ltItemLedger."Lot No.";
+                        until ltItemLedger.Next() = 0;
+
+                    if TotalLot <> '' then begin
+                        ltLineNo := ltLineNo + 1;
+                        "Purch. Rcpt. Line".Init();
+                        "Purch. Rcpt. Line"."Document No." := pDocumentNo;
+                        "Purch. Rcpt. Line"."Line No." := ltLineNo;
+                        "Purch. Rcpt. Line".Type := "Purch. Rcpt. Line".Type::" ";
+                        "Purch. Rcpt. Line".Description := 'Lot No. : ' + TotalLot;
+                        "Purch. Rcpt. Line".Insert();
+                    end
+                end;
+
+            until receiptline.Next() = 0;
     end;
 
     var
