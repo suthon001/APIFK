@@ -114,9 +114,13 @@ tableextension 60050 "FK API Vendor" extends Vendor
             trigger OnValidate()
             var
                 ltVend: Record Vendor;
+                MailManagement: Codeunit "Mail Management";
             begin
+
                 if xrec."User_Name" <> rec."User_Name" then
                     if rec."User_Name" <> '' then begin
+                        MailManagement.CheckValidEmailAddresses("User_Name");
+
                         ltVend.reset();
                         ltVend.SetRange("No.", '<>%1', rec."No.");
                         ltVend.SetRange("User_Name", rec."User_Name");

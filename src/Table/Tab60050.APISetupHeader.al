@@ -220,16 +220,24 @@ table 60050 "API Setup Header"
     local procedure SmellValue(InputString: text[50]): text[50]
     var
         i: Integer;
-        OutputString: text;
+        OutputString, OutputString2 : text;
         MidString: array[100] of Text[1024];
     begin
         i := 0;
-        WHILE STRLEN(InputString) > 0 DO BEGIN
-            i := i + 1;
-            MidString[i] := SplitStrings(InputString, ' ');
-            OutputString := OutputString + ' ' + UPPERCASE(COPYSTR(MidString[i], 1, 1)) + LOWERCASE(COPYSTR(MidString[i], 2));
-        END;
-        exit(OutputString);
+        if StrPos(InputString, ' ') <> 0 then begin
+            OutputString2 := LowerCase(COPYSTR(InputString, 1, StrPos(InputString, ' ')));
+            InputString := COPYSTR(InputString, StrPos(InputString, ' ') + 1);
+
+            WHILE STRLEN(InputString) > 0 DO BEGIN
+                i := i + 1;
+                MidString[i] := SplitStrings(InputString, ' ');
+                OutputString := OutputString + ' ' + UPPERCASE(COPYSTR(MidString[i], 1, 1)) + LOWERCASE(COPYSTR(MidString[i], 2));
+            END;
+            exit(OutputString2 + OutputString);
+        end else
+            exit(InputString);
+
+
     end;
 
     local procedure SplitStrings(VAR String: Text[50]; Separator: Text[1]) SplitedString: Text[50]
