@@ -39,6 +39,11 @@ page 60052 "Export Template Subform"
                     ToolTip = 'Specifies the value of the Service Name field.';
                     ApplicationArea = all;
                 }
+                field("Service Name 2"; Rec."Service Name 2")
+                {
+                    ToolTip = 'Specifies the value of the Service Name 2 field.';
+                    ApplicationArea = all;
+                }
                 field(Lenth; Rec.Lenth)
                 {
                     ToolTip = 'Specifies the value of the Lenth field.';

@@ -71,6 +71,12 @@ table 60051 "API Setup Line"
             Caption = 'Remark';
             DataClassification = CustomerContent;
         }
+        field(11; "Service Name 2"; text[50])
+        {
+            Caption = 'Service Name 2';
+            DataClassification = CustomerContent;
+            Editable = false;
+        }
     }
     keys
     {

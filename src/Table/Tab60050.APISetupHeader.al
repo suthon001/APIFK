@@ -176,6 +176,8 @@ table 60050 "API Setup Header"
                 APISetupLine.remark := ltField.OptionString;
                 APISetupLine.Include := true;
                 APISetupLine."Service Name" := DelChr(LowerCase(ltField.FieldName), '=', '_-&%()/\. ');
+                APISetupLine."Service Name 2" := DelChr(LowerCase(ltField.FieldName), '=', '_-&%()/\.');
+                APISetupLine."Service Name 2" := DelChr(SmellValue(APISetupLine."Service Name 2"), '=', ' ');
                 APISetupLine.Insert();
             until ltField.Next() = 0;
 
@@ -208,8 +210,43 @@ table 60050 "API Setup Header"
                         APISetupLine.remark := 'dd/mm/yyyy';
                     APISetupLine.Include := true;
                     APISetupLine."Service Name" := DelChr(LowerCase(ltField.FieldName), '=', '_-&%()/\. ');
+                    APISetupLine."Service Name 2" := DelChr(LowerCase(ltField.FieldName), '=', '_-&%()/\.');
+                    APISetupLine."Service Name 2" := DelChr(SmellValue(APISetupLine."Service Name 2"), '=', ' ');
                     APISetupLine.Insert();
                 until ltField.Next() = 0;
+        end;
+    end;
+
+    local procedure SmellValue(InputString: text[50]): text[50]
+    var
+        i: Integer;
+        OutputString: text;
+        MidString: array[100] of Text[1024];
+    begin
+        i := 0;
+        WHILE STRLEN(InputString) > 0 DO BEGIN
+            i := i + 1;
+            MidString[i] := SplitStrings(InputString, ' ');
+            OutputString := OutputString + ' ' + UPPERCASE(COPYSTR(MidString[i], 1, 1)) + LOWERCASE(COPYSTR(MidString[i], 2));
+        END;
+        exit(OutputString);
+    end;
+
+    local procedure SplitStrings(VAR String: Text[50]; Separator: Text[1]) SplitedString: Text[50]
+    var
+        Pos: Integer;
+    begin
+        Clear(Pos);
+        Pos := STRPOS(String, Separator);
+        if Pos > 0 then begin //Whether there is a separator
+            SplitedString := COPYSTR(String, 1, Pos - 1);//Copy the string before the separator
+            if Pos + 1 <= STRLEN(String) then //Is it all
+                String := COPYSTR(String, Pos + 1)//Copy the string after the separator
+            else
+                Clear(String);
+        end else begin
+            SplitedString := String;
+            Clear(String);
         end;
     end;
 }
