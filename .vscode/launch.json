@@ -2,12 +2,12 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "API_TESTING",
+            "name": "SAT",
             "request": "launch",
             "type": "al",
             "tenant": "f5030c5d-b648-4145-80d3-72361127bbb2",
             "environmentType": "Sandbox",
-            "environmentName": "API_TESTING",
+            "environmentName": "SAT",
             "startupObjectId": 60058,
             "startupObjectType": "Page",
             "breakOnError": "All",
@@ -17,12 +17,12 @@
             "schemaUpdateMode": "ForceSync"
         },
         {
-            "name": "Sanbox_20230331",
+            "name": "UAT",
             "request": "launch",
             "type": "al",
             "tenant": "f5030c5d-b648-4145-80d3-72361127bbb2",
             "environmentType": "Sandbox",
-            "environmentName": "Sanbox_20230331",
+            "environmentName": "UAT",
             "startupObjectId": 60058,
             "startupObjectType": "Page",
             "breakOnError": "All",

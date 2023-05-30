@@ -1761,7 +1761,7 @@ codeunit 60050 "FK Func"
         ltJsonArray := ltJsonToken.AsArray();
         foreach ltJsonToken2 in ltJsonArray do begin
             ltJsonObject2 := ltJsonToken2.AsObject();
-            ltDocNo := SelectJsonTokenText(ltJsonObject2, '$.customerno') + ' : ' + SelectJsonTokenText(ltJsonObject2, '$.shiptocode');
+            ltDocNo := SelectJsonTokenText(ltJsonObject2, '$.customerNo') + ' : ' + SelectJsonTokenText(ltJsonObject2, '$.code');
             if not CreateShiptoCode(ltJsonObject2) then
                 Insertlog(Database::"Ship-to Address", ltPageName, ltJsonObject2, ltDateTime, GetLastErrorText(), 1, ltNoofAPI, GetLastErrorCode(), ltDocNo, 0)
             else
@@ -2470,7 +2470,7 @@ codeunit 60050 "FK Func"
         ltRecordRef.Open(Database::"Ship-to Address");
         ltRecordRef.Init();
         ltFieldRef := ltRecordRef.FieldIndex(1);
-        ltFieldRef.Validate(SelectJsonTokenText(pJsonObject, '$.customerno'));
+        ltFieldRef.Validate(SelectJsonTokenText(pJsonObject, '$.customerNo'));
         ltFieldRef := ltRecordRef.FieldIndex(2);
         ltFieldRef.Validate(SelectJsonTokenText(pJsonObject, '$.code'));
         ltRecordRef.Insert(true);
