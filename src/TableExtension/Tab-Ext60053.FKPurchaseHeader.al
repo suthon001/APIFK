@@ -17,6 +17,16 @@ tableextension 60053 "FK Purchase Header" extends "Purchase Header"
             DataClassification = CustomerContent;
             Editable = false;
         }
+        field(60052; "Interface Complete"; Boolean)
+        {
+            Caption = 'nterface Complete';
+            DataClassification = CustomerContent;
+            Editable = false;
+        }
     }
-
+    trigger OnInsert()
+    begin
+        if not rec.IsTemporary then
+            rec."Interface Complete" := true;
+    end;
 }

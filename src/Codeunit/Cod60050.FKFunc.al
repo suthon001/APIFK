@@ -4,6 +4,12 @@
 codeunit 60050 "FK Func"
 {
 
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Create Reserv. Entry", 'OnAfterSetNewTrackingFromItemJnlLine', '', false, false)]
+    local procedure OnAfterSetNewTrackingFromItemJnlLine(ItemJnlLine: Record "Item Journal Line"; var InsertReservEntry: Record "Reservation Entry")
+    begin
+        if ItemJnlLine."Temp. New Lot No." <> '' then
+            InsertReservEntry."New Lot No." := ItemJnlLine."Temp. New Lot No.";
+    end;
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Purch.-Post (Yes/No)", 'OnBeforeSelectPostOrderOption', '', false, false)]
     local procedure OnBeforeSelectPostOrderOption(var PurchaseHeader: Record "Purchase Header"; var IsHandled: Boolean; var Result: Boolean)
@@ -77,6 +83,8 @@ codeunit 60050 "FK Func"
     end;
 
 
+
+
     /// <summary>
     /// ImportItemJournalPositive.
     /// </summary>
@@ -86,18 +94,25 @@ codeunit 60050 "FK Func"
         ltItemJournalTemp: Record "Item Journal Line" temporary;
         ltItemJournal: Record "Item Journal Line";
         ltFileName: Text;
+        ltCancel: Boolean;
     begin
-        if InsertToITemJournal(0, ltItemJournalTemp, ltFileName, pIsManual) then begin
-            if ltItemJournalTemp.FindSet() then
-                repeat
-                    ltItemJournal.Init();
-                    ltItemJournal.TransferFields(ltItemJournalTemp);
-                    ltItemJournal.Insert();
-                    InsertLot(ltItemJournal, ltItemJournal."Temp. Lot No.", ltItemJournal."Temp. Expire Date");
-                until ltItemJournalTemp.Next() = 0;
-            InsertLogTransaction(Database::"Item Journal Line", 'POSITIVE', CurrentDateTime(), 0, '', ltFileName, 0, pIsManual);
-            if pIsManual then
-                MESSAGE('Import is successfully');
+        ltCancel := false;
+        if InsertToITemJournal(0, ltItemJournalTemp, ltFileName, pIsManual, ltCancel) then begin
+            if not ltCancel then begin
+                if ltItemJournalTemp.FindSet() then
+                    repeat
+                        ltItemJournal.Init();
+                        ltItemJournal.TransferFields(ltItemJournalTemp);
+                        ltItemJournal.Insert();
+                        ltItemJournal.Validate("Item No.", ltItemJournalTemp."No.");
+                        ltItemJournal.Validate(Quantity, ltItemJournalTemp.Quantity);
+                        ltItemJournal.Modify();
+                        InsertLot(ltItemJournal, ltItemJournal."Temp. Lot No.", ltItemJournal."Temp. Expire Date");
+                    until ltItemJournalTemp.Next() = 0;
+                InsertLogTransaction(Database::"Item Journal Line", 'POSITIVE', CurrentDateTime(), 0, '', ltFileName, 0, pIsManual);
+                if pIsManual then
+                    MESSAGE('Import is successfully');
+            end;
         end else begin
             InsertLogTransaction(Database::"Item Journal Line", 'POSITIVE', CurrentDateTime(), 1, GetLastErrorText(), ltFileName, 0, pIsManual);
             if pIsManual then
@@ -115,18 +130,25 @@ codeunit 60050 "FK Func"
         ltItemJournalTemp: Record "Item Journal Line" temporary;
         ltItemJournal: Record "Item Journal Line";
         ltFileName: Text;
+        ltCancel: Boolean;
     begin
-        if InsertToITemJournal(1, ltItemJournalTemp, ltFileName, pIsManual) then begin
-            if ltItemJournalTemp.FindSet() then
-                repeat
-                    ltItemJournal.Init();
-                    ltItemJournal.TransferFields(ltItemJournalTemp);
-                    ltItemJournal.Insert();
-                    InsertLot(ltItemJournal, ltItemJournal."Temp. Lot No.", ltItemJournal."Temp. Expire Date");
-                until ltItemJournalTemp.Next() = 0;
-            InsertLogTransaction(Database::"Item Journal Line", 'NEGATIVE', CurrentDateTime(), 0, '', ltFileName, 0, pIsManual);
-            if pIsManual then
-                MESSAGE('Import is successfully');
+        ltCancel := false;
+        if InsertToITemJournal(1, ltItemJournalTemp, ltFileName, pIsManual, ltCancel) then begin
+            if not ltCancel then begin
+                if ltItemJournalTemp.FindSet() then
+                    repeat
+                        ltItemJournal.Init();
+                        ltItemJournal.TransferFields(ltItemJournalTemp);
+                        ltItemJournal.Insert();
+                        ltItemJournal.Validate("Item No.", ltItemJournalTemp."No.");
+                        ltItemJournal.Validate(Quantity, ltItemJournalTemp.Quantity);
+                        ltItemJournal.Modify();
+                        InsertLot(ltItemJournal, ltItemJournal."Temp. Lot No.", ltItemJournal."Temp. Expire Date");
+                    until ltItemJournalTemp.Next() = 0;
+                InsertLogTransaction(Database::"Item Journal Line", 'NEGATIVE', CurrentDateTime(), 0, '', ltFileName, 0, pIsManual);
+                if pIsManual then
+                    MESSAGE('Import is successfully');
+            end;
         end else begin
             InsertLogTransaction(Database::"Item Journal Line", 'NEGATIVE', CurrentDateTime(), 1, GetLastErrorText(), ltFileName, 0, pIsManual);
             if pIsManual then
@@ -140,18 +162,25 @@ codeunit 60050 "FK Func"
         ltItemJournalTemp: Record "Item Journal Line" temporary;
         ltItemJournal: Record "Item Journal Line";
         ltFileName: Text;
+        ltCancel: Boolean;
     begin
-        if InsertToItemJournalReclass(ltItemJournalTemp, ltFileName, pIsManual) then begin
-            if ltItemJournalTemp.FindSet() then
-                repeat
-                    ltItemJournal.Init();
-                    ltItemJournal.TransferFields(ltItemJournalTemp);
-                    ltItemJournal.Insert();
-                    InsertLot(ltItemJournal, ltItemJournal."Temp. Lot No.", ltItemJournal."Temp. Expire Date");
-                until ltItemJournalTemp.Next() = 0;
-            InsertLogTransaction(Database::"Item Journal Line", 'RECLASS', CurrentDateTime(), 0, '', ltFileName, 0, pIsManual);
-            if pIsManual then
-                MESSAGE('Import is successfully');
+        ltCancel := false;
+        if InsertToItemJournalReclass(ltItemJournalTemp, ltFileName, pIsManual, ltCancel) then begin
+            if not ltCancel then begin
+                if ltItemJournalTemp.FindSet() then
+                    repeat
+                        ltItemJournal.Init();
+                        ltItemJournal.TransferFields(ltItemJournalTemp);
+                        ltItemJournal.Insert();
+                        ltItemJournal.Validate("Item No.", ltItemJournalTemp."No.");
+                        ltItemJournal.Validate(Quantity, ltItemJournalTemp.Quantity);
+                        ltItemJournal.Modify();
+                        InsertLot(ltItemJournal, ltItemJournal."Temp. Lot No.", ltItemJournal."Temp. Expire Date");
+                    until ltItemJournalTemp.Next() = 0;
+                InsertLogTransaction(Database::"Item Journal Line", 'RECLASS', CurrentDateTime(), 0, '', ltFileName, 0, pIsManual);
+                if pIsManual then
+                    MESSAGE('Import is successfully');
+            end;
         end else begin
             InsertLogTransaction(Database::"Item Journal Line", 'RECLASS', CurrentDateTime(), 1, GetLastErrorText(), ltFileName, 0, pIsManual);
             if pIsManual then
@@ -171,39 +200,43 @@ codeunit 60050 "FK Func"
         ltPurchaseHeader: Record "Purchase Header";
         ltPurchaseLine: Record "Purchase Line";
         ltFileName: Text;
+        ltCancel: Boolean;
     begin
-        if updateOrder(0, ltPurchaseHeaderTemp, ltPurchaseLineTemp, ltFileName, pIsManual) then begin
-            if ltPurchaseHeaderTemp.FindSet() then
-                repeat
-                    ltPurchaseHeader.GET(ltPurchaseHeaderTemp."Document Type", ltPurchaseHeaderTemp."No.");
-                    ltPurchaseHeader.Validate("Posting Date", ltPurchaseHeaderTemp."Posting Date");
-                    ltPurchaseHeader."Vendor Invoice No." := ltPurchaseHeaderTemp."Vendor Invoice No.";
-                    ltPurchaseHeader."Ref. GR No. Intranet" := ltPurchaseHeaderTemp."Ref. GR No. Intranet";
-                    ltPurchaseHeader.Modify();
+        ltCancel := false;
+        if updateOrder(0, ltPurchaseHeaderTemp, ltPurchaseLineTemp, ltFileName, pIsManual, ltCancel) then begin
+            if not ltCancel then begin
+                if ltPurchaseHeaderTemp.FindSet() then
+                    repeat
+                        ltPurchaseHeader.GET(ltPurchaseHeaderTemp."Document Type", ltPurchaseHeaderTemp."No.");
+                        ltPurchaseHeader.Validate("Posting Date", ltPurchaseHeaderTemp."Posting Date");
+                        ltPurchaseHeader."Vendor Invoice No." := ltPurchaseHeaderTemp."Vendor Invoice No.";
+                        ltPurchaseHeader."Ref. GR No. Intranet" := ltPurchaseHeaderTemp."Ref. GR No. Intranet";
+                        ltPurchaseHeader.Modify();
 
 
-                    ltPurchaseLineTemp.reset();
-                    ltPurchaseLineTemp.SetRange("Document Type", ltPurchaseHeaderTemp."Document Type");
-                    ltPurchaseLineTemp.SetRange("Document No.", ltPurchaseHeaderTemp."No.");
-                    if ltPurchaseLineTemp.FindSet() then begin
-                        repeat
-                            ltPurchaseLine.reset();
-                            ltPurchaseLine.SetRange("Document Type", ltPurchaseLineTemp."Document Type");
-                            ltPurchaseLine.SetRange("Document No.", ltPurchaseLineTemp."Document No.");
-                            ltPurchaseLine.SetRange("No.", ltPurchaseLineTemp."No.");
-                            ltPurchaseLine.SetRange("Location Code", ltPurchaseLineTemp."Location Code");
-                            if ltPurchaseLine.FindFirst() then begin
-                                ltPurchaseLine.Validate("Qty. to Receive", ltPurchaseLineTemp.Quantity);
-                                ltPurchaseLine.Modify();
-                                InsertLotPurchase(ltPurchaseLine, ltPurchaseLine."Temp. Lot No.", ltPurchaseLine."Temp. Expire Date");
-                            end;
-                        until ltPurchaseLineTemp.Next() = 0;
-                    end;
+                        ltPurchaseLineTemp.reset();
+                        ltPurchaseLineTemp.SetRange("Document Type", ltPurchaseHeaderTemp."Document Type");
+                        ltPurchaseLineTemp.SetRange("Document No.", ltPurchaseHeaderTemp."No.");
+                        if ltPurchaseLineTemp.FindSet() then begin
+                            repeat
+                                ltPurchaseLine.reset();
+                                ltPurchaseLine.SetRange("Document Type", ltPurchaseLineTemp."Document Type");
+                                ltPurchaseLine.SetRange("Document No.", ltPurchaseLineTemp."Document No.");
+                                ltPurchaseLine.SetRange("No.", ltPurchaseLineTemp."No.");
+                                ltPurchaseLine.SetRange("Location Code", ltPurchaseLineTemp."Location Code");
+                                if ltPurchaseLine.FindFirst() then begin
+                                    ltPurchaseLine.Validate("Qty. to Receive", ltPurchaseLineTemp.Quantity);
+                                    ltPurchaseLine.Modify();
+                                    InsertLotPurchase(ltPurchaseLine, ltPurchaseLineTemp."Temp. Lot No.", ltPurchaseLine."Temp. Expire Date");
+                                end;
+                            until ltPurchaseLineTemp.Next() = 0;
+                        end;
 
-                until ltPurchaseHeaderTemp.Next() = 0;
-            InsertLogTransaction(Database::"Purchase Header", 'PURCHASE GRN', CurrentDateTime(), 0, '', ltFileName, 1, pIsManual);
-            if pIsManual then
-                MESSAGE('Import is successfully');
+                    until ltPurchaseHeaderTemp.Next() = 0;
+                InsertLogTransaction(Database::"Purchase Header", 'PURCHASE GRN', CurrentDateTime(), 0, '', ltFileName, 1, pIsManual);
+                if pIsManual then
+                    MESSAGE('Import is successfully');
+            end;
         end else begin
             InsertLogTransaction(Database::"Purchase Header", 'PURCHASE GRN', CurrentDateTime(), 1, GetLastErrorText(), ltFileName, 1, pIsManual);
             if pIsManual then
@@ -218,39 +251,43 @@ codeunit 60050 "FK Func"
         ltPurchaseHeader: Record "Purchase Header";
         ltPurchaseLine: Record "Purchase Line";
         ltFileName: Text;
+        ltCancel: Boolean;
     begin
-        if updateOrder(1, ltPurchaseHeaderTemp, ltPurchaseLineTemp, ltFileName, pIsManual) then begin
-            if ltPurchaseHeaderTemp.FindSet() then
-                repeat
-                    ltPurchaseHeader.GET(ltPurchaseHeaderTemp."Document Type", ltPurchaseHeaderTemp."No.");
-                    ltPurchaseHeader.Validate("Posting Date", ltPurchaseHeaderTemp."Posting Date");
-                    ltPurchaseHeader."Vendor Cr. Memo No." := ltPurchaseHeaderTemp."Vendor Cr. Memo No.";
-                    ltPurchaseHeader."Ref. GR No. Intranet" := ltPurchaseHeaderTemp."Ref. GR No. Intranet";
-                    ltPurchaseHeader.Modify();
+        ltCancel := false;
+        if updateOrder(1, ltPurchaseHeaderTemp, ltPurchaseLineTemp, ltFileName, pIsManual, ltCancel) then begin
+            if not ltCancel then begin
+                if ltPurchaseHeaderTemp.FindSet() then
+                    repeat
+                        ltPurchaseHeader.GET(ltPurchaseHeaderTemp."Document Type", ltPurchaseHeaderTemp."No.");
+                        ltPurchaseHeader.Validate("Posting Date", ltPurchaseHeaderTemp."Posting Date");
+                        ltPurchaseHeader."Vendor Cr. Memo No." := ltPurchaseHeaderTemp."Vendor Cr. Memo No.";
+                        ltPurchaseHeader."Ref. GR No. Intranet" := ltPurchaseHeaderTemp."Ref. GR No. Intranet";
+                        ltPurchaseHeader.Modify();
 
 
-                    ltPurchaseLineTemp.reset();
-                    ltPurchaseLineTemp.SetRange("Document Type", ltPurchaseHeaderTemp."Document Type");
-                    ltPurchaseLineTemp.SetRange("Document No.", ltPurchaseHeaderTemp."No.");
-                    if ltPurchaseLineTemp.FindSet() then begin
-                        repeat
-                            ltPurchaseLine.reset();
-                            ltPurchaseLine.SetRange("Document Type", ltPurchaseLineTemp."Document Type");
-                            ltPurchaseLine.SetRange("Document No.", ltPurchaseLineTemp."Document No.");
-                            ltPurchaseLine.SetRange("No.", ltPurchaseLineTemp."No.");
-                            ltPurchaseLine.SetRange("Location Code", ltPurchaseLineTemp."Location Code");
-                            if ltPurchaseLine.FindFirst() then begin
-                                ltPurchaseLine.Validate("Return Qty. to Ship", ltPurchaseLineTemp.Quantity);
-                                ltPurchaseLine.Modify();
-                                InsertLotPurchase(ltPurchaseLine, ltPurchaseLine."Temp. Lot No.", ltPurchaseLine."Temp. Expire Date");
-                            end;
-                        until ltPurchaseLineTemp.Next() = 0;
-                    end;
+                        ltPurchaseLineTemp.reset();
+                        ltPurchaseLineTemp.SetRange("Document Type", ltPurchaseHeaderTemp."Document Type");
+                        ltPurchaseLineTemp.SetRange("Document No.", ltPurchaseHeaderTemp."No.");
+                        if ltPurchaseLineTemp.FindSet() then begin
+                            repeat
+                                ltPurchaseLine.reset();
+                                ltPurchaseLine.SetRange("Document Type", ltPurchaseLineTemp."Document Type");
+                                ltPurchaseLine.SetRange("Document No.", ltPurchaseLineTemp."Document No.");
+                                ltPurchaseLine.SetRange("No.", ltPurchaseLineTemp."No.");
+                                ltPurchaseLine.SetRange("Location Code", ltPurchaseLineTemp."Location Code");
+                                if ltPurchaseLine.FindFirst() then begin
+                                    ltPurchaseLine.Validate("Return Qty. to Ship", ltPurchaseLineTemp.Quantity);
+                                    ltPurchaseLine.Modify();
+                                    InsertLotPurchase(ltPurchaseLine, ltPurchaseLineTemp."Temp. Lot No.", ltPurchaseLine."Temp. Expire Date");
+                                end;
+                            until ltPurchaseLineTemp.Next() = 0;
+                        end;
 
-                until ltPurchaseHeaderTemp.Next() = 0;
-            InsertLogTransaction(Database::"Purchase Header", 'RETURN SHIP', CurrentDateTime(), 0, '', ltFileName, 1, pIsManual);
-            if pIsManual then
-                MESSAGE('Import is successfully');
+                    until ltPurchaseHeaderTemp.Next() = 0;
+                InsertLogTransaction(Database::"Purchase Header", 'RETURN SHIP', CurrentDateTime(), 0, '', ltFileName, 1, pIsManual);
+                if pIsManual then
+                    MESSAGE('Import is successfully');
+            end;
         end else begin
             InsertLogTransaction(Database::"Purchase Header", 'RETURN SHIP', CurrentDateTime(), 1, GetLastErrorText(), ltFileName, 1, pIsManual);
             if pIsManual then
@@ -265,11 +302,12 @@ codeunit 60050 "FK Func"
         CreateReservEntry: Codeunit "Create Reserv. Entry";
         ReservStatus: Enum "Reservation Status";
     begin
+
         if ltItem.GET(pPurchaseLine."No.") then begin
             IF ltItem."Item Tracking Code" <> '' then
                 if pLotNo <> '' then begin
                     TempReservEntry.Init();
-                    TempReservEntry."Entry No." := GetLastReserveEntry();
+                    TempReservEntry."Entry No." := 1;
                     TempReservEntry."Lot No." := pLotNo;
                     TempReservEntry.Quantity := pPurchaseLine.Quantity;
                     if pExpireDate <> 0D then
@@ -285,13 +323,14 @@ codeunit 60050 "FK Func"
                       TempReservEntry.Quantity, TempReservEntry.Quantity * pPurchaseLine."Qty. per Unit of Measure", TempReservEntry);
                     CreateReservEntry.CreateEntry(
                       pPurchaseLine."No.", pPurchaseLine."Variant Code", pPurchaseLine."Location Code", '', pPurchaseLine."Expected Receipt Date", 0D, 0, ReservStatus::Surplus);
+
                 end;
 
         end;
     end;
 
     [TryFunction]
-    local procedure updateOrder(ImportType: Option GRN,Return; var pPurchaseHeader: Record "Purchase Header" temporary; var pPurchaseLine: Record "Purchase Line" temporary; var pFileName: Text[100]; pIsManual: Boolean)
+    local procedure updateOrder(ImportType: Option GRN,Return; var pPurchaseHeader: Record "Purchase Header" temporary; var pPurchaseLine: Record "Purchase Line" temporary; var pFileName: Text[100]; pIsManual: Boolean; var pCancel: Boolean)
     var
         CSVBuffer, TempCSVBuffer : Record "CSV Buffer" temporary;
         ltPurchaseHeader: Record "Purchase Header" temporary;
@@ -386,7 +425,7 @@ codeunit 60050 "FK Func"
                                 ltPurchaseLine."Buy-from Vendor No." := ltPurchaseHeader."Buy-from Vendor No.";
                                 ltPurchaseLine."Pay-to Vendor No." := ltPurchaseHeader."Pay-to Vendor No.";
                                 ltPurchaseLine.Insert();
-                                ltPurchaseLine.Type := SelectoptionPurchase(CSVBuffer.Value);
+                                //  ltPurchaseLine.Type := SelectoptionPurchase(CSVBuffer.Value);
                                 ltItem.GET(CSVBuffer.Value);
                                 ltPurchaseLine."No." := CSVBuffer.Value;
 
@@ -427,7 +466,8 @@ codeunit 60050 "FK Func"
                 pPurchaseHeader.copy(ltPurchaseHeader, true);
                 pPurchaseLine.copy(ltPurchaseLine, true);
             end;
-        end;
+        end else
+            pCancel := true;
     end;
 
     procedure ImportPO(pIsManual: Boolean)
@@ -437,41 +477,47 @@ codeunit 60050 "FK Func"
         ltPurchaseHeader: Record "Purchase Header";
         ltPurchaseLine: Record "Purchase Line";
         ltFileName: Text;
+        ltCancel: Boolean;
     begin
-        if InsertToPurchase(0, ltPurchaseHeaderTemp, ltPurchaseLineTemp, ltFileName, pIsManual) then begin
-            if ltPurchaseHeaderTemp.FindSet() then
-                repeat
-                    ltPurchaseHeader.Init();
-                    ltPurchaseHeader.TransferFields(ltPurchaseHeaderTemp);
-                    ltPurchaseHeader.Insert();
+        ltCancel := false;
+        if InsertToPurchase(0, ltPurchaseHeaderTemp, ltPurchaseLineTemp, ltFileName, pIsManual, ltCancel) then begin
+            if not ltCancel then begin
+                if ltPurchaseHeaderTemp.FindSet() then
+                    repeat
+                        ltPurchaseHeader.Init();
+                        ltPurchaseHeader.TransferFields(ltPurchaseHeaderTemp);
+                        ltPurchaseHeader.Insert();
 
-                    ltPurchaseLineTemp.reset();
-                    ltPurchaseLineTemp.SetRange("Document Type", ltPurchaseHeaderTemp."Document Type");
-                    ltPurchaseLineTemp.SetRange("Document No.", ltPurchaseHeaderTemp."No.");
-                    if ltPurchaseLineTemp.FindSet() then begin
-                        repeat
-                            ltPurchaseLine.Init();
-                            ltPurchaseLine.Copy(ltPurchaseLineTemp);
-                            ltPurchaseLine.Insert();
-                            ltPurchaseLine.Validate(Quantity, ltPurchaseLineTemp.Quantity);
-                            if ltPurchaseLineTemp."Location Code" <> '' then
-                                ltPurchaseLine.Validate("Location Code", ltPurchaseLineTemp."Location Code");
-                            if ltPurchaseLineTemp."Unit of Measure Code" <> '' then
-                                ltPurchaseLine.Validate("Unit of Measure Code", ltPurchaseLineTemp."Unit of Measure Code");
-                            ltPurchaseLine.Validate("Direct Unit Cost", ltPurchaseLineTemp."Direct Unit Cost");
-                            if ltPurchaseLineTemp."Line Discount Amount" <> 0 then
-                                ltPurchaseLine.Validate("Line Discount Amount", ltPurchaseLineTemp."Line Discount Amount");
-                            if ltPurchaseLineTemp."VAT Prod. Posting Group" <> '' then
-                                ltPurchaseLine.Validate("VAT Prod. Posting Group", ltPurchaseLineTemp."VAT Prod. Posting Group");
-                            ltPurchaseLine.Modify();
-                        until ltPurchaseLineTemp.Next() = 0;
-                    end;
-                    ltPurchaseHeader.Status := ltPurchaseHeader.Status::Released;
-                    ltPurchaseHeader.Modify();
-                until ltPurchaseHeaderTemp.Next() = 0;
-            InsertLogTransaction(Database::"Purchase Header", 'PURCHASE ORDER', CurrentDateTime(), 0, '', ltFileName, 0, pIsManual);
-            if pIsManual then
-                MESSAGE('Import is successfully');
+                        ltPurchaseLineTemp.reset();
+                        ltPurchaseLineTemp.SetRange("Document Type", ltPurchaseHeaderTemp."Document Type");
+                        ltPurchaseLineTemp.SetRange("Document No.", ltPurchaseHeaderTemp."No.");
+                        if ltPurchaseLineTemp.FindSet() then begin
+                            repeat
+                                ltPurchaseLine.Init();
+                                ltPurchaseLine.Copy(ltPurchaseLineTemp);
+                                ltPurchaseLine.Insert();
+                                ltPurchaseLine.Validate("No.", ltPurchaseLineTemp."No.");
+                                ltPurchaseLine.Validate(Quantity, ltPurchaseLineTemp.Quantity);
+                                if ltPurchaseLineTemp."Location Code" <> '' then
+                                    ltPurchaseLine.Validate("Location Code", ltPurchaseLineTemp."Location Code");
+                                if ltPurchaseLineTemp."Unit of Measure Code" <> '' then
+                                    ltPurchaseLine.Validate("Unit of Measure Code", ltPurchaseLineTemp."Unit of Measure Code");
+                                ltPurchaseLine.Validate("Direct Unit Cost", ltPurchaseLineTemp."Direct Unit Cost");
+                                if ltPurchaseLineTemp."Line Discount Amount" <> 0 then
+                                    ltPurchaseLine.Validate("Line Discount Amount", ltPurchaseLineTemp."Line Discount Amount");
+                                if ltPurchaseLineTemp."VAT Prod. Posting Group" <> '' then
+                                    ltPurchaseLine.Validate("VAT Prod. Posting Group", ltPurchaseLineTemp."VAT Prod. Posting Group");
+                                ltPurchaseLine.Modify();
+                            until ltPurchaseLineTemp.Next() = 0;
+                        end;
+                        ltPurchaseHeader."Interface Complete" := true;
+                        ltPurchaseHeader.Status := ltPurchaseHeader.Status::Released;
+                        ltPurchaseHeader.Modify();
+                    until ltPurchaseHeaderTemp.Next() = 0;
+                InsertLogTransaction(Database::"Purchase Header", 'PURCHASE ORDER', CurrentDateTime(), 0, '', ltFileName, 0, pIsManual);
+                if pIsManual then
+                    MESSAGE('Import is successfully');
+            end;
         end else begin
             InsertLogTransaction(Database::"Purchase Header", 'PURCHASE ORDER', CurrentDateTime(), 1, GetLastErrorText(), ltFileName, 0, pIsManual);
             if pIsManual then
@@ -486,41 +532,47 @@ codeunit 60050 "FK Func"
         ltPurchaseHeader: Record "Purchase Header";
         ltPurchaseLine: Record "Purchase Line";
         ltFileName: Text;
+        ltCancel: Boolean;
     begin
-        if InsertToPurchase(1, ltPurchaseHeaderTemp, ltPurchaseLineTemp, ltFileName, pIsManual) then begin
-            if ltPurchaseHeaderTemp.FindSet() then
-                repeat
-                    ltPurchaseHeader.Init();
-                    ltPurchaseHeader.TransferFields(ltPurchaseHeaderTemp);
-                    ltPurchaseHeader.Insert();
+        ltCancel := false;
+        if InsertToPurchase(1, ltPurchaseHeaderTemp, ltPurchaseLineTemp, ltFileName, pIsManual, ltCancel) then begin
+            if not ltCancel then begin
+                if ltPurchaseHeaderTemp.FindSet() then
+                    repeat
+                        ltPurchaseHeader.Init();
+                        ltPurchaseHeader.TransferFields(ltPurchaseHeaderTemp);
+                        ltPurchaseHeader.Insert();
 
-                    ltPurchaseLineTemp.reset();
-                    ltPurchaseLineTemp.SetRange("Document Type", ltPurchaseHeaderTemp."Document Type");
-                    ltPurchaseLineTemp.SetRange("Document No.", ltPurchaseHeaderTemp."No.");
-                    if ltPurchaseLineTemp.FindSet() then begin
-                        repeat
-                            ltPurchaseLine.Init();
-                            ltPurchaseLine.Copy(ltPurchaseLineTemp);
-                            ltPurchaseLine.Insert();
-                            ltPurchaseLine.Validate(Quantity, ltPurchaseLineTemp.Quantity);
-                            if ltPurchaseLineTemp."Location Code" <> '' then
-                                ltPurchaseLine.Validate("Location Code", ltPurchaseLineTemp."Location Code");
-                            if ltPurchaseLineTemp."Unit of Measure Code" <> '' then
-                                ltPurchaseLine.Validate("Unit of Measure Code", ltPurchaseLineTemp."Unit of Measure Code");
-                            ltPurchaseLine.Validate("Direct Unit Cost", ltPurchaseLineTemp."Direct Unit Cost");
-                            if ltPurchaseLineTemp."Line Discount Amount" <> 0 then
-                                ltPurchaseLine.Validate("Line Discount Amount", ltPurchaseLineTemp."Line Discount Amount");
-                            if ltPurchaseLineTemp."VAT Prod. Posting Group" <> '' then
-                                ltPurchaseLine.Validate("VAT Prod. Posting Group", ltPurchaseLineTemp."VAT Prod. Posting Group");
-                            ltPurchaseLine.Modify();
-                        until ltPurchaseLineTemp.Next() = 0;
-                    end;
-                    ltPurchaseHeader.Status := ltPurchaseHeader.Status::Released;
-                    ltPurchaseHeader.Modify();
-                until ltPurchaseHeaderTemp.Next() = 0;
-            InsertLogTransaction(Database::"Purchase Header", 'RETURN ORDER', CurrentDateTime(), 0, '', ltFileName, 0, pIsManual);
-            if pIsManual then
-                MESSAGE('Import is successfully');
+                        ltPurchaseLineTemp.reset();
+                        ltPurchaseLineTemp.SetRange("Document Type", ltPurchaseHeaderTemp."Document Type");
+                        ltPurchaseLineTemp.SetRange("Document No.", ltPurchaseHeaderTemp."No.");
+                        if ltPurchaseLineTemp.FindSet() then begin
+                            repeat
+                                ltPurchaseLine.Init();
+                                ltPurchaseLine.Copy(ltPurchaseLineTemp);
+                                ltPurchaseLine.Insert();
+                                ltPurchaseLine.Validate("No.", ltPurchaseLineTemp."No.");
+                                ltPurchaseLine.Validate(Quantity, ltPurchaseLineTemp.Quantity);
+                                if ltPurchaseLineTemp."Location Code" <> '' then
+                                    ltPurchaseLine.Validate("Location Code", ltPurchaseLineTemp."Location Code");
+                                if ltPurchaseLineTemp."Unit of Measure Code" <> '' then
+                                    ltPurchaseLine.Validate("Unit of Measure Code", ltPurchaseLineTemp."Unit of Measure Code");
+                                ltPurchaseLine.Validate("Direct Unit Cost", ltPurchaseLineTemp."Direct Unit Cost");
+                                if ltPurchaseLineTemp."Line Discount Amount" <> 0 then
+                                    ltPurchaseLine.Validate("Line Discount Amount", ltPurchaseLineTemp."Line Discount Amount");
+                                if ltPurchaseLineTemp."VAT Prod. Posting Group" <> '' then
+                                    ltPurchaseLine.Validate("VAT Prod. Posting Group", ltPurchaseLineTemp."VAT Prod. Posting Group");
+                                ltPurchaseLine.Modify();
+                            until ltPurchaseLineTemp.Next() = 0;
+                        end;
+                        ltPurchaseHeader."Interface Complete" := true;
+                        ltPurchaseHeader.Status := ltPurchaseHeader.Status::Released;
+                        ltPurchaseHeader.Modify();
+                    until ltPurchaseHeaderTemp.Next() = 0;
+                InsertLogTransaction(Database::"Purchase Header", 'RETURN ORDER', CurrentDateTime(), 0, '', ltFileName, 0, pIsManual);
+                if pIsManual then
+                    MESSAGE('Import is successfully');
+            end;
         end else begin
             InsertLogTransaction(Database::"Purchase Header", 'RETURN ORDER', CurrentDateTime(), 1, GetLastErrorText(), ltFileName, 0, pIsManual);
             if pIsManual then
@@ -530,9 +582,10 @@ codeunit 60050 "FK Func"
 
 
     [TryFunction]
-    local procedure InsertToPurchase(ImportType: Option PO,Return; var pPurchaseHeader: Record "Purchase Header" temporary; var pPurchaseLine: Record "Purchase Line" temporary; var pFileName: Text[100]; pIsManual: Boolean)
+    local procedure InsertToPurchase(ImportType: Option PO,Return; var pPurchaseHeader: Record "Purchase Header" temporary; var pPurchaseLine: Record "Purchase Line" temporary; var pFileName: Text[100]; pIsManual: Boolean; var pCancel: Boolean)
     var
         InterfaceSetup: Record "FK Interface Setup";
+        CheckPurchaseHeader: Record "Purchase Header";
         CSVBuffer, TempCSVBuffer : Record "CSV Buffer" temporary;
         ltPurchaseHeader: Record "Purchase Header" temporary;
         ltPurchaseLine: Record "Purchase Line" temporary;
@@ -548,6 +601,7 @@ codeunit 60050 "FK Func"
         ltInteger: Integer;
         ltCheckAlready: Boolean;
         ltPurchaseDocType: Enum "Purchase Document Type";
+        ltCheckHeader: Boolean;
 
     begin
         InterfaceSetup.GET();
@@ -586,13 +640,20 @@ codeunit 60050 "FK Func"
                                 else
                                     ltPurchaseDocType := ltPurchaseDocType::"Return Order";
 
-                                if not ltPurchaseHeader.GET(ltPurchaseDocType, CSVBuffer.Value) then begin
-                                    ltPurchaseHeader.Init();
-                                    ltPurchaseHeader."Document Type" := ltPurchaseDocType;
-                                    ltPurchaseHeader."No." := CSVBuffer.Value;
-                                    ltPurchaseHeader.Insert(true);
+                                CheckPurchaseHeader.reset();
+                                CheckPurchaseHeader.SetRange("Document Type", ltPurchaseDocType);
+                                CheckPurchaseHeader.SetRange("No.", CSVBuffer.Value);
+                                CheckPurchaseHeader.SetRange("Interface Complete", true);
+                                if CheckPurchaseHeader.IsTemporary then begin
+                                    if not ltPurchaseHeader.GET(ltPurchaseDocType, CSVBuffer.Value) then begin
+                                        ltPurchaseHeader.Init();
+                                        ltPurchaseHeader."Document Type" := ltPurchaseDocType;
+                                        ltPurchaseHeader."No." := CSVBuffer.Value;
+                                        ltPurchaseHeader.Insert(true);
+                                    end else
+                                        ltCheckAlready := true;
                                 end else
-                                    ltCheckAlready := true;
+                                    ERROR(StrSubstNo('The record in table Purchase Header already exists. Identification fields and values: Document Type=%1,No.=%2', ltPurchaseDocType, CSVBuffer.Value));
                             end;
 
                         3:
@@ -721,7 +782,8 @@ codeunit 60050 "FK Func"
                 pPurchaseHeader.copy(ltPurchaseHeader, true);
                 pPurchaseLine.copy(ltPurchaseLine, true);
             end;
-        end;
+        end else
+            pCancel := true;
     end;
 
     procedure ImportToSalesCreditMemo(pIsManual: Boolean)
@@ -731,43 +793,49 @@ codeunit 60050 "FK Func"
         ltSalesHEader: Record "Sales Header";
         ltSalesLine: Record "Sales Line";
         ltFileName: Text;
+        ltCancel: Boolean;
     begin
-        if InsertToSales(1, ltSalesHeaderTemp, ltSalesLineTemp, ltFileName, pIsManual) then begin
-            if ltSalesHeaderTemp.FindSet() then
-                repeat
-                    ltSalesHEader.Init();
-                    ltSalesHEader.TransferFields(ltSalesHeaderTemp);
-                    ltSalesHEader.Insert();
+        ltCancel := false;
+        if InsertToSales(1, ltSalesHeaderTemp, ltSalesLineTemp, ltFileName, pIsManual, ltCancel) then begin
+            if not ltCancel then begin
+                if ltSalesHeaderTemp.FindSet() then
+                    repeat
+                        ltSalesHEader.Init();
+                        ltSalesHEader.TransferFields(ltSalesHeaderTemp);
+                        ltSalesHEader.Insert();
 
-                    ltSalesLineTemp.reset();
-                    ltSalesLineTemp.SetRange("Document Type", ltSalesHeaderTemp."Document Type");
-                    ltSalesLineTemp.SetRange("Document No.", ltSalesHeaderTemp."No.");
-                    if ltSalesLineTemp.FindSet() then begin
-                        repeat
-                            ltSalesLine.Init();
-                            ltSalesLine.Copy(ltSalesLineTemp);
-                            ltSalesLine.Insert();
-                            ltSalesLine.Validate(Quantity, ltSalesLineTemp.Quantity);
-                            if ltSalesLineTemp."Location Code" <> '' then
-                                ltSalesLine.Validate("Location Code", ltSalesLineTemp."Location Code");
-                            if ltSalesLineTemp."Unit of Measure Code" <> '' then
-                                ltSalesLine.Validate("Unit of Measure Code", ltSalesLineTemp."Unit of Measure Code");
-                            ltSalesLine.Validate("Unit Price", ltSalesLineTemp."Unit Price");
-                            if ltSalesLineTemp."Line Discount Amount" <> 0 then
-                                ltSalesLine.Validate("Line Discount Amount", ltSalesLineTemp."Line Discount Amount");
-                            if ltSalesLineTemp."VAT Prod. Posting Group" <> '' then
-                                ltSalesLine.Validate("VAT Prod. Posting Group", ltSalesLineTemp."VAT Prod. Posting Group");
-                            if ltSalesLineTemp."Inv. Discount Amount" <> 0 then
-                                ltSalesLine.Validate("Inv. Discount Amount", ltSalesLineTemp."Inv. Discount Amount");
-                            ltSalesLine.Modify();
-                        until ltSalesLineTemp.Next() = 0;
-                    end;
-                    ltSalesHEader.Status := ltSalesHEader.Status::Released;
-                    ltSalesHEader.Modify();
-                until ltSalesHeaderTemp.Next() = 0;
-            InsertLogTransaction(Database::"Sales Header", 'SALES CREDIT', CurrentDateTime(), 0, '', ltFileName, 0, pIsManual);
-            if pIsManual then
-                MESSAGE('Import is successfully');
+                        ltSalesLineTemp.reset();
+                        ltSalesLineTemp.SetRange("Document Type", ltSalesHeaderTemp."Document Type");
+                        ltSalesLineTemp.SetRange("Document No.", ltSalesHeaderTemp."No.");
+                        if ltSalesLineTemp.FindSet() then begin
+                            repeat
+                                ltSalesLine.Init();
+                                ltSalesLine.Copy(ltSalesLineTemp);
+                                ltSalesLine.Insert();
+                                ltSalesLine.Validate("No.", ltSalesLineTemp."No.");
+                                ltSalesLine.Validate(Quantity, ltSalesLineTemp.Quantity);
+                                if ltSalesLineTemp."Location Code" <> '' then
+                                    ltSalesLine.Validate("Location Code", ltSalesLineTemp."Location Code");
+                                if ltSalesLineTemp."Unit of Measure Code" <> '' then
+                                    ltSalesLine.Validate("Unit of Measure Code", ltSalesLineTemp."Unit of Measure Code");
+                                ltSalesLine.Validate("Unit Price", ltSalesLineTemp."Unit Price");
+                                if ltSalesLineTemp."Line Discount Amount" <> 0 then
+                                    ltSalesLine.Validate("Line Discount Amount", ltSalesLineTemp."Line Discount Amount");
+                                if ltSalesLineTemp."VAT Prod. Posting Group" <> '' then
+                                    ltSalesLine.Validate("VAT Prod. Posting Group", ltSalesLineTemp."VAT Prod. Posting Group");
+                                if ltSalesLineTemp."Inv. Discount Amount" <> 0 then
+                                    ltSalesLine.Validate("Inv. Discount Amount", ltSalesLineTemp."Inv. Discount Amount");
+                                ltSalesLine.Modify();
+                            until ltSalesLineTemp.Next() = 0;
+                        end;
+                        ltSalesHEader."Interface Complete" := true;
+                        ltSalesHEader.Status := ltSalesHEader.Status::Released;
+                        ltSalesHEader.Modify();
+                    until ltSalesHeaderTemp.Next() = 0;
+                InsertLogTransaction(Database::"Sales Header", 'SALES CREDIT', CurrentDateTime(), 0, '', ltFileName, 0, pIsManual);
+                if pIsManual then
+                    MESSAGE('Import is successfully');
+            end;
         end else begin
             InsertLogTransaction(Database::"Sales Header", 'SALES CREDIT', CurrentDateTime(), 1, GetLastErrorText(), ltFileName, 0, pIsManual);
             if pIsManual then
@@ -782,43 +850,49 @@ codeunit 60050 "FK Func"
         ltSalesHEader: Record "Sales Header";
         ltSalesLine: Record "Sales Line";
         ltFileName: Text;
+        ltCancel: Boolean;
     begin
-        if InsertToSales(0, ltSalesHeaderTemp, ltSalesLineTemp, ltFileName, pIsManual) then begin
-            if ltSalesHeaderTemp.FindSet() then
-                repeat
-                    ltSalesHEader.Init();
-                    ltSalesHEader.TransferFields(ltSalesHeaderTemp);
-                    ltSalesHEader.Insert();
+        ltCancel := false;
+        if InsertToSales(0, ltSalesHeaderTemp, ltSalesLineTemp, ltFileName, pIsManual, ltCancel) then begin
+            if not ltCancel then begin
+                if ltSalesHeaderTemp.FindSet() then
+                    repeat
+                        ltSalesHEader.Init();
+                        ltSalesHEader.TransferFields(ltSalesHeaderTemp);
+                        ltSalesHEader.Insert();
 
-                    ltSalesLineTemp.reset();
-                    ltSalesLineTemp.SetRange("Document Type", ltSalesHeaderTemp."Document Type");
-                    ltSalesLineTemp.SetRange("Document No.", ltSalesHeaderTemp."No.");
-                    if ltSalesLineTemp.FindSet() then begin
-                        repeat
-                            ltSalesLine.Init();
-                            ltSalesLine.Copy(ltSalesLineTemp);
-                            ltSalesLine.Insert();
-                            ltSalesLine.Validate(Quantity, ltSalesLineTemp.Quantity);
-                            if ltSalesLineTemp."Location Code" <> '' then
-                                ltSalesLine.Validate("Location Code", ltSalesLineTemp."Location Code");
-                            if ltSalesLineTemp."Unit of Measure Code" <> '' then
-                                ltSalesLine.Validate("Unit of Measure Code", ltSalesLineTemp."Unit of Measure Code");
-                            ltSalesLine.Validate("Unit Price", ltSalesLineTemp."Unit Price");
-                            if ltSalesLineTemp."Line Discount Amount" <> 0 then
-                                ltSalesLine.Validate("Line Discount Amount", ltSalesLineTemp."Line Discount Amount");
-                            if ltSalesLineTemp."VAT Prod. Posting Group" <> '' then
-                                ltSalesLine.Validate("VAT Prod. Posting Group", ltSalesLineTemp."VAT Prod. Posting Group");
-                            if ltSalesLineTemp."Inv. Discount Amount" <> 0 then
-                                ltSalesLine.Validate("Inv. Discount Amount", ltSalesLineTemp."Inv. Discount Amount");
-                            ltSalesLine.Modify();
-                        until ltSalesLineTemp.Next() = 0;
-                    end;
-                    ltSalesHEader.Status := ltSalesHEader.Status::Released;
-                    ltSalesHEader.Modify();
-                until ltSalesHeaderTemp.Next() = 0;
-            InsertLogTransaction(Database::"Sales Header", 'SALES INVOICE', CurrentDateTime(), 0, '', ltFileName, 0, pIsManual);
-            if pIsManual then
-                MESSAGE('Import is successfully');
+                        ltSalesLineTemp.reset();
+                        ltSalesLineTemp.SetRange("Document Type", ltSalesHeaderTemp."Document Type");
+                        ltSalesLineTemp.SetRange("Document No.", ltSalesHeaderTemp."No.");
+                        if ltSalesLineTemp.FindSet() then begin
+                            repeat
+                                ltSalesLine.Init();
+                                ltSalesLine.Copy(ltSalesLineTemp);
+                                ltSalesLine.Insert();
+                                ltSalesLine.Validate("No.", ltSalesLineTemp."No.");
+                                ltSalesLine.Validate(Quantity, ltSalesLineTemp.Quantity);
+                                if ltSalesLineTemp."Location Code" <> '' then
+                                    ltSalesLine.Validate("Location Code", ltSalesLineTemp."Location Code");
+                                if ltSalesLineTemp."Unit of Measure Code" <> '' then
+                                    ltSalesLine.Validate("Unit of Measure Code", ltSalesLineTemp."Unit of Measure Code");
+                                ltSalesLine.Validate("Unit Price", ltSalesLineTemp."Unit Price");
+                                if ltSalesLineTemp."Line Discount Amount" <> 0 then
+                                    ltSalesLine.Validate("Line Discount Amount", ltSalesLineTemp."Line Discount Amount");
+                                if ltSalesLineTemp."VAT Prod. Posting Group" <> '' then
+                                    ltSalesLine.Validate("VAT Prod. Posting Group", ltSalesLineTemp."VAT Prod. Posting Group");
+                                if ltSalesLineTemp."Inv. Discount Amount" <> 0 then
+                                    ltSalesLine.Validate("Inv. Discount Amount", ltSalesLineTemp."Inv. Discount Amount");
+                                ltSalesLine.Modify();
+                            until ltSalesLineTemp.Next() = 0;
+                        end;
+                        ltSalesHEader."Interface Complete" := true;
+                        ltSalesHEader.Status := ltSalesHEader.Status::Released;
+                        ltSalesHEader.Modify();
+                    until ltSalesHeaderTemp.Next() = 0;
+                InsertLogTransaction(Database::"Sales Header", 'SALES INVOICE', CurrentDateTime(), 0, '', ltFileName, 0, pIsManual);
+                if pIsManual then
+                    MESSAGE('Import is successfully');
+            end;
         end else begin
             InsertLogTransaction(Database::"Sales Header", 'SALES INVOICE', CurrentDateTime(), 1, GetLastErrorText(), ltFileName, 0, pIsManual);
             if pIsManual then
@@ -828,9 +902,10 @@ codeunit 60050 "FK Func"
 
 
     [TryFunction]
-    local procedure InsertToSales(ImportType: Option Invoice,Credit; var pSalesHeader: Record "Sales Header" temporary; var pSalesLine: Record "Sales Line" temporary; var pFileName: Text[100]; pIsManual: Boolean)
+    local procedure InsertToSales(ImportType: Option Invoice,Credit; var pSalesHeader: Record "Sales Header" temporary; var pSalesLine: Record "Sales Line" temporary; var pFileName: Text[100]; pIsManual: Boolean; var pCancel: Boolean)
     var
         CSVBuffer, TempCSVBuffer : Record "CSV Buffer" temporary;
+        CheckSalesHeader: Record "Sales Header";
         ltSalesHeaderTemp: Record "Sales Header" temporary;
         ltSalesLineTemp: Record "Sales Line" temporary;
         ltItem: Record Item;
@@ -880,14 +955,21 @@ codeunit 60050 "FK Func"
                                     ltSalesDocType := ltSalesDocType::Invoice
                                 else
                                     ltSalesDocType := ltSalesDocType::"Credit Memo";
-
-                                if not ltSalesHeaderTemp.GET(ltSalesDocType, CSVBuffer.Value) then begin
-                                    ltSalesHeaderTemp.Init();
-                                    ltSalesHeaderTemp."Document Type" := ltSalesDocType;
-                                    ltSalesHeaderTemp."No." := CSVBuffer.Value;
-                                    ltSalesHeaderTemp.Insert(true);
+                                CheckSalesHeader.reset();
+                                CheckSalesHeader.SetRange("Document Type", ltSalesDocType);
+                                CheckSalesHeader.SetRange("No.", CSVBuffer.Value);
+                                CheckSalesHeader.SetRange("Interface Complete", true);
+                                if CheckSalesHeader.IsTemporary then begin
+                                    if not ltSalesHeaderTemp.GET(ltSalesDocType, CSVBuffer.Value) then begin
+                                        ltSalesHeaderTemp.Init();
+                                        ltSalesHeaderTemp."Document Type" := ltSalesDocType;
+                                        ltSalesHeaderTemp."No." := CSVBuffer.Value;
+                                        ltSalesHeaderTemp.Insert(true);
+                                    end else
+                                        ltCheckAlready := true;
                                 end else
-                                    ltCheckAlready := true;
+                                    ERROR(StrSubstNo('The record in table Sales Header already exists. Identification fields and values: Document Type=%1,No.=%2', ltSalesDocType, CSVBuffer.Value));
+
                             end;
 
                         3:
@@ -1043,7 +1125,8 @@ codeunit 60050 "FK Func"
                 pSalesHeader.copy(ltSalesHeaderTemp, true);
                 pSalesLine.copy(ltSalesLineTemp, true);
             end;
-        end;
+        end else
+            pCancel := true;
     end;
 
     procedure ImportToCashReceipt(pIsManual: Boolean)
@@ -1051,17 +1134,24 @@ codeunit 60050 "FK Func"
         ltGenJournalTemp: Record "Gen. Journal Line" temporary;
         ltGenJournalLine: Record "Gen. Journal Line";
         ltFileName: Text;
+        ltCancel: Boolean;
     begin
-        if InsertToICashReceipt(ltGenJournalTemp, ltFileName, pIsManual) then begin
-            if ltGenJournalTemp.FindSet() then
-                repeat
-                    ltGenJournalLine.Init();
-                    ltGenJournalLine.TransferFields(ltGenJournalTemp);
-                    ltGenJournalLine.Insert();
-                until ltGenJournalTemp.Next() = 0;
-            InsertLogTransaction(Database::"Gen. Journal Line", 'CASH RECEIPT', CurrentDateTime(), 0, '', ltFileName, 0, pIsManual);
-            if pIsManual then
-                MESSAGE('Import is successfully');
+        ltCancel := false;
+        if InsertToICashReceipt(ltGenJournalTemp, ltFileName, pIsManual, ltCancel) then begin
+            if not ltCancel then begin
+                if ltGenJournalTemp.FindSet() then
+                    repeat
+                        ltGenJournalLine.Init();
+                        ltGenJournalLine.TransferFields(ltGenJournalTemp);
+                        ltGenJournalLine.Insert();
+                        ltGenJournalLine.Validate("Account No.", ltGenJournalTemp."Account No.");
+                        ltGenJournalLine.Validate(Amount, ltGenJournalTemp.Amount);
+                        ltGenJournalLine.Modify();
+                    until ltGenJournalTemp.Next() = 0;
+                InsertLogTransaction(Database::"Gen. Journal Line", 'CASH RECEIPT', CurrentDateTime(), 0, '', ltFileName, 0, pIsManual);
+                if pIsManual then
+                    MESSAGE('Import is successfully');
+            end;
         end else begin
             InsertLogTransaction(Database::"Gen. Journal Line", 'CASH RECEIPT', CurrentDateTime(), 1, GetLastErrorText(), ltFileName, 0, pIsManual);
             if pIsManual then
@@ -1070,7 +1160,7 @@ codeunit 60050 "FK Func"
     end;
 
     [TryFunction]
-    local procedure InsertToICashReceipt(var pGenJournalLine: Record "Gen. Journal Line" temporary; var pFileName: Text[100]; pIsManual: Boolean)
+    local procedure InsertToICashReceipt(var pGenJournalLine: Record "Gen. Journal Line" temporary; var pFileName: Text[100]; pIsManual: Boolean; var pCancel: Boolean)
     var
         GenJournalLIne: Record "Gen. Journal Line" temporary;
         CSVBuffer, TempCSVBuffer : Record "CSV Buffer" temporary;
@@ -1085,7 +1175,6 @@ codeunit 60050 "FK Func"
         ltTemplateName, ltBatchName : code[30];
     begin
         InterfaceSetup.GET();
-
         InterfaceSetup.TestField("Cash Receipt Temp. Name");
         InterfaceSetup.TestField("Cash Receipt Batch Name");
         ltTemplateName := InterfaceSetup."Cash Receipt Temp. Name";
@@ -1183,7 +1272,7 @@ codeunit 60050 "FK Func"
     end;
 
     [TryFunction]
-    local procedure InsertToItemJournal(ImportType: Option Positive,Negative; var pItemJournalTemp: Record "Item Journal Line" temporary; var pFileName: Text[100]; pIsManual: Boolean)
+    local procedure InsertToItemJournal(ImportType: Option Positive,Negative; var pItemJournalTemp: Record "Item Journal Line" temporary; var pFileName: Text[100]; pIsManual: Boolean; var pCancel: Boolean)
     var
         ItemJournal: Record "Item Journal Line" temporary;
         CSVBuffer, TempCSVBuffer : Record "CSV Buffer" temporary;
@@ -1290,11 +1379,12 @@ codeunit 60050 "FK Func"
                 until CSVBuffer.Next() = 0;
                 pItemJournalTemp.copy(ItemJournal, true);
             end;
-        end;
+        end else
+            pCancel := true;
     end;
 
     [TryFunction]
-    local procedure InsertToItemJournalReclass(var pItemJournalTemp: Record "Item Journal Line" temporary; var pFileName: Text[100]; pIsManual: Boolean)
+    local procedure InsertToItemJournalReclass(var pItemJournalTemp: Record "Item Journal Line" temporary; var pFileName: Text[100]; pIsManual: Boolean; var pCancel: Boolean)
     var
         ItemJournal: Record "Item Journal Line" temporary;
         CSVBuffer, TempCSVBuffer : Record "CSV Buffer" temporary;
@@ -1371,10 +1461,15 @@ codeunit 60050 "FK Func"
                             end;
                         8:
                             begin
+                                ItemJournal."Temp. New Lot No." := CSVBuffer.Value;
+                                CheckLot(ItemJournal."Item No.", ItemJournal."Temp. New Lot No.");
+                            end;
+                        9:
+                            begin
                                 if Evaluate(ltDate, CSVBuffer.Value) then
                                     ItemJournal."Temp. Expire Date" := ltDate;
                             end;
-                        9:
+                        10:
                             ItemJournal.Validate("Reason Code", CSVBuffer.Value);
                     end;
 
@@ -1384,7 +1479,8 @@ codeunit 60050 "FK Func"
                 until CSVBuffer.Next() = 0;
                 pItemJournalTemp.copy(ItemJournal, true);
             end;
-        end;
+        end else
+            pCancel := true;
     end;
 
     local procedure InsertLogTransaction(pTableID: Integer; PageName: Text; pDateTime: DateTime; pStatus: Option Successfully,Error; pMsgError: Text; pFileName: Text; pMethodType: Option "Insert","Update","Delete"; pIsManual: Boolean)
@@ -1437,6 +1533,10 @@ codeunit 60050 "FK Func"
                 TempReservEntry.Insert();
 
                 CreateReservEntry.SetDates(0D, TempReservEntry."Expiration Date");
+                If pITemJournal."Entry Type" = pITemJournal."Entry Type"::Transfer then begin
+                    CreateReservEntry.SetNewExpirationDate(pExpireDate);
+                    CreateReservEntry.SetNewTrackingFromItemJnlLine(pITemJournal);
+                end;
                 CreateReservEntry.CreateReservEntryFor(Database::"Item Journal Line", pITemJournal."Entry Type".AsInteger(), pITemJournal."Journal Template Name", pITemJournal."Journal Batch Name",
                     0, pITemJournal."Line No.", pITemJournal."Qty. per Unit of Measure", TempReservEntry.Quantity, TempReservEntry.Quantity * pITemJournal."Qty. per Unit of Measure", TempReservEntry);
                 CreateReservEntry.CreateEntry(pITemJournal."Item No.", pITemJournal."Variant Code", pITemJournal."Location Code", '', 0D, 0D, 0, ReservStatus::Surplus);

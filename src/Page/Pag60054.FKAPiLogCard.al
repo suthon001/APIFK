@@ -4,7 +4,7 @@
 page 60054 "FK APi Log Card"
 {
 
-    Caption = 'FK APi Log Card';
+    Caption = 'API Log Card';
     PageType = Card;
     SourceTable = "FK API Log";
     UsageCategory = None;

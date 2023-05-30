@@ -229,36 +229,49 @@ report 60052 "TPP Purchase Receipt"
         receiptline.SetRange("Document No.", pDocumentNo);
         if receiptline.FindSet() then
             repeat
-                TotalLot := '';
-                ltLineNo := ltLineNo + 1;
-                "Purch. Rcpt. Line".Init();
-                "Purch. Rcpt. Line".TransferFields(receiptline, false);
-                "Purch. Rcpt. Line"."Document No." := pDocumentNo;
-                "Purch. Rcpt. Line"."Line No." := ltLineNo;
-                "Purch. Rcpt. Line".Insert();
-                if receiptline.Type = receiptline.Type::Item then begin
-                    ltItemLedger.reset();
-                    ltItemLedger.SetRange("Document No.", pDocumentNo);
-                    ltItemLedger.SetRange("Document Line No.", receiptline."Line No.");
-                    ltItemLedger.SetFilter("Lot No.", '<>%1', '');
-                    ltItemLedger.SetRange(Correction, false);
-                    if ltItemLedger.FindSet() then
-                        repeat
-                            if TotalLot <> '' then
-                                TotalLot := TotalLot + ',';
-                            if StrPos(TotalLot, ltItemLedger."Lot No.") = 0 then
-                                TotalLot := TotalLot + ltItemLedger."Lot No.";
-                        until ltItemLedger.Next() = 0;
-
-                    if TotalLot <> '' then begin
+                if not receiptline.Correction then begin
+                    if (receiptline.Type <> receiptline.Type::" ") AND (receiptline.Quantity <> 0) then begin
+                        TotalLot := '';
                         ltLineNo := ltLineNo + 1;
                         "Purch. Rcpt. Line".Init();
+                        "Purch. Rcpt. Line".TransferFields(receiptline, false);
                         "Purch. Rcpt. Line"."Document No." := pDocumentNo;
                         "Purch. Rcpt. Line"."Line No." := ltLineNo;
-                        "Purch. Rcpt. Line".Type := "Purch. Rcpt. Line".Type::" ";
-                        "Purch. Rcpt. Line".Description := 'Lot No. : ' + TotalLot;
                         "Purch. Rcpt. Line".Insert();
-                    end
+                        if receiptline.Type = receiptline.Type::Item then begin
+                            ltItemLedger.reset();
+                            ltItemLedger.SetRange("Document No.", pDocumentNo);
+                            ltItemLedger.SetRange("Document Line No.", receiptline."Line No.");
+                            ltItemLedger.SetFilter("Lot No.", '<>%1', '');
+                            ltItemLedger.SetRange(Correction, false);
+                            if ltItemLedger.FindSet() then
+                                repeat
+                                    if TotalLot <> '' then
+                                        TotalLot := TotalLot + ',';
+                                    if StrPos(TotalLot, ltItemLedger."Lot No.") = 0 then
+                                        TotalLot := TotalLot + ltItemLedger."Lot No.";
+                                until ltItemLedger.Next() = 0;
+
+                            if TotalLot <> '' then begin
+                                ltLineNo := ltLineNo + 1;
+                                "Purch. Rcpt. Line".Init();
+                                "Purch. Rcpt. Line"."Document No." := pDocumentNo;
+                                "Purch. Rcpt. Line"."Line No." := ltLineNo;
+                                "Purch. Rcpt. Line".Type := "Purch. Rcpt. Line".Type::" ";
+                                "Purch. Rcpt. Line".Description := 'Lot No. : ' + TotalLot;
+                                "Purch. Rcpt. Line".Insert();
+                            end;
+                        end;
+                    end else begin
+                        if (receiptline.Type = receiptline.Type::" ") AND (receiptline.Description <> '') then begin
+                            ltLineNo := ltLineNo + 1;
+                            "Purch. Rcpt. Line".Init();
+                            "Purch. Rcpt. Line".TransferFields(receiptline, false);
+                            "Purch. Rcpt. Line"."Document No." := pDocumentNo;
+                            "Purch. Rcpt. Line"."Line No." := ltLineNo;
+                            "Purch. Rcpt. Line".Insert();
+                        end
+                    end;
                 end;
 
             until receiptline.Next() = 0;
