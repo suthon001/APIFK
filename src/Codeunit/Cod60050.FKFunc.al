@@ -2417,6 +2417,7 @@ codeunit 60050 "FK Func"
         ltLineNo, ltIndexof, ltIndexofDetail : Integer;
         ltDate: Date;
         ltDocNo: Code[30];
+        CheckJsonToken: JsonToken;
     begin
         APIMappingHeader.GET(pPageName);
         APIMappingLine.reset();
@@ -2435,25 +2436,27 @@ codeunit 60050 "FK Func"
                 APIMappingLine.SetRange("Is Primary", false);
                 if APIMappingLine.FindSet() then begin
                     repeat
-                        ltFieldRef := ltRecordRef.FIELD(APIMappingLine."Field No.");
-                        if ltFieldRef.Type IN [ltFieldRef.Type::Integer, ltFieldRef.Type::Decimal, ltFieldRef.Type::Option] then
-                            if ltFieldRef.Type = ltFieldRef.Type::Option then begin
-                                ltIndexofDetail := SelectOption(ltFieldRef.OptionCaption, SelectJsonTokenText(pJsonObject, '$.' + APIMappingLine."Service Name 2"));
-                                ltFieldRef.validate(ltIndexofDetail);
-                            end else
-                                ltFieldRef.validate(SelectJsonTokenInterger(pJsonObject, '$.' + APIMappingLine."Service Name 2"))
-                        else
-                            if ltFieldRef.Type = ltFieldRef.Type::Date then begin
-                                Evaluate(ltDate, SelectJsonTokenText(pJsonObject, '$.' + APIMappingLine."Service Name 2"));
-                                ltFieldRef.Validate(ltDate);
-                            end else
-                                if ltFieldRef.Type = ltFieldRef.Type::Boolean then begin
-                                    if uppercase(SelectJsonTokenText(pJsonObject, '$.' + APIMappingLine."Service Name 2")) = 'NO' then
-                                        ltFieldRef.Validate(false)
-                                    else
-                                        ltFieldRef.Validate(true);
+                        if pJsonObject.SelectToken('$.' + APIMappingLine."Service Name 2", CheckJsonToken) then begin
+                            ltFieldRef := ltRecordRef.FIELD(APIMappingLine."Field No.");
+                            if ltFieldRef.Type IN [ltFieldRef.Type::Integer, ltFieldRef.Type::Decimal, ltFieldRef.Type::Option] then
+                                if ltFieldRef.Type = ltFieldRef.Type::Option then begin
+                                    ltIndexofDetail := SelectOption(ltFieldRef.OptionCaption, SelectJsonTokenText(pJsonObject, '$.' + APIMappingLine."Service Name 2"));
+                                    ltFieldRef.validate(ltIndexofDetail);
                                 end else
-                                    ltFieldRef.Validate(SelectJsonTokenText(pJsonObject, '$.' + APIMappingLine."Service Name 2"));
+                                    ltFieldRef.validate(SelectJsonTokenInterger(pJsonObject, '$.' + APIMappingLine."Service Name 2"))
+                            else
+                                if ltFieldRef.Type = ltFieldRef.Type::Date then begin
+                                    Evaluate(ltDate, SelectJsonTokenText(pJsonObject, '$.' + APIMappingLine."Service Name 2"));
+                                    ltFieldRef.Validate(ltDate);
+                                end else
+                                    if ltFieldRef.Type = ltFieldRef.Type::Boolean then begin
+                                        if uppercase(SelectJsonTokenText(pJsonObject, '$.' + APIMappingLine."Service Name 2")) = 'NO' then
+                                            ltFieldRef.Validate(false)
+                                        else
+                                            ltFieldRef.Validate(true);
+                                    end else
+                                        ltFieldRef.Validate(SelectJsonTokenText(pJsonObject, '$.' + APIMappingLine."Service Name 2"));
+                        end;
                     until APIMappingLine.Next() = 0;
 
                     ltRecordRef.Modify(true);
@@ -2486,8 +2489,10 @@ codeunit 60050 "FK Func"
         ltDate: Date;
         ltDocNo: Code[30];
         HasAlready: Boolean;
+        CheckJsonToken: JsonToken;
     begin
         HasAlready := false;
+
         APIMappingHeader.GET(pPageName);
         ltRecordRef.Open(APIMappingHeader."Table ID");
         ltRecordRef.Init();
@@ -2509,25 +2514,27 @@ codeunit 60050 "FK Func"
             APIMappingLine.SetFilter("Field No.", '<>%1', 12);
         if APIMappingLine.FindSet() then begin
             repeat
-                ltFieldRef := ltRecordRef.FIELD(APIMappingLine."Field No.");
-                if ltFieldRef.Type IN [ltFieldRef.Type::Integer, ltFieldRef.Type::Decimal, ltFieldRef.Type::Option] then
-                    if ltFieldRef.Type = ltFieldRef.Type::Option then begin
-                        ltIndexofDetail := SelectOption(ltFieldRef.OptionCaption, SelectJsonTokenText(pJsonObject, '$.' + APIMappingLine."Service Name 2"));
-                        ltFieldRef.validate(ltIndexofDetail);
-                    end else
-                        ltFieldRef.validate(SelectJsonTokenInterger(pJsonObject, '$.' + APIMappingLine."Service Name 2"))
-                else
-                    if ltFieldRef.Type = ltFieldRef.Type::Date then begin
-                        Evaluate(ltDate, SelectJsonTokenText(pJsonObject, '$.' + APIMappingLine."Service Name 2"));
-                        ltFieldRef.Validate(ltDate);
-                    end else
-                        if ltFieldRef.Type = ltFieldRef.Type::Boolean then begin
-                            if uppercase(SelectJsonTokenText(pJsonObject, '$.' + APIMappingLine."Service Name 2")) = 'NO' then
-                                ltFieldRef.Validate(false)
-                            else
-                                ltFieldRef.Validate(true);
+                if pJsonObject.SelectToken('$.' + APIMappingLine."Service Name 2", CheckJsonToken) then begin
+                    ltFieldRef := ltRecordRef.FIELD(APIMappingLine."Field No.");
+                    if ltFieldRef.Type IN [ltFieldRef.Type::Integer, ltFieldRef.Type::Decimal, ltFieldRef.Type::Option] then
+                        if ltFieldRef.Type = ltFieldRef.Type::Option then begin
+                            ltIndexofDetail := SelectOption(ltFieldRef.OptionCaption, SelectJsonTokenText(pJsonObject, '$.' + APIMappingLine."Service Name 2"));
+                            ltFieldRef.validate(ltIndexofDetail);
                         end else
-                            ltFieldRef.Validate(SelectJsonTokenText(pJsonObject, '$.' + APIMappingLine."Service Name 2"));
+                            ltFieldRef.validate(SelectJsonTokenInterger(pJsonObject, '$.' + APIMappingLine."Service Name 2"))
+                    else
+                        if ltFieldRef.Type = ltFieldRef.Type::Date then begin
+                            Evaluate(ltDate, SelectJsonTokenText(pJsonObject, '$.' + APIMappingLine."Service Name 2"));
+                            ltFieldRef.Validate(ltDate);
+                        end else
+                            if ltFieldRef.Type = ltFieldRef.Type::Boolean then begin
+                                if uppercase(SelectJsonTokenText(pJsonObject, '$.' + APIMappingLine."Service Name 2")) = 'NO' then
+                                    ltFieldRef.Validate(false)
+                                else
+                                    ltFieldRef.Validate(true);
+                            end else
+                                ltFieldRef.Validate(SelectJsonTokenText(pJsonObject, '$.' + APIMappingLine."Service Name 2"));
+                end;
             until APIMappingLine.Next() = 0;
             ltFieldRef := ltRecordRef.FIELD(69999);
             ltFieldRef.validate(true);
@@ -2553,8 +2560,8 @@ codeunit 60050 "FK Func"
         //             ItemJournalInsertReserveLine(TemplateName, BatchName, ltLineNo, ltJsonTokenReserve);
         //         end;
 
-
     end;
+
 
     [TryFunction]
     local procedure CreateShiptoCode(pJsonObject: JsonObject)
@@ -2565,6 +2572,7 @@ codeunit 60050 "FK Func"
         ltField: Record Field;
         ltIndexofDetail: Integer;
         ltDate: Date;
+        CheckJsonToken: JsonToken;
     begin
 
         ltRecordRef.Open(Database::"Ship-to Address");
@@ -2583,21 +2591,23 @@ codeunit 60050 "FK Func"
         APIMappingLine.SetRange("Is Primary", false);
         if APIMappingLine.FindSet() then
             repeat
-                ltFieldRef := ltRecordRef.FIELD(APIMappingLine."Field No.");
-                if ltFieldRef.Type IN [ltFieldRef.Type::Integer, ltFieldRef.Type::Decimal, ltFieldRef.Type::Option] then
-                    if ltFieldRef.Type = ltFieldRef.Type::Option then begin
-                        ltIndexofDetail := SelectOption(ltFieldRef.OptionCaption, SelectJsonTokenText(pJsonObject, '$.' + APIMappingLine."Service Name 2"));
-                        ltFieldRef.validate(ltIndexofDetail);
-                    end else
-                        ltFieldRef.validate(SelectJsonTokenInterger(pJsonObject, '$.' + APIMappingLine."Service Name 2"))
-                else
-                    if ltFieldRef.Type = ltFieldRef.Type::Boolean then begin
-                        if uppercase(SelectJsonTokenText(pJsonObject, '$.' + APIMappingLine."Service Name 2")) = 'NO' then
-                            ltFieldRef.Validate(false)
-                        else
-                            ltFieldRef.Validate(true);
-                    end else
-                        ltFieldRef.Validate(SelectJsonTokenText(pJsonObject, '$.' + APIMappingLine."Service Name 2"));
+                if pJsonObject.SelectToken('$.' + APIMappingLine."Service Name 2", CheckJsonToken) then begin
+                    ltFieldRef := ltRecordRef.FIELD(APIMappingLine."Field No.");
+                    if ltFieldRef.Type IN [ltFieldRef.Type::Integer, ltFieldRef.Type::Decimal, ltFieldRef.Type::Option] then
+                        if ltFieldRef.Type = ltFieldRef.Type::Option then begin
+                            ltIndexofDetail := SelectOption(ltFieldRef.OptionCaption, SelectJsonTokenText(pJsonObject, '$.' + APIMappingLine."Service Name 2"));
+                            ltFieldRef.validate(ltIndexofDetail);
+                        end else
+                            ltFieldRef.validate(SelectJsonTokenInterger(pJsonObject, '$.' + APIMappingLine."Service Name 2"))
+                    else
+                        if ltFieldRef.Type = ltFieldRef.Type::Boolean then begin
+                            if uppercase(SelectJsonTokenText(pJsonObject, '$.' + APIMappingLine."Service Name 2")) = 'NO' then
+                                ltFieldRef.Validate(false)
+                            else
+                                ltFieldRef.Validate(true);
+                        end else
+                            ltFieldRef.Validate(SelectJsonTokenText(pJsonObject, '$.' + APIMappingLine."Service Name 2"));
+                end;
             until APIMappingLine.Next() = 0;
         ltRecordRef.Modify();
         ltRecordRef.Close();
@@ -2617,7 +2627,7 @@ codeunit 60050 "FK Func"
         ltLineNo, ltIndexofDetail : Integer;
         ltDate: Date;
         ShiptoCode: Code[20];
-
+        CheckJsonToken: JsonToken;
     begin
         if pJsonObject.SelectToken('$.shiptodetail', ltJsonToken) then begin
             ltJsonArray := ltJsonToken.AsArray();
@@ -2641,19 +2651,21 @@ codeunit 60050 "FK Func"
                     APIMappingLine.SetRange("Is Primary", false);
                     if APIMappingLine.FindSet() then
                         repeat
-                            ltFieldRef := ltRecordRef.FIELD(APIMappingLine."Field No.");
-                            if ltFieldRef.Type IN [ltFieldRef.Type::Integer, ltFieldRef.Type::Decimal, ltFieldRef.Type::Option] then
-                                if ltFieldRef.Type = ltFieldRef.Type::Option then begin
-                                    ltIndexofDetail := SelectOption(ltFieldRef.OptionCaption, SelectJsonTokenText(ltJsonObjectDetail, '$.' + APIMappingLine."Service Name 2"));
-                                    ltFieldRef.validate(ltIndexofDetail);
-                                end else
-                                    ltFieldRef.validate(SelectJsonTokenInterger(ltJsonObjectDetail, '$.' + APIMappingLine."Service Name 2"))
-                            else
-                                if ltFieldRef.Type = ltFieldRef.Type::Date then begin
-                                    Evaluate(ltDate, SelectJsonTokenText(ltJsonObjectDetail, '$.' + APIMappingLine."Service Name 2"));
-                                    ltFieldRef.Validate(ltDate);
-                                end else
-                                    ltFieldRef.Validate(SelectJsonTokenText(ltJsonObjectDetail, '$.' + APIMappingLine."Service Name 2"));
+                            if ltJsonObjectDetail.SelectToken('$.' + APIMappingLine."Service Name 2", CheckJsonToken) then begin
+                                ltFieldRef := ltRecordRef.FIELD(APIMappingLine."Field No.");
+                                if ltFieldRef.Type IN [ltFieldRef.Type::Integer, ltFieldRef.Type::Decimal, ltFieldRef.Type::Option] then
+                                    if ltFieldRef.Type = ltFieldRef.Type::Option then begin
+                                        ltIndexofDetail := SelectOption(ltFieldRef.OptionCaption, SelectJsonTokenText(ltJsonObjectDetail, '$.' + APIMappingLine."Service Name 2"));
+                                        ltFieldRef.validate(ltIndexofDetail);
+                                    end else
+                                        ltFieldRef.validate(SelectJsonTokenInterger(ltJsonObjectDetail, '$.' + APIMappingLine."Service Name 2"))
+                                else
+                                    if ltFieldRef.Type = ltFieldRef.Type::Date then begin
+                                        Evaluate(ltDate, SelectJsonTokenText(ltJsonObjectDetail, '$.' + APIMappingLine."Service Name 2"));
+                                        ltFieldRef.Validate(ltDate);
+                                    end else
+                                        ltFieldRef.Validate(SelectJsonTokenText(ltJsonObjectDetail, '$.' + APIMappingLine."Service Name 2"));
+                            end;
                         until APIMappingLine.Next() = 0;
                     ltRecordRef.Modify();
                     ltRecordRef.Close();
