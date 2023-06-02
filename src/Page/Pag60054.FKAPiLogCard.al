@@ -58,7 +58,7 @@ page 60054 "FK APi Log Card"
             group(JsonLog)
             {
                 Caption = 'Log';
-                Visible = showlog;
+                Visible = true;
                 field(ltJsonLog; ltJsonLog)
                 {
                     Caption = 'Json Log';
@@ -98,6 +98,12 @@ page 60054 "FK APi Log Card"
         ltJsonLog := rec.GetJsonLog();
         ltResponse := rec.GetResponse();
         showlog := false;
+        if rec."No." in [Database::Customer, Database::Vendor, Database::Item] then
+            showlog := true;
+    end;
+
+    trigger OnOpenPage()
+    begin
         if rec."No." in [Database::Customer, Database::Vendor, Database::Item] then
             showlog := true;
     end;
