@@ -4,6 +4,85 @@
 codeunit 60050 "FK Func"
 {
 
+    procedure APITempToTable(pTableID: Integer; pPageNo: Integer; pVariant: Variant; pNo: Code[30]; pMethodType: Option Insert,Update,Delete; pPageName: text[50])
+    var
+        ltRecordRef: RecordRef;
+        ltFieldRef, ltFieldRefToTable : FieldRef;
+        pagecontrol: Record "Page Control Field";
+        ltJsonObject: JsonObject;
+        apiLog: Record "FK API Log";
+        JsonLogText: Text;
+        ltOutStream: OutStream;
+    begin
+        CLEAR(ltOutStream);
+        JsonLogText := '';
+        ltRecordRef.GetTable(pVariant);
+        pagecontrol.reset();
+        pagecontrol.SetCurrentKey(PageNo, FieldNo);
+        pagecontrol.SetRange(PageNo, pPageNo);
+        pagecontrol.SetFilter(FieldNo, '<>%1', 0);
+        if pagecontrol.FindSet() then begin
+            repeat
+                ltFieldRef := ltRecordRef.Field(pagecontrol.FieldNo);
+                ltJsonObject.Add(pagecontrol.ControlName, format(ltFieldRef.Value));
+            until pagecontrol.next() = 0;
+            ltJsonObject.WriteTo(JsonLogText);
+            apiLog.Init();
+            apiLog."Entry No." := GetLastEntryLog();
+            apiLog."Page Name" := Uppercase(pPageName);
+            apiLog."No." := pTableID;
+            apiLog."Date Time" := CurrentDateTime();
+            apiLog."Method Type" := pMethodType;
+            apiLog."Interface By" := CopyStr(USERID(), 1, 100);
+            apiLog."Document No." := pNo;
+            apiLog.Insert(true);
+            apiLog."Json Msg.".CreateOutStream(ltOutStream, TEXTENCODING::UTF8);
+            ltOutStream.WriteText(JsonLogText);
+        end;
+        // InsertToTableWithTryFunction(pTableID, pPageNo, pVariant);
+        if InsertToTableWithTryFunction(pTableID, pPageNo, pVariant) then begin
+            CLEAR(ltOutStream);
+            apiLog.Status := apiLog.Status::Successfully;
+            apiLog.Response.CreateOutStream(ltOutStream, TEXTENCODING::UTF8);
+            ltOutStream.WriteText(JsonLogText);
+        end else begin
+            apiLog."Last Error" := GetLastErrorText();
+            apiLog."Last Error Code" := GetLastErrorCode();
+            apiLog.Status := apiLog.Status::Error;
+        end;
+        apiLog.Modify();
+        Commit();
+        if GetLastErrorText() <> '' then
+            ERROR(GetLastErrorText());
+    end;
+
+    [TryFunction]
+    local procedure InsertToTableWithTryFunction(pTableID: Integer; pPageNo: Integer; pVariant: Variant)
+    var
+        pagecontrol: Record "Page Control Field";
+        ltRecordRef, ltRecordRefToTable : RecordRef;
+        ltFieldRef, ltFieldRefToTable : FieldRef;
+    begin
+        ltRecordRef.GetTable(pVariant);
+        pagecontrol.reset();
+        pagecontrol.SetCurrentKey(PageNo, FieldNo);
+        pagecontrol.SetRange(PageNo, pPageNo);
+        pagecontrol.SetFilter(FieldNo, '<>%1', 0);
+        if pagecontrol.FindSet() then begin
+            ltRecordRefToTable.Open(pTableID);
+            ltRecordRefToTable.Init();
+            repeat
+                ltFieldRef := ltRecordRef.Field(pagecontrol.FieldNo);
+                ltFieldRefToTable := ltRecordRefToTable.Field(pagecontrol.FieldNo);
+                ltFieldRefToTable.Validate(ltFieldRef.Value);
+            until pagecontrol.next() = 0;
+            if not ltRecordRefToTable.Insert(true) then
+                ltRecordRefToTable.Modify();
+            ltRecordRefToTable.Close();
+            ltRecordRef.Close();
+        end;
+    end;
+
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Create Reserv. Entry", 'OnAfterSetNewTrackingFromItemJnlLine', '', false, false)]
     local procedure OnAfterSetNewTrackingFromItemJnlLine(ItemJnlLine: Record "Item Journal Line"; var InsertReservEntry: Record "Reservation Entry")
     begin

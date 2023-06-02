@@ -22,7 +22,7 @@ table 60052 "FK API Log"
         }
         field(3; "No."; Integer)
         {
-            Caption = 'No.';
+            Caption = 'Table No.';
             DataClassification = CustomerContent;
             Editable = false;
         }
