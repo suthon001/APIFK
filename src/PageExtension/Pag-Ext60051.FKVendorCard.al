@@ -75,4 +75,29 @@ pageextension 60051 "FK Vendor Card" extends "Vendor Card"
             }
         }
     }
+    actions
+    {
+        addfirst(processing)
+        {
+            action(BCToInTranet)
+            {
+                Caption = 'Bc to Intranet';
+                Image = Interaction;
+                Promoted = true;
+                PromotedCategory = Process;
+                PromotedIsBig = true;
+                PromotedOnly = true;
+                ApplicationArea = all;
+                trigger OnAction()
+                var
+                    FKFunc: Codeunit "FK Func";
+                    ConfirmMsg: Label 'Do you want send vendor %1 to Intranet ?', Locked = true;
+                begin
+                    if not Confirm(StrSubstNo(ConfirmMsg, rec."No.")) then
+                        exit;
+                    FKFunc.BCToFreshKetIntregation(rec, true);
+                end;
+            }
+        }
+    }
 }

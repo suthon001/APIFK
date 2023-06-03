@@ -8,7 +8,7 @@ tableextension 60061 "FK Ship-to Address" extends "Ship-to Address"
         field(60050; "Vat Registration No."; Text[20])
         {
             Caption = 'Vat Registration No.';
-            DataClassification = ToBeClassified;
+            DataClassification = CustomerContent;
         }
         field(69999; "Is Successfully"; Boolean)
         {

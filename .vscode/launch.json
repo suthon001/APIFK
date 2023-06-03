@@ -2,13 +2,13 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "SAT",
+            "name": "SIT",
             "request": "launch",
             "type": "al",
             "tenant": "f5030c5d-b648-4145-80d3-72361127bbb2",
             "environmentType": "Sandbox",
-            "environmentName": "SAT",
-            "startupObjectId": 60058,
+            "environmentName": "SIT",
+            "startupObjectId": 27,
             "startupObjectType": "Page",
             "breakOnError": "All",
             "launchBrowser": true,

@@ -5,22 +5,22 @@ tableextension 60059 "FK Item Journal Line" extends "Item Journal Line"
         field(60050; "Temp. Lot No."; Code[50])
         {
             Caption = 'Temp. Lot No.';
-            DataClassification = ToBeClassified;
+            DataClassification = CustomerContent;
         }
         field(60051; "Temp. Expire Date"; date)
         {
             Caption = 'Temp. Expire Date';
-            DataClassification = ToBeClassified;
+            DataClassification = CustomerContent;
         }
         field(60052; "Temp. New Lot No."; Code[50])
         {
             Caption = 'Temp. New Lot No.';
-            DataClassification = ToBeClassified;
+            DataClassification = CustomerContent;
         }
         field(60053; "Document No. Series"; Code[20])
         {
             Caption = 'Document No. Series';
-            DataClassification = ToBeClassified;
+            DataClassification = CustomerContent;
         }
 
     }

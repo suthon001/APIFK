@@ -1,15 +1,13 @@
 table 60054 "Customer Buffer"
 {
     Caption = 'Customer Buffer';
-    DataClassification = ToBeClassified;
+    DataClassification = CustomerContent;
     TableType = Temporary;
     fields
     {
         field(1; "No."; Code[20])
         {
             Caption = 'No.';
-
-
         }
         field(2; Name; Text[100])
         {

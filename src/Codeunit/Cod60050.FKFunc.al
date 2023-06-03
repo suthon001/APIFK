@@ -3,19 +3,139 @@
 /// </summary>
 codeunit 60050 "FK Func"
 {
+    procedure BCToFreshKetIntregation(pVendor: Record Vendor; pManual: Boolean)
+    var
+        FreshketIntregation: Record "Freshket Intregation Setup";
+        ltJsonObject: JsonObject;
+        ltVendorNoIntranet: Integer;
+        beforsendMsg: Label 'The record no. %1 already send to intranet', Locked = true;
+    begin
+        if pManual then
+            if pVendor."BC To INTRANET" then begin
+                message(beforsendMsg, pVendor."No.");
+                exit;
+            end;
+        CLEAR(ltJsonObject);
+        FreshketIntregation.GET();
+        FreshketIntregation.TestField("FK URL");
+        FreshketIntregation.TestField("FK UserName");
+        FreshketIntregation.TestField("FK Password");
+        if Evaluate(ltVendorNoIntranet, pVendor."Vendor No. Intranet") then;
+        ltJsonObject.Add('no', pVendor."No.");
+        ltJsonObject.Add('name', pVendor.Name);
+        ltJsonObject.Add('name2', pVendor."Name 2");
+        ltJsonObject.Add('supplierengname', pVendor."Supplier Eng Name");
+        ltJsonObject.Add('searchname', pVendor."Search Name");
+        ltJsonObject.Add('vendornointranet', ltVendorNoIntranet);
+        ltJsonObject.Add('address', pVendor.Address);
+        ltJsonObject.Add('address2', pVendor."Address 2");
+        ltJsonObject.Add('city', pVendor.City);
+        ltJsonObject.Add('postcode', pVendor."Post Code");
+        ltJsonObject.Add('country/regioncode', pVendor."Country/Region Code");
+        ltJsonObject.Add('billingaddress1', pVendor."Billing Address");
+        ltJsonObject.Add('billingaddress2', pVendor."Billing Address 2");
+        ltJsonObject.Add('billingcity', pVendor."Billing City");
+        ltJsonObject.Add('billingpostcode', pVendor."Billing Post Code");
+        ltJsonObject.Add('billingcountrycode', pVendor."Billing Region Code");
+        ltJsonObject.Add('phoneno', pVendor."Phone No.");
+        ltJsonObject.Add('mobilephoneno', pVendor."Mobile Phone No.");
+        ltJsonObject.Add('username', pVendor.User_Name);
+        ltJsonObject.Add('vatregistrationno', pVendor."VAT Registration No.");
+        ltJsonObject.Add('currencycode', pVendor."Currency Code");
+        ltJsonObject.Add('contactname', pVendor.Contact);
+        if pVendor."VAT registration supplier" then begin
+            ltJsonObject.Add('vatregistrationsupplier', 1);
+            ltJsonObject.Add('companytype', 1);
+            ltJsonObject.Add('vendordirect', 1);
+        end else begin
+            ltJsonObject.Add('vatregistrationsupplier', 0);
+            ltJsonObject.Add('companytype', 0);
+            ltJsonObject.Add('vendordirect', 0);
+        end;
+        ConnectToWebService(ltJsonObject, FreshketIntregation."FK URL", FreshketIntregation."FK UserName", FreshketIntregation."FK Password", pManual, pVendor."No.");
+    end;
+
+
+    local procedure ConnectToWebService(pJsonObject: JsonObject; pBaseUrl: text; pUser: text; pPassword: text; pManual: Boolean; pNo: code[30])
+    var
+        ltVendor: Record Vendor;
+        gvHttpHeadersContent, contentHeaders : HttpHeaders;
+        gvHttpRequestMessage: HttpRequestMessage;
+        gvHttpResponseMessage: HttpResponseMessage;
+        gvHttpClient: HttpClient;
+        gvHttpContent, gvHttpContentaddboydy : HttpContent;
+        PayloadOutStream: OutStream;
+        PayloadInStream: InStream;
+        ltJsonToken: JsonToken;
+        ltJsonObject, ltJsonObjectData : JsonObject;
+        gvResponseText, ltCode, ltMessage, ltJsonBody, AuthString : Text;
+        Base64: Codeunit "Base64 Convert";
+        AuthStringTxt: Label '%1:%2', Locked = true;
+        AuthHeaderTxt: Label 'Basic %1', Locked = true;
+        AuthHeaderLbl: Label 'Authorization', Locked = true;
+    begin
+        CLEAR(gvHttpRequestMessage);
+        CLEAR(gvHttpClient);
+        CLEAR(gvHttpResponseMessage);
+        CLEAR(gvResponseText);
+        CLEAR(gvHttpContent);
+        CLEAR(gvHttpContentaddboydy);
+        AuthString := STRSUBSTNO(AuthStringTxt, pUser, pPassword);
+        AuthString := STRSUBSTNO(AuthHeaderTxt, Base64.ToBase64(AuthString));
+
+        gvHttpHeadersContent := gvHttpClient.DefaultRequestHeaders();
+        gvHttpHeadersContent.Add(AuthHeaderLbl, AuthString);
+        pJsonObject.WriteTo(ltJsonBody);
+
+        gvHttpContentaddboydy.WriteFrom(ltJsonBody);
+        gvHttpContentaddboydy.GetHeaders(contentHeaders);
+        contentHeaders.Clear();
+        contentHeaders.Add('Content-Type', 'application/json');
+        gvHttpClient.Post(pBaseUrl, gvHttpContentaddboydy, gvHttpResponseMessage);
+        gvHttpResponseMessage.Content.ReadAs(gvResponseText);
+        ltJsonToken.ReadFrom(gvResponseText);
+        ltJsonObject := ltJsonToken.AsObject();
+        if (gvHttpResponseMessage.IsSuccessStatusCode()) and (gvHttpResponseMessage.HttpStatusCode() = 200) then begin
+            ltCode := SelectJsonTokenText(ltJsonObject, '$.code');
+            if uppercase(ltCode) = 'SUCCESS' then begin
+                ltMessage := SelectJsonTokenText(ltJsonObject, '$.message');
+                if ltJsonObject.SelectToken('$.data', ltJsonToken) then
+                    ltJsonObjectData := ltJsonToken.AsObject();
+                insertlogNew(Database::Vendor, 'BC To INTRANET', ltJsonObjectData, CurrentDateTime(), '', 0, 0, '', pNo, 0, pManual);
+            end;
+            ltVendor.GET(pNo);
+            ltVendor."BC To INTRANET" := true;
+            ltVendor.Modify();
+            if pManual then
+                Message('Status: %1 :\Message: %2', ltCode, ltMessage);
+        end else begin
+            ltMessage := SelectJsonTokenText(ltJsonObject, '$.message');
+            insertlogNew(Database::Vendor, 'BC To INTRANET', pJsonObject, CurrentDateTime(), ltMessage, 1, 0, '', pNo, 0, pManual);
+            Commit();
+            if pManual then
+                Message('Status: %1 :\Message: %2', 'Error', ltMessage);
+        end;
+    end;
+
+
 
     procedure APITempToTable(pTableID: Integer; pPageNo: Integer; pVariant: Variant; pNo: Code[30]; pMethodType: Option Insert,Update,Delete; pPageName: text[50])
     var
         ltRecordRef: RecordRef;
         ltFieldRef, ltFieldRefToTable : FieldRef;
         pagecontrol: Record "Page Control Field";
-        ltJsonObject: JsonObject;
+        ltJsonObject, ltJsonObjectRespones : JsonObject;
         apiLog: Record "FK API Log";
-        JsonLogText: Text;
+        JsonLogText, JsonLogTextRespones : Text;
         ltOutStream: OutStream;
+        ltDecimal: Decimal;
+        ltInteger: Integer;
     begin
         CLEAR(ltOutStream);
+        CLEAR(ltJsonObject);
+        Clear(ltJsonObjectRespones);
         JsonLogText := '';
+        JsonLogTextRespones := '';
         ltRecordRef.GetTable(pVariant);
         pagecontrol.reset();
         pagecontrol.SetCurrentKey(PageNo, FieldNo);
@@ -24,7 +144,29 @@ codeunit 60050 "FK Func"
         if pagecontrol.FindSet() then begin
             repeat
                 ltFieldRef := ltRecordRef.Field(pagecontrol.FieldNo);
-                ltJsonObject.Add(pagecontrol.ControlName, format(ltFieldRef.Value));
+                if ltFieldRef.Type IN [ltFieldRef.Type::Integer, ltFieldRef.Type::Decimal] then begin
+                    if ltFieldRef.Type = ltFieldRef.Type::Integer then begin
+                        Evaluate(ltInteger, format(ltFieldRef.Value));
+                        ltJsonObjectRespones.Add(pagecontrol.ControlName, ltInteger);
+                    end else begin
+                        Evaluate(ltDecimal, format(ltFieldRef.Value));
+                        ltJsonObjectRespones.Add(pagecontrol.ControlName, ltDecimal);
+                    end;
+                end else
+                    ltJsonObjectRespones.Add(pagecontrol.ControlName, format(ltFieldRef.Value));
+
+
+                if Format(ltFieldRef.Value) <> '' then
+                    if ltFieldRef.Type IN [ltFieldRef.Type::Integer, ltFieldRef.Type::Decimal] then begin
+                        if ltFieldRef.Type = ltFieldRef.Type::Integer then begin
+                            Evaluate(ltInteger, format(ltFieldRef.Value));
+                            ltJsonObject.Add(pagecontrol.ControlName, ltInteger);
+                        end else begin
+                            Evaluate(ltDecimal, format(ltFieldRef.Value));
+                            ltJsonObject.Add(pagecontrol.ControlName, ltDecimal);
+                        end;
+                    end else
+                        ltJsonObject.Add(pagecontrol.ControlName, format(ltFieldRef.Value));
             until pagecontrol.next() = 0;
             ltJsonObject.WriteTo(JsonLogText);
             apiLog.Init();
@@ -39,12 +181,12 @@ codeunit 60050 "FK Func"
             apiLog."Json Msg.".CreateOutStream(ltOutStream, TEXTENCODING::UTF8);
             ltOutStream.WriteText(JsonLogText);
         end;
-        // InsertToTableWithTryFunction(pTableID, pPageNo, pVariant);
         if InsertToTableWithTryFunction(pTableID, pPageNo, pVariant) then begin
+            ltJsonObjectRespones.WriteTo(JsonLogTextRespones);
             CLEAR(ltOutStream);
             apiLog.Status := apiLog.Status::Successfully;
             apiLog.Response.CreateOutStream(ltOutStream, TEXTENCODING::UTF8);
-            ltOutStream.WriteText(JsonLogText);
+            ltOutStream.WriteText(JsonLogTextRespones);
         end else begin
             apiLog."Last Error" := GetLastErrorText();
             apiLog."Last Error Code" := GetLastErrorCode();
@@ -62,6 +204,7 @@ codeunit 60050 "FK Func"
         pagecontrol: Record "Page Control Field";
         ltRecordRef, ltRecordRefToTable : RecordRef;
         ltFieldRef, ltFieldRefToTable : FieldRef;
+        BaseUnit: Record "Unit of Measure";
     begin
         ltRecordRef.GetTable(pVariant);
         pagecontrol.reset();
@@ -74,10 +217,11 @@ codeunit 60050 "FK Func"
             repeat
                 ltFieldRef := ltRecordRef.Field(pagecontrol.FieldNo);
                 ltFieldRefToTable := ltRecordRefToTable.Field(pagecontrol.FieldNo);
+                if (pTableID = Database::Item) and (pagecontrol.FieldNo = 8) then
+                    BaseUnit.GET(format(ltFieldRef.Value));
                 ltFieldRefToTable.Validate(ltFieldRef.Value);
             until pagecontrol.next() = 0;
-            if not ltRecordRefToTable.Insert(true) then
-                ltRecordRefToTable.Modify();
+            ltRecordRefToTable.Insert(true);
             ltRecordRefToTable.Close();
             ltRecordRef.Close();
         end;
@@ -2004,7 +2148,7 @@ codeunit 60050 "FK Func"
             ltJsonObject2 := ltJsonToken2.AsObject();
             if not InsertTotable(FKApiPageType::Item, Database::Item, ltJsonObject2) then begin
                 Insertlog(Database::Item, ltPageName, ltJsonObject2, ltDateTime, GetLastErrorText(), 1, ltNoofAPI, GetLastErrorCode(), SelectJsonTokenText(ltJsonObject2, '$.no'), 0);
-                ClearError(Database::Item, SelectJsonTokenText(ltJsonObject2, '$.no'));
+                //  ClearError(Database::Item, SelectJsonTokenText(ltJsonObject2, '$.no'));
             end else
                 Insertlog(Database::Item, ltPageName, ltJsonObject2, ltDateTime, '', 0, ltNoofAPI, '', SelectJsonTokenText(ltJsonObject2, '$.no'), 0);
         end;
@@ -2233,12 +2377,12 @@ codeunit 60050 "FK Func"
             TempBlob.CreateInStream(ltStr, TextEncoding::UTF8);
             ltFileName := apiSetupHeader."Serivce Name" + '.txt';
             DownloadFromStream(ltStr, '', '', '', ltFileName);
-            if (ltURL <> '') and (ltpayload <> '') then begin
-                ConnectToWebService(ltpayload, ltURL);
-                ltFieldRef := ltRecordRef.Field(70000);
-                ltFieldRef.Value := true;
-                ltRecordRef.Modify();
-            end;
+            // if (ltURL <> '') and (ltpayload <> '') then begin
+            //     ConnectToWebService(ltpayload, ltURL);
+            //     ltFieldRef := ltRecordRef.Field(70000);
+            //     ltFieldRef.Value := true;
+            //     ltRecordRef.Modify();
+            // end;
         end;
         ltRecordRef.Close();
     end;
@@ -3053,6 +3197,41 @@ codeunit 60050 "FK Func"
         apiLog.Modify();
     end;
 
+
+    local procedure insertlogNew(pTableID: integer; PageName: text; pjsonObject: JsonObject; pDateTime: DateTime; pMsgError: Text; pStatus: Option Successfully,"Error"; pNoOfAPI: Integer; pMsgErrorCode: text; pDocumentNo: Code[100]; pMethodType: Option "Insert","Update","Delete"; pIsManual: Boolean)
+    var
+        apiLog: Record "FK API Log";
+        APIMappingLine: Record "API Setup Line";
+        JsonText: Text;
+        ltOutStream, ltOutStream2 : OutStream;
+        ltMsg: Text;
+    begin
+        JsonText := '';
+        pjsonObject.WriteTo(JsonText);
+        apiLog.Init();
+        apiLog."Entry No." := GetLastEntryLog();
+        apiLog."Page Name" := PageName;
+        apiLog."No." := pTableID;
+        apiLog."Date Time" := pDateTime;
+        apiLog.Status := pStatus;
+        apiLog."No. of API" := pNoOfAPI;
+        apiLog."Method Type" := pMethodType;
+        apiLog."Interface By" := CopyStr(USERID(), 1, 100);
+        apiLog.Insert(true);
+        apiLog."Last Error Code" := pMsgErrorCode;
+        apiLog."Document No." := pDocumentNo;
+        apiLog."Is Manual" := pIsManual;
+        apiLog."Json Msg.".CreateOutStream(ltOutStream, TEXTENCODING::UTF8);
+        ltOutStream.WriteText(JsonText);
+        if pMsgError <> '' then
+            apiLog."Last Error" := pMsgError
+        else begin
+            apiLog.Response.CreateOutStream(ltOutStream2, TEXTENCODING::UTF8);
+            ltOutStream2.WriteText(JsonText);
+        end;
+        apiLog.Modify();
+    end;
+
     local procedure GetLastEntryLog(): Integer
     var
         apiLog: Record "FK API Log";
@@ -3440,44 +3619,6 @@ codeunit 60050 "FK Func"
     end;
 
 
-    local procedure ConnectToWebService(pJsonBody: Text; pBaseUrl: text)
-    var
-        gvHttpHeadersContent: HttpHeaders;
-        gvHttpRequestMessage: HttpRequestMessage;
-        gvHttpResponseMessage: HttpResponseMessage;
-        gvHttpClient: HttpClient;
-
-        gvHttpContent, gvHttpContentaddboydy : HttpContent;
-        PayloadOutStream: OutStream;
-        PayloadInStream: InStream;
-        ltJsonToken: JsonToken;
-        ltJsonObject: JsonObject;
-        gvResponseText: Text;
-    begin
-        if (pJsonBody = '') or (pBaseUrl = '') then
-            exit;
-        CLEAR(gvHttpRequestMessage);
-        CLEAR(gvHttpClient);
-        CLEAR(gvHttpResponseMessage);
-        CLEAR(gvResponseText);
-        CLEAR(gvHttpContent);
-        CLEAR(gvHttpContentaddboydy);
-
-        gvHttpContentaddboydy.WriteFrom(pJsonBody);
-        gvHttpContentaddboydy.GetHeaders(gvHttpHeadersContent);
-        gvHttpHeadersContent.Clear();
-        gvHttpHeadersContent.Add('Content-Type', 'application/json');
-        gvHttpRequestMessage.Content := gvHttpContentaddboydy;
-        gvHttpRequestMessage.SetRequestUri(pBaseUrl);
-        gvHttpRequestMessage.Method := 'POST';
-        gvHttpClient.Send(gvHttpRequestMessage, gvHttpResponseMessage);
-        gvHttpResponseMessage.Content.ReadAs(gvResponseText);
-        if (gvHttpResponseMessage.IsSuccessStatusCode()) then begin
-            ltJsonToken.ReadFrom(gvResponseText);
-            ltJsonObject := ltJsonToken.AsObject();
-        end else
-            ERROR(gvResponseText);
-    end;
 
     var
         gvNo: Text;

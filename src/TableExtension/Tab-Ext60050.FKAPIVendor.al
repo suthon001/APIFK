@@ -27,8 +27,6 @@ tableextension 60050 "FK API Vendor" extends Vendor
                         if ltVend.FindFirst() then
                             ltVend.FieldError("Vendor No. Intranet", 'already exists');
                     end;
-
-
             end;
         }
         field(60052; "Billing Address"; Text[100])
@@ -51,6 +49,7 @@ tableextension 60050 "FK API Vendor" extends Vendor
             //This property is currently not supported
             //TestTableRelation = false;
             ValidateTableRelation = false;
+            DataClassification = CustomerContent;
 
             trigger OnLookup()
             begin
@@ -79,6 +78,7 @@ tableextension 60050 "FK API Vendor" extends Vendor
             //This property is currently not supported
             //TestTableRelation = false;
             ValidateTableRelation = false;
+            DataClassification = CustomerContent;
 
             trigger OnLookup()
             begin
@@ -102,6 +102,7 @@ tableextension 60050 "FK API Vendor" extends Vendor
         {
             Caption = 'Billing Country/Region Code';
             TableRelation = "Country/Region";
+            DataClassification = CustomerContent;
 
             trigger OnValidate()
             begin
@@ -111,6 +112,7 @@ tableextension 60050 "FK API Vendor" extends Vendor
         field(60057; "User_Name"; text[50])
         {
             Caption = 'User_Name';
+            DataClassification = CustomerContent;
             trigger OnValidate()
             var
                 ltVend: Record Vendor;
@@ -147,7 +149,7 @@ tableextension 60050 "FK API Vendor" extends Vendor
         field(60061; "TPP Default Address"; Boolean)
         {
             Caption = 'Default Address';
-            DataClassification = ToBeClassified;
+            DataClassification = CustomerContent;
             trigger OnValidate()
             begin
                 if xrec."TPP Default Address" <> rec."TPP Default Address" then
@@ -161,6 +163,12 @@ tableextension 60050 "FK API Vendor" extends Vendor
                         rec."Billing Region Code" := '';
                     end;
             end;
+        }
+        field(69998; "BC To INTRANET"; Boolean)
+        {
+            Caption = 'BC To INTRANET';
+            DataClassification = CustomerContent;
+            Editable = false;
         }
         field(69999; "Is Successfully"; Boolean)
         {

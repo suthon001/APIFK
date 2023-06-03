@@ -6,8 +6,8 @@ page 60050 "FK API Mapping"
 
     Caption = 'API Mapping Lists';
     PageType = List;
-    ApplicationArea = all;
-    UsageCategory = Lists;
+    //ApplicationArea = all;
+    //  UsageCategory = Lists;
     CardPageId = "FK API Mapping Card";
     SourceTable = "API Setup Header";
     RefreshOnActivate = true;
