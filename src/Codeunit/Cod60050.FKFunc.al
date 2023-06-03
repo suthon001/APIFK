@@ -99,19 +99,19 @@ codeunit 60050 "FK Func"
             ltCode := SelectJsonTokenText(ltJsonObject, '$.code');
             if uppercase(ltCode) = 'SUCCESS' then begin
                 ltMessage := SelectJsonTokenText(ltJsonObject, '$.message');
-                insertlogNew(Database::Vendor, 'BC To INTRANET', pJsonObject, CurrentDateTime(), '', 0, 0, '', pNo, 0, gvResponseText, pManual);
+                insertlogNew(Database::Vendor, 'BC TO INTRANET', pJsonObject, CurrentDateTime(), '', 0, 0, '', pNo, 0, gvResponseText, pManual);
             end;
             ltVendor.GET(pNo);
             ltVendor."BC To INTRANET" := true;
             ltVendor.Modify();
             if pManual then
-                Message('Status: %1 :\Message: %2', ltCode, ltMessage);
+                Message('Status : %1\Message : %2', ltCode, ltMessage);
         end else begin
             ltMessage := SelectJsonTokenText(ltJsonObject, '$.message');
-            insertlogNew(Database::Vendor, 'BC To INTRANET', pJsonObject, CurrentDateTime(), ltMessage, 1, 0, '', pNo, 0, '', pManual);
+            insertlogNew(Database::Vendor, 'BC TO INTRANET', pJsonObject, CurrentDateTime(), ltMessage, 1, 0, '', pNo, 0, '', pManual);
             Commit();
             if pManual then
-                Message('Status: %1 :\Message: %2', 'Error', ltMessage);
+                Message('Status : %1 :\Message : %2', 'ERROR', ltMessage);
         end;
     end;
 
