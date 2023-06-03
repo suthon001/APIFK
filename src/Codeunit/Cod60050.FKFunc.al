@@ -67,7 +67,7 @@ codeunit 60050 "FK Func"
         PayloadOutStream: OutStream;
         PayloadInStream: InStream;
         ltJsonToken: JsonToken;
-        ltJsonObject, ltJsonObjectData : JsonObject;
+        ltJsonObject: JsonObject;
         gvResponseText, ltCode, ltMessage, ltJsonBody, AuthString : Text;
         Base64: Codeunit "Base64 Convert";
         AuthStringTxt: Label '%1:%2', Locked = true;
@@ -99,9 +99,7 @@ codeunit 60050 "FK Func"
             ltCode := SelectJsonTokenText(ltJsonObject, '$.code');
             if uppercase(ltCode) = 'SUCCESS' then begin
                 ltMessage := SelectJsonTokenText(ltJsonObject, '$.message');
-                if ltJsonObject.SelectToken('$.data', ltJsonToken) then
-                    ltJsonObjectData := ltJsonToken.AsObject();
-                insertlogNew(Database::Vendor, 'BC To INTRANET', ltJsonObjectData, CurrentDateTime(), '', 0, 0, '', pNo, 0, pManual);
+                insertlogNew(Database::Vendor, 'BC To INTRANET', pJsonObject, CurrentDateTime(), '', 0, 0, '', pNo, 0, gvResponseText, pManual);
             end;
             ltVendor.GET(pNo);
             ltVendor."BC To INTRANET" := true;
@@ -110,7 +108,7 @@ codeunit 60050 "FK Func"
                 Message('Status: %1 :\Message: %2', ltCode, ltMessage);
         end else begin
             ltMessage := SelectJsonTokenText(ltJsonObject, '$.message');
-            insertlogNew(Database::Vendor, 'BC To INTRANET', pJsonObject, CurrentDateTime(), ltMessage, 1, 0, '', pNo, 0, pManual);
+            insertlogNew(Database::Vendor, 'BC To INTRANET', pJsonObject, CurrentDateTime(), ltMessage, 1, 0, '', pNo, 0, '', pManual);
             Commit();
             if pManual then
                 Message('Status: %1 :\Message: %2', 'Error', ltMessage);
@@ -3198,7 +3196,7 @@ codeunit 60050 "FK Func"
     end;
 
 
-    local procedure insertlogNew(pTableID: integer; PageName: text; pjsonObject: JsonObject; pDateTime: DateTime; pMsgError: Text; pStatus: Option Successfully,"Error"; pNoOfAPI: Integer; pMsgErrorCode: text; pDocumentNo: Code[100]; pMethodType: Option "Insert","Update","Delete"; pIsManual: Boolean)
+    local procedure insertlogNew(pTableID: integer; PageName: text; pjsonObject: JsonObject; pDateTime: DateTime; pMsgError: Text; pStatus: Option Successfully,"Error"; pNoOfAPI: Integer; pMsgErrorCode: text; pDocumentNo: Code[100]; pMethodType: Option "Insert","Update","Delete"; pRespones: text; pIsManual: Boolean)
     var
         apiLog: Record "FK API Log";
         APIMappingLine: Record "API Setup Line";
@@ -3227,7 +3225,7 @@ codeunit 60050 "FK Func"
             apiLog."Last Error" := pMsgError
         else begin
             apiLog.Response.CreateOutStream(ltOutStream2, TEXTENCODING::UTF8);
-            ltOutStream2.WriteText(JsonText);
+            ltOutStream2.WriteText(pRespones);
         end;
         apiLog.Modify();
     end;
