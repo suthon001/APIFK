@@ -204,23 +204,40 @@ codeunit 60050 "FK Func"
         apiLog."Document No." := pNo;
         apiLog."Json Msg.".CreateOutStream(ltOutStream, TEXTENCODING::UTF8);
         ltOutStream.WriteText(JsonLogText);
-        if InsertToTableWithTryFunction(pTableID, pPageNo, pVariant) then begin
-            ltJsonObjectRespones.WriteTo(JsonLogTextRespones);
-            CLEAR(ltOutStream);
-            apiLog.Status := apiLog.Status::Successfully;
-            apiLog.Response.CreateOutStream(ltOutStream, TEXTENCODING::UTF8);
-            ltOutStream.WriteText(JsonLogTextRespones);
-            apiLog.Insert(true);
-            Commit();
-        end else begin
-            apiLog."Last Error" := COPYSTR(GetLastErrorText(), 1, MaxStrLen(apiLog."Last Error Code"));
-            apiLog."Last Error Code" := COPYSTR(GetLastErrorCode(), 1, MaxStrLen(apiLog."Last Error Code"));
-            apiLog.Status := apiLog.Status::Error;
-            apiLog.Insert(true);
-            Commit();
-            ERROR(GetLastErrorText());
-        end;
-
+        if pMethodType = pMethodType::Insert then
+            if InsertToTableWithTryFunction(pTableID, pPageNo, pVariant) then begin
+                ltJsonObjectRespones.WriteTo(JsonLogTextRespones);
+                CLEAR(ltOutStream);
+                apiLog.Status := apiLog.Status::Successfully;
+                apiLog.Response.CreateOutStream(ltOutStream, TEXTENCODING::UTF8);
+                ltOutStream.WriteText(JsonLogTextRespones);
+                apiLog.Insert(true);
+                Commit();
+            end else begin
+                apiLog."Last Error" := COPYSTR(GetLastErrorText(), 1, MaxStrLen(apiLog."Last Error Code"));
+                apiLog."Last Error Code" := COPYSTR(GetLastErrorCode(), 1, MaxStrLen(apiLog."Last Error Code"));
+                apiLog.Status := apiLog.Status::Error;
+                apiLog.Insert(true);
+                Commit();
+                ERROR(GetLastErrorText());
+            end;
+        if pMethodType = pMethodType::Update then
+            if UpdateToTableWithTryFunction(pTableID, pPageNo, pVariant) then begin
+                ltJsonObjectRespones.WriteTo(JsonLogTextRespones);
+                CLEAR(ltOutStream);
+                apiLog.Status := apiLog.Status::Successfully;
+                apiLog.Response.CreateOutStream(ltOutStream, TEXTENCODING::UTF8);
+                ltOutStream.WriteText(JsonLogTextRespones);
+                apiLog.Insert(true);
+                Commit();
+            end else begin
+                apiLog."Last Error" := COPYSTR(GetLastErrorText(), 1, MaxStrLen(apiLog."Last Error Code"));
+                apiLog."Last Error Code" := COPYSTR(GetLastErrorCode(), 1, MaxStrLen(apiLog."Last Error Code"));
+                apiLog.Status := apiLog.Status::Error;
+                apiLog.Insert(true);
+                Commit();
+                ERROR(GetLastErrorText());
+            end;
     end;
 
     [TryFunction]
@@ -282,6 +299,71 @@ codeunit 60050 "FK Func"
             ltRecordRefToTable.Insert(true);
             ltRecordRefToTable.Close();
             ltRecordRef.Close();
+        end;
+    end;
+
+    [TryFunction]
+    local procedure UpdateToTableWithTryFunction(pTableID: Integer; pPageNo: Integer; pVariant: Variant)
+    var
+        pagecontrol: Record "Page Control Field";
+        ltRecordRef, ltRecordRefToTable : RecordRef;
+        ltFieldRef, ltFieldRefToTable : FieldRef;
+        ltItem: Record Item;
+        ltVendor: Record Vendor;
+        ltCustomer: Record Customer;
+        ltShiptoAddress: Record "Ship-to Address";
+        ltCust, ltCode : code[20];
+    begin
+        ltRecordRef.GetTable(pVariant);
+        if pTableID = Database::Item then begin
+            ltFieldRef := ltRecordRef.FieldIndex(1);
+            if not ltItem.get(format(ltFieldRef.Value)) then
+                ERROR('The record in table Item does not exists. Identification fields and values: No.=' + format(ltFieldRef.Value));
+        end;
+        if pTableID = Database::Vendor then begin
+            ltFieldRef := ltRecordRef.FieldIndex(1);
+            if not ltVendor.get(format(ltFieldRef.Value)) then
+                ERROR('The record in table Vendor does not exists. Identification fields and values: No.=' + format(ltFieldRef.Value));
+        end;
+        if pTableID = Database::Customer then begin
+            ltFieldRef := ltRecordRef.FieldIndex(1);
+            if not ltCustomer.get(format(ltFieldRef.Value)) then
+                ERROR('The record in table Customer does not exists. Identification fields and values: No.=' + format(ltFieldRef.Value));
+        end;
+        if pTableID = Database::"Ship-to Address" then begin
+            ltFieldRef := ltRecordRef.FieldIndex(1);
+            ltCust := format(ltFieldRef.Value);
+            ltFieldRef := ltRecordRef.FieldIndex(2);
+            ltCode := format(ltFieldRef.Value);
+            if not ltShiptoAddress.get(ltCust, ltCode) then
+                ERROR('The record in table Ship-to Address does not exists. Identification fields and values: Customer No.=' + ltCust + ',Code =' + ltCode);
+        end;
+        ltRecordRefToTable.Open(pTableID);
+        if pTableID = Database::"Ship-to Address" then begin
+            ltFieldRefToTable := ltRecordRefToTable.FieldIndex(1);
+            ltFieldRefToTable.SetRange(ltCust);
+            ltFieldRefToTable := ltRecordRefToTable.FieldIndex(2);
+            ltFieldRefToTable.SetRange(ltCode);
+        end else begin
+            ltFieldRefToTable := ltRecordRefToTable.FieldIndex(1);
+            ltFieldRefToTable.SetRange(format(ltFieldRef.Value));
+        end;
+        if ltRecordRefToTable.FindFirst() then begin
+            pagecontrol.reset();
+            pagecontrol.SetCurrentKey(PageNo, FieldNo);
+            pagecontrol.SetRange(PageNo, pPageNo);
+            pagecontrol.SetFilter(FieldNo, '<>%1', 0);
+            if pagecontrol.FindSet() then begin
+                repeat
+                    ltFieldRef := ltRecordRef.Field(pagecontrol.FieldNo);
+                    ltFieldRefToTable := ltRecordRefToTable.Field(pagecontrol.FieldNo);
+                    if format(ltFieldRef.Value) <> '' then
+                        ltFieldRefToTable.Validate(ltFieldRef.Value);
+                until pagecontrol.next() = 0;
+                ltRecordRefToTable.Modify();
+                ltRecordRefToTable.Close();
+                ltRecordRef.Close();
+            end;
         end;
     end;
 
