@@ -1,4 +1,4 @@
-page 60060 "Freshket Intregation Setup"
+page 60059 "Freshket Intregation Setup"
 {
     ApplicationArea = Basic, Suite;
     Caption = 'Freshket Intregation Setup';

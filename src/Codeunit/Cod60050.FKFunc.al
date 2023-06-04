@@ -9,51 +9,65 @@ codeunit 60050 "FK Func"
         ltJsonObject: JsonObject;
         ltVendorNoIntranet: Integer;
         beforsendMsg: Label 'The record no. %1 already send to intranet', Locked = true;
+        ltVendor: Record Vendor;
     begin
-        if pManual then
-            if pVendor."BC To INTRANET" then begin
-                message(beforsendMsg, pVendor."No.");
-                exit;
-            end;
         CLEAR(ltJsonObject);
         FreshketIntregation.GET();
         FreshketIntregation.TestField("FK URL");
         FreshketIntregation.TestField("FK UserName");
         FreshketIntregation.TestField("FK Password");
-        if Evaluate(ltVendorNoIntranet, pVendor."Vendor No. Intranet") then;
-        ltJsonObject.Add('no', pVendor."No.");
-        ltJsonObject.Add('name', pVendor.Name);
-        ltJsonObject.Add('name2', pVendor."Name 2");
-        ltJsonObject.Add('supplierengname', pVendor."Supplier Eng Name");
-        ltJsonObject.Add('searchname', pVendor."Search Name");
-        ltJsonObject.Add('vendornointranet', ltVendorNoIntranet);
-        ltJsonObject.Add('address', pVendor.Address);
-        ltJsonObject.Add('address2', pVendor."Address 2");
-        ltJsonObject.Add('city', pVendor.City);
-        ltJsonObject.Add('postcode', pVendor."Post Code");
-        ltJsonObject.Add('country/regioncode', pVendor."Country/Region Code");
-        ltJsonObject.Add('billingaddress1', pVendor."Billing Address");
-        ltJsonObject.Add('billingaddress2', pVendor."Billing Address 2");
-        ltJsonObject.Add('billingcity', pVendor."Billing City");
-        ltJsonObject.Add('billingpostcode', pVendor."Billing Post Code");
-        ltJsonObject.Add('billingcountrycode', pVendor."Billing Region Code");
-        ltJsonObject.Add('phoneno', pVendor."Phone No.");
-        ltJsonObject.Add('mobilephoneno', pVendor."Mobile Phone No.");
-        ltJsonObject.Add('username', pVendor.User_Name);
-        ltJsonObject.Add('vatregistrationno', pVendor."VAT Registration No.");
-        ltJsonObject.Add('currencycode', pVendor."Currency Code");
-        ltJsonObject.Add('contactname', pVendor.Contact);
-        if pVendor."VAT registration supplier" then begin
-            ltJsonObject.Add('vatregistrationsupplier', 1);
-            ltJsonObject.Add('companytype', 1);
-            ltJsonObject.Add('vendordirect', 1);
-        end else begin
-            ltJsonObject.Add('vatregistrationsupplier', 0);
-            ltJsonObject.Add('companytype', 0);
-            ltJsonObject.Add('vendordirect', 0);
+
+        if pManual then begin
+            ltVendor.GET(pVendor."No.");
+            ltVendor.TestField("Vendor Direct", true);
+            if ltVendor."BC To INTRANET" then begin
+                message(beforsendMsg, ltVendor."No.");
+                exit;
+            end;
         end;
-        ConnectToWebService(ltJsonObject, FreshketIntregation."FK URL", FreshketIntregation."FK UserName", FreshketIntregation."FK Password", pManual, pVendor."No.");
+
+
+        if Evaluate(ltVendorNoIntranet, ltVendor."Vendor No. Intranet") then;
+
+        ltJsonObject.Add('no', ltVendor."No.");
+        ltJsonObject.Add('name', ltVendor.Name);
+        ltJsonObject.Add('name2', ltVendor."Name 2");
+        ltJsonObject.Add('supplierengname', ltVendor."Supplier Eng Name");
+        ltJsonObject.Add('searchname', ltVendor."Search Name");
+        ltJsonObject.Add('vendornointranet', ltVendorNoIntranet);
+        ltJsonObject.Add('address', ltVendor.Address);
+        ltJsonObject.Add('address2', ltVendor."Address 2");
+        ltJsonObject.Add('city', ltVendor.City);
+        ltJsonObject.Add('postcode', ltVendor."Post Code");
+        ltJsonObject.Add('country/regioncode', ltVendor."Country/Region Code");
+        ltJsonObject.Add('billingaddress1', ltVendor."Billing Address");
+        ltJsonObject.Add('billingaddress2', ltVendor."Billing Address 2");
+        ltJsonObject.Add('billingcity', ltVendor."Billing City");
+        ltJsonObject.Add('billingpostcode', ltVendor."Billing Post Code");
+        ltJsonObject.Add('billingcountrycode', ltVendor."Billing Region Code");
+        ltJsonObject.Add('phoneno', ltVendor."Phone No.");
+        ltJsonObject.Add('mobilephoneno', ltVendor."Mobile Phone No.");
+        ltJsonObject.Add('username', ltVendor.User_Name);
+        ltJsonObject.Add('vatregistrationno', ltVendor."VAT Registration No.");
+        ltJsonObject.Add('currencycode', ltVendor."Currency Code");
+        ltJsonObject.Add('contactname', ltVendor.Contact);
+        if ltVendor."VAT registration supplier" then
+            ltJsonObject.Add('vatregistrationsupplier', 1)
+        else
+            ltJsonObject.Add('vatregistrationsupplier', 0);
+        if ltVendor."Company Type" then
+            ltJsonObject.Add('companytype', 1)
+        else
+            ltJsonObject.Add('companytype', 0);
+        if ltVendor."Vendor Direct" then
+            ltJsonObject.Add('vendordirect', 1)
+        else
+            ltJsonObject.Add('vendordirect', 0);
+
+        ConnectToWebService(ltJsonObject, FreshketIntregation."FK URL", FreshketIntregation."FK UserName", FreshketIntregation."FK Password", pManual, ltVendor."No.");
     end;
+
+
 
 
     local procedure ConnectToWebService(pJsonObject: JsonObject; pBaseUrl: text; pUser: text; pPassword: text; pManual: Boolean; pNo: code[30])
@@ -117,7 +131,7 @@ codeunit 60050 "FK Func"
 
 
 
-    procedure APITempToTable(pTableID: Integer; pPageNo: Integer; pVariant: Variant; pNo: Code[30]; pMethodType: Option Insert,Update,Delete; pPageName: text[50])
+    procedure APITempToTable(pTableID: Integer; pPageNo: Integer; pVariant: Variant; pNo: Code[100]; pMethodType: Option Insert,Update,Delete; pPageName: text[50])
     var
         ltRecordRef: RecordRef;
         ltFieldRef, ltFieldRefToTable : FieldRef;
@@ -215,7 +229,7 @@ codeunit 60050 "FK Func"
             repeat
                 ltFieldRef := ltRecordRef.Field(pagecontrol.FieldNo);
                 ltFieldRefToTable := ltRecordRefToTable.Field(pagecontrol.FieldNo);
-                if (pTableID = Database::Item) and (pagecontrol.FieldNo = 8) then
+                if (pTableID = Database::Item) and (pagecontrol.FieldNo in [8, 5425, 5426]) then
                     BaseUnit.GET(format(ltFieldRef.Value));
                 ltFieldRefToTable.Validate(ltFieldRef.Value);
             until pagecontrol.next() = 0;
