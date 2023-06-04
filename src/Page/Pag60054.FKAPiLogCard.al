@@ -9,7 +9,7 @@ page 60054 "FK APi Log Card"
     SourceTable = "FK API Log";
     UsageCategory = None;
     InsertAllowed = false;
-    DataCaptionExpression = StrSubstNo('%1:%2', rec."Page Name", rec."Document No.");
+    DataCaptionExpression = StrSubstNo(DataCaptionLbl, rec."Page Name", rec."Document No.");
     layout
     {
         area(content)
@@ -65,6 +65,7 @@ page 60054 "FK APi Log Card"
                     MultiLine = true;
                     Editable = false;
                     ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the Json Log field.';
                 }
 
             }
@@ -93,25 +94,13 @@ page 60054 "FK APi Log Card"
             }
         }
     }
-    trigger OnAfterGetRecord()
-    begin
-        ltJsonLog := rec.GetJsonLog();
-        ltResponse := rec.GetResponse();
-        showlog := false;
-        if rec."No." in [Database::Customer, Database::Vendor, Database::Item] then
-            showlog := true;
-    end;
 
-    trigger OnOpenPage()
-    begin
-        if rec."No." in [Database::Customer, Database::Vendor, Database::Item] then
-            showlog := true;
-    end;
 
 
 
     var
+        DataCaptionLbl: Label '%1:%2', Locked = true;
         ltJsonLog, ltResponse : Text;
-        showlog: Boolean;
+
 
 }

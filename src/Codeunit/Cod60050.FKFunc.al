@@ -78,8 +78,6 @@ codeunit 60050 "FK Func"
         gvHttpResponseMessage: HttpResponseMessage;
         gvHttpClient: HttpClient;
         gvHttpContent, gvHttpContentaddboydy : HttpContent;
-        PayloadOutStream: OutStream;
-        PayloadInStream: InStream;
         ltJsonToken: JsonToken;
         ltJsonObject: JsonObject;
         gvResponseText, ltCode, ltMessage, ltJsonBody, AuthString : Text;
@@ -134,7 +132,7 @@ codeunit 60050 "FK Func"
     procedure APITempToTable(pTableID: Integer; pPageNo: Integer; pVariant: Variant; pNo: Code[100]; pMethodType: Option Insert,Update,Delete; pPageName: text[50])
     var
         ltRecordRef: RecordRef;
-        ltFieldRef, ltFieldRefToTable : FieldRef;
+        ltFieldRef: FieldRef;
         pagecontrol: Record "Page Control Field";
         ltJsonObject, ltJsonObjectRespones : JsonObject;
         apiLog: Record "FK API Log";
@@ -200,8 +198,8 @@ codeunit 60050 "FK Func"
             apiLog.Response.CreateOutStream(ltOutStream, TEXTENCODING::UTF8);
             ltOutStream.WriteText(JsonLogTextRespones);
         end else begin
-            apiLog."Last Error" := GetLastErrorText();
-            apiLog."Last Error Code" := GetLastErrorCode();
+            apiLog."Last Error" := COPYSTR(GetLastErrorText(), 1, MaxStrLen(apiLog."Last Error Code"));
+            apiLog."Last Error Code" := COPYSTR(GetLastErrorCode(), 1, MaxStrLen(apiLog."Last Error Code"));
             apiLog.Status := apiLog.Status::Error;
         end;
         apiLog.Modify();
@@ -308,14 +306,6 @@ codeunit 60050 "FK Func"
         exit(SalesLineType);
     end;
 
-    local procedure SelectoptionPurchase(pValue: Text): Enum "Purchase Line Type"
-    var
-
-        PurchaseLineType: Enum "Purchase Line Type";
-    begin
-        PurchaseLineType := Enum::"Purchase Line Type".FromInteger(PurchaseLineType.Ordinals.Get(PurchaseLineType.Names.IndexOf(pValue)));
-        exit(PurchaseLineType);
-    end;
 
 
 
@@ -452,7 +442,7 @@ codeunit 60050 "FK Func"
                         ltPurchaseLineTemp.reset();
                         ltPurchaseLineTemp.SetRange("Document Type", ltPurchaseHeaderTemp."Document Type");
                         ltPurchaseLineTemp.SetRange("Document No.", ltPurchaseHeaderTemp."No.");
-                        if ltPurchaseLineTemp.FindSet() then begin
+                        if ltPurchaseLineTemp.FindSet() then
                             repeat
                                 ltPurchaseLine.reset();
                                 ltPurchaseLine.SetRange("Document Type", ltPurchaseLineTemp."Document Type");
@@ -465,7 +455,6 @@ codeunit 60050 "FK Func"
                                     InsertLotPurchase(ltPurchaseLine, ltPurchaseLineTemp."Temp. Lot No.", ltPurchaseLine."Temp. Expire Date");
                                 end;
                             until ltPurchaseLineTemp.Next() = 0;
-                        end;
 
                     until ltPurchaseHeaderTemp.Next() = 0;
                 InsertLogTransaction(Database::"Purchase Header", 'PURCHASE GRN', CurrentDateTime(), 0, '', ltFileName, 1, pIsManual);
@@ -503,7 +492,7 @@ codeunit 60050 "FK Func"
                         ltPurchaseLineTemp.reset();
                         ltPurchaseLineTemp.SetRange("Document Type", ltPurchaseHeaderTemp."Document Type");
                         ltPurchaseLineTemp.SetRange("Document No.", ltPurchaseHeaderTemp."No.");
-                        if ltPurchaseLineTemp.FindSet() then begin
+                        if ltPurchaseLineTemp.FindSet() then
                             repeat
                                 ltPurchaseLine.reset();
                                 ltPurchaseLine.SetRange("Document Type", ltPurchaseLineTemp."Document Type");
@@ -516,7 +505,6 @@ codeunit 60050 "FK Func"
                                     InsertLotPurchase(ltPurchaseLine, ltPurchaseLineTemp."Temp. Lot No.", ltPurchaseLine."Temp. Expire Date");
                                 end;
                             until ltPurchaseLineTemp.Next() = 0;
-                        end;
 
                     until ltPurchaseHeaderTemp.Next() = 0;
                 InsertLogTransaction(Database::"Purchase Header", 'RETURN SHIP', CurrentDateTime(), 0, '', ltFileName, 1, pIsManual);
@@ -538,7 +526,7 @@ codeunit 60050 "FK Func"
         ReservStatus: Enum "Reservation Status";
     begin
 
-        if ltItem.GET(pPurchaseLine."No.") then begin
+        if ltItem.GET(pPurchaseLine."No.") then
             IF ltItem."Item Tracking Code" <> '' then
                 if pLotNo <> '' then begin
                     TempReservEntry.Init();
@@ -560,8 +548,6 @@ codeunit 60050 "FK Func"
                       pPurchaseLine."No.", pPurchaseLine."Variant Code", pPurchaseLine."Location Code", '', pPurchaseLine."Expected Receipt Date", 0D, 0, ReservStatus::Surplus);
 
                 end;
-
-        end;
     end;
 
     [TryFunction]
@@ -574,9 +560,7 @@ codeunit 60050 "FK Func"
         InterfaceSetup: Record "FK Interface Setup";
         ltItem: Record Item;
         ltLocation: Record location;
-        ltUnitOfMeasure: Record "Unit of Measure";
-        ltVatprod: record "VAT Product Posting Group";
-        UploadResult, CSVFileName : text;
+        CSVFileName: text;
         CSVInStrem: InStream;
         LastField: Integer;
         ltDate: Date;
@@ -585,7 +569,7 @@ codeunit 60050 "FK Func"
         ltCheckAlready: Boolean;
         ltPurchaseDocType: Enum "Purchase Document Type";
     begin
-        if not pIsManual then begin
+        if not pIsManual then
             if ImportType = ImportType::GRN then begin
                 InterfaceSetup.TestField("Purchase GRN Path");
                 InterfaceSetup.TestField("Purch. GRN Succ. Path");
@@ -595,7 +579,6 @@ codeunit 60050 "FK Func"
                 InterfaceSetup.TestField("Return to ship Succ. Path");
                 InterfaceSetup.TestField("Return to ship Err Path");
             end;
-        end;
         if UploadIntoStream('File Name', '', '', CSVFileName, CSVInStrem) then begin
             pFileName := CSVFileName;
             CSVBuffer.reset();
@@ -627,21 +610,18 @@ codeunit 60050 "FK Func"
                                     ltCheckAlready := true;
                             end;
                         2:
-                            begin
-                                if not ltCheckAlready then
-                                    if Evaluate(ltDate, CSVBuffer.Value) then
-                                        ltPurchaseHeader.Validate("Posting Date", ltDate);
-                            end;
+
+                            if not ltCheckAlready then
+                                if Evaluate(ltDate, CSVBuffer.Value) then
+                                    ltPurchaseHeader.Validate("Posting Date", ltDate);
 
                         3:
-                            begin
-                                if not ltCheckAlready then begin
-                                    if ImportType = ImportType::GRN then
-                                        ltPurchaseHeader.Validate("Vendor Invoice No.", CSVBuffer.Value)
-                                    else
-                                        ltPurchaseHeader.Validate("Vendor Cr. Memo No.", CSVBuffer.Value);
-                                end;
-                            end;
+
+                            if not ltCheckAlready then
+                                if ImportType = ImportType::GRN then
+                                    ltPurchaseHeader.Validate("Vendor Invoice No.", CSVBuffer.Value)
+                                else
+                                    ltPurchaseHeader.Validate("Vendor Cr. Memo No.", CSVBuffer.Value);
                         4:
                             begin
                                 if not ltCheckAlready then
@@ -673,11 +653,9 @@ codeunit 60050 "FK Func"
 
                             end;
                         7:
-                            begin
-                                if Evaluate(ltDicimal, CSVBuffer.Value) then
-                                    ltPurchaseLine.Quantity := ltDicimal;
 
-                            end;
+                            if Evaluate(ltDicimal, CSVBuffer.Value) then
+                                ltPurchaseLine.Quantity := ltDicimal;
                         8:
                             begin
                                 ltPurchaseLine."Temp. Lot No." := CSVBuffer.Value;
@@ -685,11 +663,9 @@ codeunit 60050 "FK Func"
 
                             end;
                         9:
-                            begin
-                                if Evaluate(ltDate, CSVBuffer.Value) then
-                                    ltPurchaseLine."Temp. Expire Date" := ltDate;
 
-                            end;
+                            if Evaluate(ltDate, CSVBuffer.Value) then
+                                ltPurchaseLine."Temp. Expire Date" := ltDate;
                     end;
 
                     if CSVBuffer."Field No." = LastField then begin
@@ -726,7 +702,7 @@ codeunit 60050 "FK Func"
                         ltPurchaseLineTemp.reset();
                         ltPurchaseLineTemp.SetRange("Document Type", ltPurchaseHeaderTemp."Document Type");
                         ltPurchaseLineTemp.SetRange("Document No.", ltPurchaseHeaderTemp."No.");
-                        if ltPurchaseLineTemp.FindSet() then begin
+                        if ltPurchaseLineTemp.FindSet() then
                             repeat
                                 ltPurchaseLine.Init();
                                 ltPurchaseLine.Copy(ltPurchaseLineTemp);
@@ -744,7 +720,6 @@ codeunit 60050 "FK Func"
                                     ltPurchaseLine.Validate("VAT Prod. Posting Group", ltPurchaseLineTemp."VAT Prod. Posting Group");
                                 ltPurchaseLine.Modify();
                             until ltPurchaseLineTemp.Next() = 0;
-                        end;
                         ltPurchaseHeader."Interface Complete" := true;
                         ltPurchaseHeader.Status := ltPurchaseHeader.Status::Released;
                         ltPurchaseHeader.Modify();
@@ -781,7 +756,7 @@ codeunit 60050 "FK Func"
                         ltPurchaseLineTemp.reset();
                         ltPurchaseLineTemp.SetRange("Document Type", ltPurchaseHeaderTemp."Document Type");
                         ltPurchaseLineTemp.SetRange("Document No.", ltPurchaseHeaderTemp."No.");
-                        if ltPurchaseLineTemp.FindSet() then begin
+                        if ltPurchaseLineTemp.FindSet() then
                             repeat
                                 ltPurchaseLine.Init();
                                 ltPurchaseLine.Copy(ltPurchaseLineTemp);
@@ -799,7 +774,6 @@ codeunit 60050 "FK Func"
                                     ltPurchaseLine.Validate("VAT Prod. Posting Group", ltPurchaseLineTemp."VAT Prod. Posting Group");
                                 ltPurchaseLine.Modify();
                             until ltPurchaseLineTemp.Next() = 0;
-                        end;
                         ltPurchaseHeader."Interface Complete" := true;
                         ltPurchaseHeader.Status := ltPurchaseHeader.Status::Released;
                         ltPurchaseHeader.Modify();
@@ -817,7 +791,7 @@ codeunit 60050 "FK Func"
 
 
     [TryFunction]
-    local procedure InsertToPurchase(ImportType: Option PO,Return; var pPurchaseHeader: Record "Purchase Header" temporary; var pPurchaseLine: Record "Purchase Line" temporary; var pFileName: Text[100]; pIsManual: Boolean; var pCancel: Boolean)
+    local procedure InsertToPurchase(ImportType: Option PO,Return; var pPurchaseHeader: Record "Purchase Header" temporary; var pPurchaseLine: Record "Purchase Line" temporary; var pFileName: Text; pIsManual: Boolean; var pCancel: Boolean)
     var
         InterfaceSetup: Record "FK Interface Setup";
         CheckPurchaseHeader: Record "Purchase Header";
@@ -828,7 +802,7 @@ codeunit 60050 "FK Func"
         ltLocation: Record location;
         ltUnitOfMeasure: Record "Unit of Measure";
         ltVatprod: record "VAT Product Posting Group";
-        UploadResult, CSVFileName : text;
+        CSVFileName: text;
         CSVInStrem: InStream;
         LastField: Integer;
         ltDate: Date;
@@ -836,12 +810,11 @@ codeunit 60050 "FK Func"
         ltInteger: Integer;
         ltCheckAlready: Boolean;
         ltPurchaseDocType: Enum "Purchase Document Type";
-        ltCheckHeader: Boolean;
 
     begin
         InterfaceSetup.GET();
 
-        if not pIsManual then begin
+        if not pIsManual then
             if ImportType = ImportType::PO then begin
                 InterfaceSetup.TestField("Purchase Order Path");
                 InterfaceSetup.TestField("Purchase Order Succ. Path");
@@ -851,7 +824,6 @@ codeunit 60050 "FK Func"
                 InterfaceSetup.TestField("Purch. Return Order Succ. Path");
                 InterfaceSetup.TestField("Purch. Return Order Error Path");
             end;
-        end;
         if UploadIntoStream('File Name', '', '', CSVFileName, CSVInStrem) then begin
             pFileName := CSVFileName;
             CSVBuffer.reset();
@@ -883,7 +855,7 @@ codeunit 60050 "FK Func"
                                     if not ltPurchaseHeader.GET(ltPurchaseDocType, CSVBuffer.Value) then begin
                                         ltPurchaseHeader.Init();
                                         ltPurchaseHeader."Document Type" := ltPurchaseDocType;
-                                        ltPurchaseHeader."No." := CSVBuffer.Value;
+                                        ltPurchaseHeader."No." := COPYSTR(CSVBuffer.Value, 1, MaxStrLen(ltPurchaseHeader."No."));
                                         ltPurchaseHeader.Insert(true);
                                     end else
                                         ltCheckAlready := true;
@@ -892,52 +864,44 @@ codeunit 60050 "FK Func"
                             end;
 
                         3:
-                            begin
-                                if not ltCheckAlready then
-                                    ltPurchaseHeader.Validate("Buy-from Vendor No.", CSVBuffer.Value);
-                            end;
+
+                            if not ltCheckAlready then
+                                ltPurchaseHeader.Validate("Buy-from Vendor No.", CSVBuffer.Value);
                         4:
-                            begin
-                                if not ltCheckAlready then
-                                    ltPurchaseHeader.Validate("Vendor No. Intranet", CSVBuffer.Value);
-                            end;
+
+                            if not ltCheckAlready then
+                                ltPurchaseHeader.Validate("Vendor No. Intranet", CSVBuffer.Value);
                         5:
-                            begin
-                                if not ltCheckAlready then
-                                    if Evaluate(ltDate, CSVBuffer.Value) then
-                                        ltPurchaseHeader.Validate("Order Date", ltDate);
-                            end;
+
+                            if not ltCheckAlready then
+                                if Evaluate(ltDate, CSVBuffer.Value) then
+                                    ltPurchaseHeader.Validate("Order Date", ltDate);
                         6:
-                            begin
-                                if not ltCheckAlready then
-                                    if Evaluate(ltDate, CSVBuffer.Value) then
-                                        ltPurchaseHeader.Validate("Posting Date", ltDate);
-                            end;
+
+                            if not ltCheckAlready then
+                                if Evaluate(ltDate, CSVBuffer.Value) then
+                                    ltPurchaseHeader.Validate("Posting Date", ltDate);
                         7:
-                            begin
-                                if not ltCheckAlready then
-                                    if Evaluate(ltDate, CSVBuffer.Value) then
-                                        ltPurchaseHeader.Validate("Expected Receipt Date", ltDate);
-                            end;
+
+                            if not ltCheckAlready then
+                                if Evaluate(ltDate, CSVBuffer.Value) then
+                                    ltPurchaseHeader.Validate("Expected Receipt Date", ltDate);
                         8:
-                            begin
-                                if not ltCheckAlready then
-                                    ltPurchaseHeader."Your Reference" := CSVBuffer.Value;
-                            end;
+
+                            if not ltCheckAlready then
+                                ltPurchaseHeader."Your Reference" := COPYSTR(CSVBuffer.Value, 1, MaxStrLen(ltPurchaseHeader."Your Reference"));
                         11:
-                            begin
-                                if not ltCheckAlready then
-                                    if CSVBuffer.Value <> '' then
-                                        ltPurchaseHeader.Validate("Shortcut Dimension 1 Code", CSVBuffer.Value);
-                            end;
+
+                            if not ltCheckAlready then
+                                if CSVBuffer.Value <> '' then
+                                    ltPurchaseHeader.Validate("Shortcut Dimension 1 Code", CSVBuffer.Value);
 
                         12:
-                            begin
-                                if not ltCheckAlready then begin
-                                    if CSVBuffer.Value <> '' then
-                                        ltPurchaseHeader.Validate("Shortcut Dimension 2 Code", CSVBuffer.Value);
-                                    ltPurchaseHeader.Modify();
-                                end;
+
+                            if not ltCheckAlready then begin
+                                if CSVBuffer.Value <> '' then
+                                    ltPurchaseHeader.Validate("Shortcut Dimension 2 Code", CSVBuffer.Value);
+                                ltPurchaseHeader.Modify();
                             end;
 
                         13:
@@ -953,56 +917,48 @@ codeunit 60050 "FK Func"
 
                             end;
                         14:
-                            begin
 
-                                ltPurchaseLine.Type := ltPurchaseLine.Type::Item;
-                            end;
+
+                            ltPurchaseLine.Type := ltPurchaseLine.Type::Item;
 
                         15:
                             begin
                                 ltItem.GET(CSVBuffer.Value);
-                                ltPurchaseLine."No." := CSVBuffer.Value;
+                                ltPurchaseLine."No." := COPYSTR(CSVBuffer.Value, 1, MaxStrLen(ltPurchaseLine."No."));
                                 ltPurchaseLine.Description := ltItem.Description;
                                 ltPurchaseLine."Description 2" := ltItem."Description 2";
                                 ltPurchaseLine."Unit of Measure Code" := ltItem."Purch. Unit of Measure";
                             end;
                         16:
-                            begin
-                                if Evaluate(ltDicimal, CSVBuffer.Value) then
-                                    ltPurchaseLine.Quantity := ltDicimal;
 
-                            end;
+                            if Evaluate(ltDicimal, CSVBuffer.Value) then
+                                ltPurchaseLine.Quantity := ltDicimal;
                         17:
                             begin
                                 if CSVBuffer.Value <> '' then
                                     ltUnitOfMeasure.get(CSVBuffer.Value);
-                                ltPurchaseLine."Unit of Measure Code" := CSVBuffer.Value;
-
+                                ltPurchaseLine."Unit of Measure Code" := COPYSTR(CSVBuffer.Value, 1, MaxStrLen(ltPurchaseLine."Unit of Measure Code"));
                             end;
                         18:
                             begin
                                 if CSVBuffer.Value <> '' then
                                     ltLocation.get(CSVBuffer.Value);
-                                ltPurchaseLine."Location Code" := CSVBuffer.Value;
+                                ltPurchaseLine."Location Code" := COPYSTR(CSVBuffer.Value, 1, MaxStrLen(ltPurchaseLine."Location Code"));
 
                             end;
                         19:
-                            begin
-                                if Evaluate(ltDicimal, CSVBuffer.Value) then
-                                    ltPurchaseLine."Direct Unit Cost" := ltDicimal;
 
-                            end;
+                            if Evaluate(ltDicimal, CSVBuffer.Value) then
+                                ltPurchaseLine."Direct Unit Cost" := ltDicimal;
                         22:
-                            begin
-                                if Evaluate(ltDicimal, CSVBuffer.Value) then
-                                    ltPurchaseLine."Line Discount Amount" := ltDicimal;
 
-                            end;
+                            if Evaluate(ltDicimal, CSVBuffer.Value) then
+                                ltPurchaseLine."Line Discount Amount" := ltDicimal;
                         23:
                             begin
                                 if CSVBuffer.Value <> '' then
                                     ltVatprod.get(CSVBuffer.Value);
-                                ltPurchaseLine."VAT Prod. Posting Group" := CSVBuffer.Value;
+                                ltPurchaseLine."VAT Prod. Posting Group" := COPYSTR(CSVBuffer.Value, 1, MaxStrLen(ltPurchaseLine."VAT Prod. Posting Group"));
 
                             end;
 
@@ -1042,7 +998,7 @@ codeunit 60050 "FK Func"
                         ltSalesLineTemp.reset();
                         ltSalesLineTemp.SetRange("Document Type", ltSalesHeaderTemp."Document Type");
                         ltSalesLineTemp.SetRange("Document No.", ltSalesHeaderTemp."No.");
-                        if ltSalesLineTemp.FindSet() then begin
+                        if ltSalesLineTemp.FindSet() then
                             repeat
                                 ltSalesLine.Init();
                                 ltSalesLine.Copy(ltSalesLineTemp);
@@ -1062,7 +1018,6 @@ codeunit 60050 "FK Func"
                                     ltSalesLine.Validate("Inv. Discount Amount", ltSalesLineTemp."Inv. Discount Amount");
                                 ltSalesLine.Modify();
                             until ltSalesLineTemp.Next() = 0;
-                        end;
                         ltSalesHEader."Interface Complete" := true;
                         ltSalesHEader.Status := ltSalesHEader.Status::Released;
                         ltSalesHEader.Modify();
@@ -1099,7 +1054,7 @@ codeunit 60050 "FK Func"
                         ltSalesLineTemp.reset();
                         ltSalesLineTemp.SetRange("Document Type", ltSalesHeaderTemp."Document Type");
                         ltSalesLineTemp.SetRange("Document No.", ltSalesHeaderTemp."No.");
-                        if ltSalesLineTemp.FindSet() then begin
+                        if ltSalesLineTemp.FindSet() then
                             repeat
                                 ltSalesLine.Init();
                                 ltSalesLine.Copy(ltSalesLineTemp);
@@ -1119,7 +1074,6 @@ codeunit 60050 "FK Func"
                                     ltSalesLine.Validate("Inv. Discount Amount", ltSalesLineTemp."Inv. Discount Amount");
                                 ltSalesLine.Modify();
                             until ltSalesLineTemp.Next() = 0;
-                        end;
                         ltSalesHEader."Interface Complete" := true;
                         ltSalesHEader.Status := ltSalesHEader.Status::Released;
                         ltSalesHEader.Modify();
@@ -1137,7 +1091,7 @@ codeunit 60050 "FK Func"
 
 
     [TryFunction]
-    local procedure InsertToSales(ImportType: Option Invoice,Credit; var pSalesHeader: Record "Sales Header" temporary; var pSalesLine: Record "Sales Line" temporary; var pFileName: Text[100]; pIsManual: Boolean; var pCancel: Boolean)
+    local procedure InsertToSales(ImportType: Option Invoice,Credit; var pSalesHeader: Record "Sales Header" temporary; var pSalesLine: Record "Sales Line" temporary; var pFileName: Text; pIsManual: Boolean; var pCancel: Boolean)
     var
         CSVBuffer, TempCSVBuffer : Record "CSV Buffer" temporary;
         CheckSalesHeader: Record "Sales Header";
@@ -1148,7 +1102,7 @@ codeunit 60050 "FK Func"
         InterfaceSetup: Record "FK Interface Setup";
         ltUnitOfMeasure: Record "Unit of Measure";
         ltVatprod: record "VAT Product Posting Group";
-        UploadResult, CSVFileName : text;
+        CSVFileName: text;
         CSVInStrem: InStream;
         LastField: Integer;
         ltDate: Date;
@@ -1157,7 +1111,7 @@ codeunit 60050 "FK Func"
         ltCheckAlready: Boolean;
         ltSalesDocType: Enum "Sales Document Type";
     begin
-        if not pIsManual then begin
+        if not pIsManual then
             if ImportType = ImportType::Invoice then begin
                 InterfaceSetup.TestField("Sales Invoice Path");
                 InterfaceSetup.TestField("Sales Invoice Succ. Path");
@@ -1167,7 +1121,6 @@ codeunit 60050 "FK Func"
                 InterfaceSetup.TestField("Sales Credit Succ. Path");
                 InterfaceSetup.TestField("Sales Credit Err Path");
             end;
-        end;
         if UploadIntoStream('File Name', '', '', CSVFileName, CSVInStrem) then begin
             pFileName := CSVFileName;
             CSVBuffer.reset();
@@ -1198,7 +1151,7 @@ codeunit 60050 "FK Func"
                                     if not ltSalesHeaderTemp.GET(ltSalesDocType, CSVBuffer.Value) then begin
                                         ltSalesHeaderTemp.Init();
                                         ltSalesHeaderTemp."Document Type" := ltSalesDocType;
-                                        ltSalesHeaderTemp."No." := CSVBuffer.Value;
+                                        ltSalesHeaderTemp."No." := COPYSTR(CSVBuffer.Value, 1, MaxStrLen(ltSalesHeaderTemp."No."));
                                         ltSalesHeaderTemp.Insert(true);
                                     end else
                                         ltCheckAlready := true;
@@ -1208,67 +1161,56 @@ codeunit 60050 "FK Func"
                             end;
 
                         3:
-                            begin
-                                if not ltCheckAlready then
-                                    ltSalesHeaderTemp.Validate("Sell-to Customer No.", CSVBuffer.Value);
-                            end;
+
+                            if not ltCheckAlready then
+                                ltSalesHeaderTemp.Validate("Sell-to Customer No.", CSVBuffer.Value);
                         6:
-                            begin
-                                if not ltCheckAlready then
-                                    ltSalesHeaderTemp.Validate("Ship-to Code", CSVBuffer.Value);
-                            end;
+
+                            if not ltCheckAlready then
+                                ltSalesHeaderTemp.Validate("Ship-to Code", CSVBuffer.Value);
 
 
                         7:
-                            begin
-                                if not ltCheckAlready then
-                                    ltSalesHeaderTemp.Validate("Ship-to Name", CSVBuffer.Value);
-                            end;
+
+                            if not ltCheckAlready then
+                                ltSalesHeaderTemp.Validate("Ship-to Name", CSVBuffer.Value);
                         8:
-                            begin
-                                if not ltCheckAlready then
-                                    ltSalesHeaderTemp.Validate("Ship-to address", CSVBuffer.Value);
-                            end;
+
+                            if not ltCheckAlready then
+                                ltSalesHeaderTemp.Validate("Ship-to address", CSVBuffer.Value);
                         9:
-                            begin
-                                if not ltCheckAlready then
-                                    ltSalesHeaderTemp.Validate("Ship-to address 2", CSVBuffer.Value);
-                            end;
+
+                            if not ltCheckAlready then
+                                ltSalesHeaderTemp.Validate("Ship-to address 2", CSVBuffer.Value);
                         10:
-                            begin
-                                if not ltCheckAlready then
-                                    ltSalesHeaderTemp.Validate("Ship-to City", CSVBuffer.Value);
-                            end;
+
+                            if not ltCheckAlready then
+                                ltSalesHeaderTemp.Validate("Ship-to City", CSVBuffer.Value);
 
                         11:
-                            begin
-                                if not ltCheckAlready then
-                                    ltSalesHeaderTemp.Validate("Ship-to Post Code", CSVBuffer.Value);
-                            end;
+
+                            if not ltCheckAlready then
+                                ltSalesHeaderTemp.Validate("Ship-to Post Code", CSVBuffer.Value);
 
                         12:
-                            begin
-                                if not ltCheckAlready then
-                                    if Evaluate(ltDate, CSVBuffer.Value) then
-                                        ltSalesHeaderTemp.Validate("posting Date", ltDate);
-                            end;
+
+                            if not ltCheckAlready then
+                                if Evaluate(ltDate, CSVBuffer.Value) then
+                                    ltSalesHeaderTemp.Validate("posting Date", ltDate);
 
                         13:
-                            begin
-                                if not ltCheckAlready then
-                                    ltSalesHeaderTemp.Validate("Payment Method Code", CSVBuffer.Value);
-                            end;
+
+                            if not ltCheckAlready then
+                                ltSalesHeaderTemp.Validate("Payment Method Code", CSVBuffer.Value);
                         14:
-                            begin
-                                if not ltCheckAlready then
-                                    ltSalesHeaderTemp.Validate("Your Reference", CSVBuffer.Value);
-                            end;
+
+                            if not ltCheckAlready then
+                                ltSalesHeaderTemp.Validate("Your Reference", CSVBuffer.Value);
 
                         15:
-                            begin
-                                if not ltCheckAlready then
-                                    ltSalesHeaderTemp.Validate("External Document No.", CSVBuffer.Value);
-                            end;
+
+                            if not ltCheckAlready then
+                                ltSalesHeaderTemp.Validate("External Document No.", CSVBuffer.Value);
 
 
                         16:
@@ -1284,70 +1226,60 @@ codeunit 60050 "FK Func"
 
                             end;
                         17:
-                            begin
 
-                                ltSalesLineTemp.Type := SelectoptionSales(CSVBuffer.Value);
-                            end;
+
+                            ltSalesLineTemp.Type := SelectoptionSales(CSVBuffer.Value);
 
                         18:
                             begin
                                 ltItem.GET(CSVBuffer.Value);
-                                ltSalesLineTemp."No." := CSVBuffer.Value;
+                                ltSalesLineTemp."No." := COPYSTR(CSVBuffer.Value, 1, MaxStrLen(ltSalesLineTemp."No."));
                                 ltSalesLineTemp.Description := ltItem.Description;
                                 ltSalesLineTemp."Description 2" := ltItem."Description 2";
                                 ltSalesLineTemp."Unit of Measure Code" := ltItem."Sales Unit of Measure";
                             end;
                         19:
-                            begin
 
-                                ltSalesLineTemp.Description := CSVBuffer.Value;
-                            end;
+
+                            ltSalesLineTemp.Description := COPYSTR(CSVBuffer.Value, 1, MaxStrLen(ltSalesLineTemp.Description));
                         20:
-                            begin
-                                if Evaluate(ltDicimal, CSVBuffer.Value) then
-                                    ltSalesLineTemp.Quantity := ltDicimal;
 
-                            end;
+                            if Evaluate(ltDicimal, CSVBuffer.Value) then
+                                ltSalesLineTemp.Quantity := ltDicimal;
                         21:
                             begin
                                 if CSVBuffer.Value <> '' then
                                     ltUnitOfMeasure.get(CSVBuffer.Value);
-                                ltSalesLineTemp."Unit of Measure Code" := CSVBuffer.Value;
+                                ltSalesLineTemp."Unit of Measure Code" := COPYSTR(CSVBuffer.Value, 1, MaxStrLen(ltSalesLineTemp."Unit of Measure Code"));
 
                             end;
                         22:
                             begin
                                 if CSVBuffer.Value <> '' then
                                     ltLocation.get(CSVBuffer.Value);
-                                ltSalesLineTemp."Location Code" := CSVBuffer.Value;
+                                ltSalesLineTemp."Location Code" := COPYSTR(CSVBuffer.Value, 1, MaxStrLen(ltSalesLineTemp."Location Code"));
 
                             end;
                         23:
-                            begin
-                                if Evaluate(ltDicimal, CSVBuffer.Value) then
-                                    ltSalesLineTemp."Unit Price" := ltDicimal;
 
-                            end;
+                            if Evaluate(ltDicimal, CSVBuffer.Value) then
+                                ltSalesLineTemp."Unit Price" := ltDicimal;
 
                         26:
                             begin
                                 if CSVBuffer.Value <> '' then
                                     ltVatprod.get(CSVBuffer.Value);
-                                ltSalesLineTemp."VAT Prod. Posting Group" := CSVBuffer.Value;
+                                ltSalesLineTemp."VAT Prod. Posting Group" := COPYSTR(CSVBuffer.Value, 1, MaxStrLen(ltSalesLineTemp."VAT Prod. Posting Group"));
 
                             end;
                         27:
-                            begin
-                                if Evaluate(ltDicimal, CSVBuffer.Value) then
-                                    ltSalesLineTemp."Line Discount Amount" := ltDicimal;
 
-                            end;
+                            if Evaluate(ltDicimal, CSVBuffer.Value) then
+                                ltSalesLineTemp."Line Discount Amount" := ltDicimal;
                         28:
-                            begin
-                                if Evaluate(ltDicimal, CSVBuffer.Value) then
-                                    ltSalesLineTemp."Inv. Discount Amount" := ltDicimal;
 
-                            end;
+                            if Evaluate(ltDicimal, CSVBuffer.Value) then
+                                ltSalesLineTemp."Inv. Discount Amount" := ltDicimal;
 
                     end;
 
@@ -1395,19 +1327,19 @@ codeunit 60050 "FK Func"
     end;
 
     [TryFunction]
-    local procedure InsertToICashReceipt(var pGenJournalLine: Record "Gen. Journal Line" temporary; var pFileName: Text[100]; pIsManual: Boolean; var pCancel: Boolean)
+    local procedure InsertToICashReceipt(var pGenJournalLine: Record "Gen. Journal Line" temporary; var pFileName: Text; pIsManual: Boolean; var pCancel: Boolean)
     var
         GenJournalLIne: Record "Gen. Journal Line" temporary;
         CSVBuffer, TempCSVBuffer : Record "CSV Buffer" temporary;
         InterfaceSetup: Record "FK Interface Setup";
         GenJournalTemplate: Record "Gen. Journal Template";
-        UploadResult, CSVFileName : text;
+        CSVFileName: text;
         CSVInStrem: InStream;
         ltLineNo: Integer;
         ltDate: Date;
         ltDicimal: Decimal;
         TotalRec, LastField : Integer;
-        ltTemplateName, ltBatchName : code[30];
+        ltTemplateName, ltBatchName : code[10];
     begin
         InterfaceSetup.GET();
         InterfaceSetup.TestField("Cash Receipt Temp. Name");
@@ -1449,38 +1381,31 @@ codeunit 60050 "FK Func"
 
 
                         4:
-                            begin
-                                if Evaluate(ltDate, CSVBuffer.Value) then
-                                    GenJournalLIne.Validate("Posting Date", ltDate);
-                            end;
+
+                            if Evaluate(ltDate, CSVBuffer.Value) then
+                                GenJournalLIne.Validate("Posting Date", ltDate);
                         5:
-                            begin
-                                if Evaluate(ltDate, CSVBuffer.Value) then
-                                    GenJournalLIne.Validate("Document Date", ltDate);
-                            end;
+
+                            if Evaluate(ltDate, CSVBuffer.Value) then
+                                GenJournalLIne.Validate("Document Date", ltDate);
                         6:
-                            begin
-                                GenJournalLIne."Document Type" := GenJournalLIne."Document Type"::Payment;
-                            end;
+
+                            GenJournalLIne."Document Type" := GenJournalLIne."Document Type"::Payment;
                         7:
                             GenJournalLIne.Validate("Document No.", CSVBuffer.Value);
                         8:
-                            begin
-                                GenJournalLIne.validate("External Document No.", CSVBuffer.Value);
-                            end;
-                        9:
-                            begin
 
-                                GenJournalLIne.validate("Account Type", SelectoptionGenLine(CSVBuffer.Value));
-                            end;
+                            GenJournalLIne.validate("External Document No.", CSVBuffer.Value);
+                        9:
+
+
+                            GenJournalLIne.validate("Account Type", SelectoptionGenLine(CSVBuffer.Value));
                         10:
-                            begin
-                                GenJournalLIne.Validate("Account No.", CSVBuffer.Value);
-                            end;
+
+                            GenJournalLIne.Validate("Account No.", CSVBuffer.Value);
                         11:
-                            begin
-                                GenJournalLIne.Validate("Description", CSVBuffer.Value);
-                            end;
+
+                            GenJournalLIne.Validate("Description", CSVBuffer.Value);
                         12:
                             if CSVBuffer.Value <> '' then
                                 GenJournalLIne.Validate("Currency Code", CSVBuffer.Value);
@@ -1489,11 +1414,10 @@ codeunit 60050 "FK Func"
                                 GenJournalLIne.Validate("Amount", ltDicimal);
 
                         15:
-                            begin
-                                if CSVBuffer.Value <> '' then begin
-                                    GenJournalLIne."Applies-to Doc. Type" := GenJournalLIne."Applies-to Doc. Type"::Invoice;
-                                    GenJournalLIne.Validate("Applies-to Doc. No.", CSVBuffer.Value);
-                                end;
+
+                            if CSVBuffer.Value <> '' then begin
+                                GenJournalLIne."Applies-to Doc. Type" := GenJournalLIne."Applies-to Doc. Type"::Invoice;
+                                GenJournalLIne.Validate("Applies-to Doc. No.", CSVBuffer.Value);
                             end;
                     end;
                     if CSVBuffer."Field No." = LastField then
@@ -1503,23 +1427,24 @@ codeunit 60050 "FK Func"
                 until CSVBuffer.Next() = 0;
                 pGenJournalLine.copy(GenJournalLIne, true);
             end;
-        end;
+        end else
+            pCancel := true;
     end;
 
     [TryFunction]
-    local procedure InsertToItemJournal(ImportType: Option Positive,Negative; var pItemJournalTemp: Record "Item Journal Line" temporary; var pFileName: Text[100]; pIsManual: Boolean; var pCancel: Boolean)
+    local procedure InsertToItemJournal(ImportType: Option Positive,Negative; var pItemJournalTemp: Record "Item Journal Line" temporary; var pFileName: Text; pIsManual: Boolean; var pCancel: Boolean)
     var
         ItemJournal: Record "Item Journal Line" temporary;
         CSVBuffer, TempCSVBuffer : Record "CSV Buffer" temporary;
         InterfaceSetup: Record "FK Interface Setup";
         ITemJournalTemplate: Record "Item Journal Template";
-        UploadResult, CSVFileName : text;
+        CSVFileName: text;
         CSVInStrem: InStream;
         ltLineNo: Integer;
         ltDate: Date;
         ltDicimal: Decimal;
         TotalRec, LastField : Integer;
-        ltTemplateName, ltBatchName : code[30];
+        ltTemplateName, ltBatchName : code[10];
     begin
         InterfaceSetup.GET();
         if ImportType = ImportType::Positive then begin
@@ -1587,20 +1512,18 @@ codeunit 60050 "FK Func"
                         5:
                             ItemJournal.Validate("Location Code", CSVBuffer.Value);
                         6:
-                            begin
-                                if Evaluate(ltDicimal, CSVBuffer.Value) then
-                                    ItemJournal.Validate(Quantity, ltDicimal);
-                            end;
+
+                            if Evaluate(ltDicimal, CSVBuffer.Value) then
+                                ItemJournal.Validate(Quantity, ltDicimal);
                         7:
                             begin
-                                ItemJournal."Temp. Lot No." := CSVBuffer.Value;
+                                ItemJournal."Temp. Lot No." := COPYSTR(CSVBuffer.Value, 1, MaxStrLen(ItemJournal."Temp. Lot No."));
                                 CheckLot(ItemJournal."Item No.", ItemJournal."Temp. Lot No.");
                             end;
                         8:
-                            begin
-                                if Evaluate(ltDate, CSVBuffer.Value) then
-                                    ItemJournal."Temp. Expire Date" := ltDate
-                            end;
+
+                            if Evaluate(ltDate, CSVBuffer.Value) then
+                                ItemJournal."Temp. Expire Date" := ltDate;
                         9:
                             ItemJournal.Validate("Reason Code", CSVBuffer.Value);
 
@@ -1619,20 +1542,20 @@ codeunit 60050 "FK Func"
     end;
 
     [TryFunction]
-    local procedure InsertToItemJournalReclass(var pItemJournalTemp: Record "Item Journal Line" temporary; var pFileName: Text[100]; pIsManual: Boolean; var pCancel: Boolean)
+    local procedure InsertToItemJournalReclass(var pItemJournalTemp: Record "Item Journal Line" temporary; var pFileName: Text; pIsManual: Boolean; var pCancel: Boolean)
     var
         ItemJournal: Record "Item Journal Line" temporary;
         CSVBuffer, TempCSVBuffer : Record "CSV Buffer" temporary;
         InterfaceSetup: Record "FK Interface Setup";
         ITemJournalTemplate: Record "Item Journal Template";
-        UploadResult, CSVFileName : text;
+        CSVFileName: text;
         CSVInStrem: InStream;
         ltLineNo: Integer;
         ltDate: Date;
         ltDicimal: Decimal;
 
         TotalRec, LastField : Integer;
-        ltTemplateName, ltBatchName : code[30];
+        ltTemplateName, ltBatchName : code[10];
     begin
         InterfaceSetup.GET();
 
@@ -1685,25 +1608,23 @@ codeunit 60050 "FK Func"
                         5:
                             ItemJournal.Validate("New Location Code", CSVBuffer.Value);
                         6:
-                            begin
-                                if Evaluate(ltDicimal, CSVBuffer.Value) then
-                                    ItemJournal.Validate(Quantity, ltDicimal);
-                            end;
+
+                            if Evaluate(ltDicimal, CSVBuffer.Value) then
+                                ItemJournal.Validate(Quantity, ltDicimal);
                         7:
                             begin
-                                ItemJournal."Temp. Lot No." := CSVBuffer.Value;
+                                ItemJournal."Temp. Lot No." := COPYSTR(CSVBuffer.Value, 1, MaxStrLen(ItemJournal."Temp. Lot No."));
                                 CheckLot(ItemJournal."Item No.", ItemJournal."Temp. Lot No.");
                             end;
                         8:
                             begin
-                                ItemJournal."Temp. New Lot No." := CSVBuffer.Value;
+                                ItemJournal."Temp. New Lot No." := COPYSTR(CSVBuffer.Value, 1, MaxStrLen(ItemJournal."Temp. New Lot No."));
                                 CheckLot(ItemJournal."Item No.", ItemJournal."Temp. New Lot No.");
                             end;
                         9:
-                            begin
-                                if Evaluate(ltDate, CSVBuffer.Value) then
-                                    ItemJournal."Temp. Expire Date" := ltDate;
-                            end;
+
+                            if Evaluate(ltDate, CSVBuffer.Value) then
+                                ItemJournal."Temp. Expire Date" := ltDate;
                         10:
                             ItemJournal.Validate("Reason Code", CSVBuffer.Value);
                     end;
@@ -1726,16 +1647,16 @@ codeunit 60050 "FK Func"
         apiLog.Init();
         apiLog."Entry No." := GetLastEntryLog();
         apiLog."Method Type" := pMethodType;
-        apiLog."Page Name" := PageName;
+        apiLog."Page Name" := COPYSTR(PageName, 1, MaxStrLen(apiLog."Page Name"));
         apiLog."No." := pTableID;
         apiLog."Date Time" := pDateTime;
         apiLog.Status := pStatus;
         apiLog.Insert(true);
         apiLog."Interface By" := CopyStr(USERID(), 1, 100);
         apiLog."Is Manual" := pIsManual;
-        if pMsgError <> '' then begin
-            apiLog."Last Error" := pMsgError;
-        end else begin
+        if pMsgError <> '' then
+            apiLog."Last Error" := COPYSTR(pMsgError, 1, MaxStrLen(apiLog."Last Error"))
+        else begin
             if pIsManual then
                 pMsgError := 'Manual Import is successfully'
             else
@@ -1849,10 +1770,10 @@ codeunit 60050 "FK Func"
                                                                                               pJsonFormat: Boolean)
     var
         //  PageControl, PageControlDetail : Record "Page Control Field";
-        APIMapping, APIMappingLine : Record "API Setup Line";
+        APIMappingLine: Record "API Setup Line";
         ReservationEntry: Record "Reservation Entry";
         ltField: Record Field;
-        ltJsonObject, ltResult, ltJsonObjectbuill, ltJsonObjectbuillReserve, ltJsonObjectReserve : JsonObject;
+        ltJsonObject, ltResult, ltJsonObjectbuill, ltJsonObjectReserve : JsonObject;
         ltJsonArray, ltJsonArraybuill, ltJsonArrayReserve : JsonArray;
         ltFieldRef: FieldRef;
         ltRecordRef: RecordRef;
@@ -1906,7 +1827,7 @@ codeunit 60050 "FK Func"
                 APIMappingLine.SetRange(Include, true);
                 APIMappingLine.SetRange("Is Primary", false);
                 APIMappingLine.SetFilter("Service Name 2", '<>%1', '');
-                if APIMappingLine.FindSet() then begin
+                if APIMappingLine.FindSet() then
                     repeat
                         ltField.GET(pTableID, APIMappingLine."Field No.");
                         if (ltField.Class = ltField.Class::Normal) and (ltField.Type <> ltField.Type::BLOB) then begin
@@ -1924,7 +1845,6 @@ codeunit 60050 "FK Func"
                         end;
 
                     until APIMappingLine.Next() = 0;
-                end;
                 ltRecordRef.Close();
                 CheckFirstLineInt := 0;
                 CheckFirstLineInt2 := 0;
@@ -2055,7 +1975,7 @@ codeunit 60050 "FK Func"
     /// <returns>Return value of type Text.</returns>
     procedure createcustomer(customerlists: BigText): Text;
     var
-        ltJsonObject, ltJsonObjectDetail, ltJsonObject2 : JsonObject;
+        ltJsonObject2: JsonObject;
         ltJsonToken, ltJsonToken2 : JsonToken;
         ltJsonArray: JsonArray;
         ltDateTime: DateTime;
@@ -2081,7 +2001,7 @@ codeunit 60050 "FK Func"
 
     procedure createshiptoaddress(shiptolists: BigText): Text;
     var
-        ltJsonObject, ltJsonObjectDetail, ltJsonObject2 : JsonObject;
+        ltJsonObject2: JsonObject;
         ltJsonToken, ltJsonToken2 : JsonToken;
         ltJsonArray: JsonArray;
         ltDateTime: DateTime;
@@ -2113,7 +2033,7 @@ codeunit 60050 "FK Func"
     /// <returns>Return value of type Text.</returns>
     procedure updatecustomer(customerlists: BigText): Text;
     var
-        ltJsonObject, ltJsonObjectDetail, ltJsonObject2 : JsonObject;
+        ltJsonObject2: JsonObject;
         ltJsonToken, ltJsonToken2 : JsonToken;
         ltJsonArray: JsonArray;
         ltDateTime: DateTime;
@@ -2144,7 +2064,7 @@ codeunit 60050 "FK Func"
     /// <returns>Return value of type Text.</returns>
     procedure createitem(itemlists: BigText): Text;
     var
-        ltJsonObject, ltJsonObjectDetail, ltJsonObject2 : JsonObject;
+        ltJsonObject2: JsonObject;
         ltJsonToken, ltJsonToken2 : JsonToken;
         ltJsonArray: JsonArray;
         ltDateTime: DateTime;
@@ -2158,10 +2078,10 @@ codeunit 60050 "FK Func"
         ltJsonArray := ltJsonToken.AsArray();
         foreach ltJsonToken2 in ltJsonArray do begin
             ltJsonObject2 := ltJsonToken2.AsObject();
-            if not InsertTotable(FKApiPageType::Item, Database::Item, ltJsonObject2) then begin
-                Insertlog(Database::Item, ltPageName, ltJsonObject2, ltDateTime, GetLastErrorText(), 1, ltNoofAPI, GetLastErrorCode(), SelectJsonTokenText(ltJsonObject2, '$.no'), 0);
-                //  ClearError(Database::Item, SelectJsonTokenText(ltJsonObject2, '$.no'));
-            end else
+            if not InsertTotable(FKApiPageType::Item, Database::Item, ltJsonObject2) then
+                Insertlog(Database::Item, ltPageName, ltJsonObject2, ltDateTime, GetLastErrorText(), 1, ltNoofAPI, GetLastErrorCode(), SelectJsonTokenText(ltJsonObject2, '$.no'), 0)
+            //  ClearError(Database::Item, SelectJsonTokenText(ltJsonObject2, '$.no'));
+            else
                 Insertlog(Database::Item, ltPageName, ltJsonObject2, ltDateTime, '', 0, ltNoofAPI, '', SelectJsonTokenText(ltJsonObject2, '$.no'), 0);
         end;
         exit(ReuturnErrorAPI(ltPageName, ltNoofAPI));
@@ -2174,7 +2094,7 @@ codeunit 60050 "FK Func"
     /// <returns>Return value of type Text.</returns>
     procedure updateitem(itemlists: BigText): Text;
     var
-        ltJsonObject, ltJsonObjectDetail, ltJsonObject2 : JsonObject;
+        ltJsonObject2: JsonObject;
         ltJsonToken, ltJsonToken2 : JsonToken;
         ltJsonArray: JsonArray;
         ltDateTime: DateTime;
@@ -2202,7 +2122,7 @@ codeunit 60050 "FK Func"
     /// <returns>Return value of type Text.</returns>
     procedure createvendor(vendorlists: BigText): Text;
     var
-        ltJsonObject, ltJsonObjectDetail, ltJsonObject2 : JsonObject;
+        ltJsonObject2: JsonObject;
         ltJsonToken, ltJsonToken2 : JsonToken;
         ltJsonArray: JsonArray;
         ltDateTime: DateTime;
@@ -2232,7 +2152,7 @@ codeunit 60050 "FK Func"
     /// <returns>Return value of type Text.</returns>
     procedure updatevendor(vendorlists: BigText): Text;
     var
-        ltJsonObject, ltJsonObjectDetail, ltJsonObject2 : JsonObject;
+        ltJsonObject2: JsonObject;
         ltJsonToken, ltJsonToken2 : JsonToken;
         ltJsonArray: JsonArray;
         ltDateTime: DateTime;
@@ -2375,7 +2295,7 @@ codeunit 60050 "FK Func"
                             ltJsonObject.Add(apisetupline."Service Name 2", format(ltFieldRef.Value));
                     until apisetupline.Next() = 0;
                 ltJsonArray.Add(ltJsonObject);
-            until ltRecordRef.next = 0;
+            until ltRecordRef.next() = 0;
             ltURL := '';
             ltJsonObjectBiuld.Add(apiSetupHeader."Serivce Name", ltJsonArray);
             ltJsonObjectBiuld.WriteTo(ltpayload);
@@ -2475,7 +2395,7 @@ codeunit 60050 "FK Func"
     procedure goodreceiptnote(goodreceiptnotelists: BigText): Text
     var
 
-        ltJsonObject, ltJsonObjectDetail, ltJsonObject2 : JsonObject;
+        ltJsonObject2: JsonObject;
         ltJsonToken, ltJsonToken2 : JsonToken;
         ltDocumentType: Enum "Purchase Document Type";
         ltJsonArray: JsonArray;
@@ -2505,8 +2425,7 @@ codeunit 60050 "FK Func"
     /// <returns>Return value of type Text.</returns>
     procedure returnreceipt(returnreceiptlists: BigText): Text
     var
-
-        ltJsonObject, ltJsonObjectDetail, ltJsonObject2 : JsonObject;
+        ltJsonObject2: JsonObject;
         ltJsonToken, ltJsonToken2 : JsonToken;
         ltDocumentType: Enum "Purchase Document Type";
         ltJsonArray: JsonArray;
@@ -2646,10 +2565,7 @@ codeunit 60050 "FK Func"
         APIMappingLine: Record "API Setup Line";
         ltFieldRef: FieldRef;
         ltRecordRef: RecordRef;
-        ltField: Record Field;
-        ltJsonTokenReserve: JsonToken;
-        TemplateName, BatchName : Code[30];
-        ltLineNo, ltIndexof, ltIndexofDetail : Integer;
+        ltIndexofDetail: Integer;
         ltDate: Date;
         ltDocNo: Code[30];
         CheckJsonToken: JsonToken;
@@ -2714,13 +2630,9 @@ codeunit 60050 "FK Func"
     var
         APIMappingHeader: Record "API Setup Header";
         APIMappingLine: Record "API Setup Line";
-        ltCustomer: Record Customer;
         ltFieldRef: FieldRef;
         ltRecordRef: RecordRef;
-        ltField: Record Field;
-        ltJsonTokenReserve: JsonToken;
-        TemplateName, BatchName : Code[30];
-        ltLineNo, ltIndexof, ltIndexofDetail : Integer;
+        ltIndexofDetail: Integer;
         ltDate: Date;
         ltDocNo: Code[30];
         HasAlready: Boolean;
@@ -2804,9 +2716,7 @@ codeunit 60050 "FK Func"
         APIMappingLine: Record "API Setup Line";
         ltFieldRef: FieldRef;
         ltRecordRef: RecordRef;
-        ltField: Record Field;
         ltIndexofDetail: Integer;
-        ltDate: Date;
         CheckJsonToken: JsonToken;
     begin
 
@@ -2855,13 +2765,12 @@ codeunit 60050 "FK Func"
         APIMappingLine: Record "API Setup Line";
         ltJsonToken: JsonToken;
         ltJsonArray: JsonArray;
-        ltJsonTokenDetail, ltJsonTokenReserve : JsonToken;
+        ltJsonTokenDetail: JsonToken;
         ltFieldRef: FieldRef;
         ltRecordRef: RecordRef;
-        ltField: Record Field;
-        ltLineNo, ltIndexofDetail : Integer;
+        ltIndexofDetail: Integer;
         ltDate: Date;
-        ShiptoCode: Code[20];
+        ShiptoCode: Code[10];
         CheckJsonToken: JsonToken;
     begin
         if pJsonObject.SelectToken('$.shiptodetail', ltJsonToken) then begin
@@ -2907,12 +2816,11 @@ codeunit 60050 "FK Func"
                 end;
             end;
         end;
-        if ShiptoCode <> '' then begin
+        if ShiptoCode <> '' then
             if Customer.GET(pCustomerCode) then begin
                 Customer."Ship-to Code" := ShiptoCode;
                 Customer.Modify();
             end;
-        end;
     end;
 
     local procedure InsertTotableLine(pJsonObject: JsonObject; subtableID: Integer; pPageID: Enum "FK Api Page Type"; pSubPageID: Integer;
@@ -2926,7 +2834,6 @@ codeunit 60050 "FK Func"
         ltJsonTokenDetail, ltJsonTokenReserve : JsonToken;
         ltFieldRef: FieldRef;
         ltRecordRef: RecordRef;
-        ltField: Record Field;
         ltLineNo: Integer;
         ltDate: Date;
         ltCheckLine: JsonToken;
@@ -2956,16 +2863,15 @@ codeunit 60050 "FK Func"
                 APIMappingLine.SetRange(Include, true);
                 APIMappingLine.SetFilter("Service Name 2", '<>%1', '');
                 APIMappingLine.SetRange("Is Primary", false);
-                if APIMappingLine.FindSet() then begin
+                if APIMappingLine.FindSet() then
                     repeat
                         ltFieldRef := ltRecordRef.FIELD(APIMappingLine."Field No.");
                         if ltFieldRef.Type IN [ltFieldRef.Type::Integer, ltFieldRef.Type::Decimal, ltFieldRef.Type::Option] then begin
                             if ltFieldRef.Type = ltFieldRef.Type::Option then
                                 ltFieldRef.validate(SelectOption(ltFieldRef.OptionCaption, SelectJsonTokenText(ltJsonObjectDetail, '$.' + APIMappingLine."Service Name 2")))
                             else
-                                if SelectJsonTokenInterger(ltJsonObjectDetail, '$.' + APIMappingLine."Service Name 2") <> 0 then begin
+                                if SelectJsonTokenInterger(ltJsonObjectDetail, '$.' + APIMappingLine."Service Name 2") <> 0 then
                                     ltFieldRef.validate(SelectJsonTokenInterger(ltJsonObjectDetail, '$.' + APIMappingLine."Service Name 2"));
-                                end
                         end else
                             if ltFieldRef.Type = ltFieldRef.Type::Date then begin
                                 if SelectJsonTokenText(ltJsonObjectDetail, '$.' + APIMappingLine."Service Name 2") <> '' then begin
@@ -2976,7 +2882,6 @@ codeunit 60050 "FK Func"
                                 if SelectJsonTokenText(ltJsonObjectDetail, '$.' + APIMappingLine."Service Name 2") <> '' then
                                     ltFieldRef.Validate(SelectJsonTokenText(ltJsonObjectDetail, '$.' + APIMappingLine."Service Name 2"));
                     until APIMappingLine.Next() = 0;
-                end;
                 ltRecordRef.Modify();
                 if ltJsonObjectDetail.SelectToken('$.reservelines', ltJsonTokenReserve) then
                     if subtableID = Database::"Purchase Line" then
@@ -2989,25 +2894,7 @@ codeunit 60050 "FK Func"
         end;
     end;
 
-    local procedure DeleteDocAfterGetError(pTableID: Integer; pDocumentType: Integer; pDocumentNo: code[30])
-    var
-        SalesHeader: Record "Sales Header";
-        PurchaseHeader: Record "Purchase Header";
-    begin
-        if pTableID = Database::"Sales Header" then begin
-            SalesHeader.reset();
-            SalesHeader.SetRange("Document Type", pDocumentType);
-            SalesHeader.SetRange("No.", pDocumentNo);
-            if SalesHeader.FindFirst() then
-                SalesHeader.Delete(true);
-        end else begin
-            PurchaseHeader.reset();
-            PurchaseHeader.SetRange("Document Type", pDocumentType);
-            PurchaseHeader.SetRange("No.", pDocumentNo);
-            if PurchaseHeader.FindFirst() then
-                PurchaseHeader.Delete(true);
-        end;
-    end;
+
 
     local procedure GetLastLine(subTableID: Integer; pDocumentType: Integer; pDocumentNo: Code[30]): Integer
     var
@@ -3036,10 +2923,9 @@ codeunit 60050 "FK Func"
         ltLoopOption: Integer;
     begin
         pOptionCaption := pOptionCaption + ',,,,,,,,,,';
-        for ltLoopOption := 1 TO 10 do begin
+        for ltLoopOption := 1 TO 10 do
             if UPPERCASE(SelectStr(ltLoopOption, pOptionCaption)) = uppercase(pValue) then
                 exit(ltLoopOption - 1);
-        end;
     end;
 
     local procedure InsertTOTempReserve(var pTempReservEntry: Record "Reservation Entry" temporary; pJsonToken: JsonToken)
@@ -3179,10 +3065,8 @@ codeunit 60050 "FK Func"
     local procedure insertlog(pTableID: integer; PageName: text; pjsonObject: JsonObject; pDateTime: DateTime; pMsgError: Text; pStatus: Option Successfully,"Error"; pNoOfAPI: Integer; pMsgErrorCode: text; pDocumentNo: Code[100]; pMethodType: Option "Insert","Update","Delete")
     var
         apiLog: Record "FK API Log";
-        APIMappingLine: Record "API Setup Line";
         JsonText: Text;
         ltOutStream, ltOutStream2 : OutStream;
-        ltMsg: Text;
     begin
         JsonText := '';
         pjsonObject.WriteTo(JsonText);
@@ -3213,10 +3097,8 @@ codeunit 60050 "FK Func"
     local procedure insertlogNew(pTableID: integer; PageName: text; pjsonObject: JsonObject; pDateTime: DateTime; pMsgError: Text; pStatus: Option Successfully,"Error"; pNoOfAPI: Integer; pMsgErrorCode: text; pDocumentNo: Code[100]; pMethodType: Option "Insert","Update","Delete"; pRespones: text; pIsManual: Boolean)
     var
         apiLog: Record "FK API Log";
-        APIMappingLine: Record "API Setup Line";
         JsonText: Text;
         ltOutStream, ltOutStream2 : OutStream;
-        ltMsg: Text;
     begin
         JsonText := '';
         pjsonObject.WriteTo(JsonText);
@@ -3312,11 +3194,10 @@ codeunit 60050 "FK Func"
                                                                                                        pDocumentNo: Text;
                                                                                                        pJsonFormat: Boolean)
     var
-        //  PageControl, PageControlDetail : Record "Page Control Field";
-        APIMapping, APIMappingLine : Record "API Setup Line";
+        APIMappingLine: Record "API Setup Line";
         ReservationEntry: Record "Reservation Entry";
         ltField: Record Field;
-        ltJsonObject, ltResult, ltJsonObjectbuill, ltJsonObjectbuillReserve, ltJsonObjectReserve : JsonObject;
+        ltJsonObject, ltResult, ltJsonObjectbuill, ltJsonObjectReserve : JsonObject;
         ltJsonArray, ltJsonArraybuill, ltJsonArrayReserve : JsonArray;
         ltFieldRef: FieldRef;
         ltRecordRef: RecordRef;
@@ -3354,7 +3235,7 @@ codeunit 60050 "FK Func"
             APIMappingLine.SetRange("Line Type", APIMappingLine."Line Type"::Header);
             APIMappingLine.SetRange(Include, true);
             APIMappingLine.SetFilter("Service Name 2", '<>%1', '');
-            if APIMappingLine.FindSet() then begin
+            if APIMappingLine.FindSet() then
                 repeat
                     ltField.GET(pTableID, APIMappingLine."Field No.");
                     if (ltField.Class = ltField.Class::Normal) and (ltField.Type <> ltField.Type::BLOB) then begin
@@ -3372,7 +3253,6 @@ codeunit 60050 "FK Func"
                     end;
 
                 until APIMappingLine.Next() = 0;
-            end;
             ltRecordRef.Close();
 
             CLEAR(ltJsonArray);
@@ -3446,7 +3326,7 @@ codeunit 60050 "FK Func"
                         ltJsonObject.Add('?reservelines', ltJsonArrayReserve);
                     end;
                     ltJsonArray.Add(ltJsonObject);
-                until ltRecordRef.next = 0;
+                until ltRecordRef.next() = 0;
 
                 ltRecordRef.Close();
             end;
@@ -3497,7 +3377,6 @@ codeunit 60050 "FK Func"
     var
 
         APIMappingLine: Record "API Setup Line";
-        ReservationEntry: Record "Reservation Entry";
         ltField: Record Field;
         ltJsonObject, ltJsonObjectReserve, ltResult : JsonObject;
         ltJsonArray, ltJsonArrayReserve : JsonArray;
@@ -3509,8 +3388,7 @@ codeunit 60050 "FK Func"
         ltInstr: InStream;
         ltFileName: Text;
         ValueDecimal: Decimal;
-        ValueInteger, ltLineNo : Integer;
-        TemplateName, BatchName : Code[30];
+        ValueInteger: Integer;
         CR, LF, tab : char;
         CheckFirstLineInt: Integer;
     begin
@@ -3519,7 +3397,7 @@ codeunit 60050 "FK Func"
         ltRecordRef.Open(pTableID);
         ltFieldRef := ltRecordRef.FieldIndex(1);
         ltFieldRef.SetFilter(pDocumentNo);
-        if ltRecordRef.FindFirst() then begin
+        if ltRecordRef.FindFirst() then
             repeat
                 CLEAR(ltJsonObject);
                 APIMappingLine.reset();
@@ -3561,14 +3439,14 @@ codeunit 60050 "FK Func"
                     APIMappingLine.SetRange("Line Type", APIMappingLine."Line Type"::Line);
                     APIMappingLine.SetRange(Include, true);
                     APIMappingLine.SetFilter("Service Name 2", '<>%1', '');
-                    if APIMappingLine.FindFirst() then begin
+                    if APIMappingLine.FindSet() then begin
                         repeat
                             CheckFirstLineInt := CheckFirstLineInt + 1;
                             if CheckFirstLineInt = 1 then
                                 ltJsonObjectReserve.Add(APIMappingLine."Service Name 2", 'Value' + APIMappingLine."Service Name 2")
                             else
                                 ltJsonObjectReserve.Add('$' + APIMappingLine."Service Name 2", 'Value' + APIMappingLine."Service Name 2");
-                        until APIMappingLine.next = 0;
+                        until APIMappingLine.next() = 0;
                         ltJsonArrayReserve.Add(ltJsonObjectReserve);
                     end;
                     ltJsonObject.Add('?shiptodetail', ltJsonArrayReserve);
@@ -3576,7 +3454,6 @@ codeunit 60050 "FK Func"
 
 
             until ltRecordRef.Next() = 0;
-        end;
         ltRecordRef.Close();
         ltResult.Add(pApiName, ltJsonArray);
         ltResult.WriteTo(ltText);
@@ -3602,15 +3479,12 @@ codeunit 60050 "FK Func"
     local procedure SelectJsonTokenText(JsonObject: JsonObject; Path: text): text;
     var
         ltJsonToken: JsonToken;
-        lJObjProduct: JsonObject;
-        lJArrSku: JsonArray;
-        ImageText: Text;
     begin
         if not JsonObject.SelectToken(Path, ltJsonToken) then
             exit('');
-        if ltJsonToken.AsValue.IsNull then
+        if ltJsonToken.AsValue().IsNull then
             exit('');
-        exit(ltJsonToken.asvalue.astext());
+        exit(ltJsonToken.asvalue().astext());
     end;
 
     local procedure SelectJsonTokenInterger(JsonObject: JsonObject; Path: text): Decimal;
@@ -3621,7 +3495,7 @@ codeunit 60050 "FK Func"
     begin
         if not JsonObject.SelectToken(Path, ltJsonToken) then
             exit(0);
-        if ltJsonToken.AsValue.IsNull then
+        if ltJsonToken.AsValue().IsNull then
             exit(0);
         DecimalText := delchr(format(ltJsonToken), '=', '"');
         if DecimalText = '' then

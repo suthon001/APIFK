@@ -321,13 +321,6 @@ page 60055 "FK Good ReceiptNote List"
     var
         DocumentIsPosted: Boolean;
         ReportPrint: codeunit "Test Report-Print";
-        JobQueueActive: Boolean;
-        OpenApprovalEntriesExist: Boolean;
-        CanCancelApprovalForRecord: Boolean;
-        SkipLinesWithoutVAT: Boolean;
-        ReadyToPostQst: Label '%1 out of %2 selected orders are ready for post. \Do you want to continue and post them?';
         OpenPostedPurchaseOrderQst: Label 'The order is posted as number %1 and moved to the Posted Purchase Invoices window.\\Do you want to open the posted invoice?', Comment = '%1 = posted document number';
-        CanRequestApprovalForFlow: Boolean;
-        CanCancelApprovalForFlow: Boolean;
 
 }

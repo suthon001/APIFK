@@ -87,7 +87,8 @@ pageextension 60051 "FK Vendor Card" extends "Vendor Card"
                 PromotedCategory = Process;
                 PromotedIsBig = true;
                 PromotedOnly = true;
-                ApplicationArea = all;
+                ApplicationArea = Basic, Suite;
+                ToolTip = 'Executes the Bc to Intranet action.';
                 trigger OnAction()
                 var
                     FKFunc: Codeunit "FK Func";

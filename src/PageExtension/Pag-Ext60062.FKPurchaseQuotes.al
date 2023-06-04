@@ -15,11 +15,12 @@ pageextension 60062 "FK Purchase Quotes" extends "Purchase Quotes"
             {
                 Caption = 'Purchase Quote';
                 Image = PrintReport;
-                ApplicationArea = all;
+                ApplicationArea = Basic, Suite;
                 Promoted = true;
                 PromotedCategory = report;
                 PromotedIsBig = true;
                 PromotedOnly = true;
+                ToolTip = 'Executes the Purchase Quote action.';
                 trigger OnAction()
                 var
                     PurchaseHeader: Record "Purchase Header";

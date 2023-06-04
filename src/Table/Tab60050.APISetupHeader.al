@@ -14,7 +14,7 @@ table 60050 "API Setup Header"
             DataClassification = CustomerContent;
             trigger OnValidate()
             begin
-                if rec."Page Name" <> xrec."Page Name" then begin
+                if rec."Page Name" <> xrec."Page Name" then
                     case "Page Name" of
                         "Page Name"::Item:
                             begin
@@ -41,7 +41,6 @@ table 60050 "API Setup Header"
                                 rec."Serivce Name" := 'vendorlists';
                             end;
                     end;
-                end;
             end;
         }
         field(2; "Page No."; Integer)
@@ -226,11 +225,11 @@ table 60050 "API Setup Header"
         i := 0;
         if StrPos(InputString, ' ') <> 0 then begin
             OutputString2 := LowerCase(COPYSTR(InputString, 1, StrPos(InputString, ' ')));
-            InputString := COPYSTR(InputString, StrPos(InputString, ' ') + 1);
+            InputString := COPYSTR(COPYSTR(InputString, StrPos(InputString, ' ') + 1), 1, MaxStrLen(InputString));
 
             WHILE STRLEN(InputString) > 0 DO BEGIN
                 i := i + 1;
-                MidString[i] := SplitStrings(InputString, ' ');
+                MidString[i] := COPYSTR(SplitStrings(InputString, ' '), 1, MaxStrLen(MidString[i]));
                 OutputString := OutputString + ' ' + UPPERCASE(COPYSTR(MidString[i], 1, 1)) + LOWERCASE(COPYSTR(MidString[i], 2));
             END;
             exit(OutputString2 + OutputString);
@@ -240,7 +239,7 @@ table 60050 "API Setup Header"
 
     end;
 
-    local procedure SplitStrings(VAR String: Text[50]; Separator: Text[1]) SplitedString: Text[50]
+    local procedure SplitStrings(VAR String: Text[50]; Separator: Text[1]) SplitedString: Text;
     var
         Pos: Integer;
     begin

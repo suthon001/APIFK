@@ -1,0 +1,38 @@
+{
+    "name":"TPP Thailand",
+    "description":"Rules to Ignore",
+    "rules":[
+        {
+            "id":"AA0214",
+            "action" : "Hidden",
+            "justification":"Not right"
+        },
+        {
+            "id":"AA0215",
+            "action" : "Hidden",
+            "justification":"Not right"
+        },
+        {
+            "id":"AA0072",
+            "action" : "Hidden",
+            "justification":"Not right"
+        },{
+            "id":"AA0073",
+            "action" : "Hidden",
+            "justification":"Not right"
+        },{
+            "id":"AA0074",
+            "action" : "Hidden",
+            "justification":"Not right"
+        }
+        ,{
+            "id":"AA0021",
+            "action" : "Hidden",
+            "justification":"Not right"
+        } ,{
+            "id":"AA0217",
+            "action" : "Hidden",
+            "justification":"Not right"
+        }
+    ]
+}

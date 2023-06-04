@@ -15,11 +15,12 @@ pageextension 60063 "FK Purchase Return Order" extends "Purchase Return Order"
             {
                 Caption = 'Purchase Return Order';
                 Image = PrintReport;
-                ApplicationArea = all;
+                ApplicationArea = Basic, Suite;
                 Promoted = true;
                 PromotedCategory = report;
                 PromotedIsBig = true;
                 PromotedOnly = true;
+                ToolTip = 'Executes the Purchase Return Order action.';
                 trigger OnAction()
                 var
                     PurchaseHeader: Record "Purchase Header";

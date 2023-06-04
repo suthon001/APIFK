@@ -1388,14 +1388,12 @@ table 60056 "item buffer"
             Caption = 'Serial No. Filter';
             FieldClass = FlowFilter;
         }
-#pragma warning disable
         field(6515; "Package No. Filter"; Code[50])
         {
             Caption = 'Package No. Filter';
             CaptionClass = '6,3';
             FieldClass = FlowFilter;
         }
-#pragma warning enable
         field(6650; "Qty. on Purch. Return"; Decimal)
         {
             AccessByPermission = TableData "Return Receipt Header" = R;
@@ -1496,14 +1494,7 @@ table 60056 "item buffer"
             Caption = 'Next Counting End Date';
             Editable = false;
         }
-        field(7387; "Unit Group Exists"; Boolean)
-        {
-            CalcFormula = exist("Unit Group" where("Source Id" = field(SystemId),
-                                                "Source Type" = const(Item)));
-            Caption = 'Unit Group Exists';
-            Editable = false;
-            FieldClass = FlowField;
-        }
+
         field(7700; "Identifier Code"; Code[20])
         {
             CalcFormula = Lookup("Item Identifier".Code WHERE("Item No." = FIELD("No.")));

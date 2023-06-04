@@ -13,7 +13,7 @@ page 60053 "FK API Log Entry"
     ModifyAllowed = false;
     Editable = false;
     CardPageId = "FK APi Log Card";
-    DataCaptionExpression = StrSubstNo('%1:%2', rec."Page Name", rec."Document No.");
+    DataCaptionExpression = StrSubstNo(DataCaptionLbl, rec."Page Name", rec."Document No.");
     layout
     {
         area(content)
@@ -70,4 +70,6 @@ page 60053 "FK API Log Entry"
             }
         }
     }
+    var
+        DataCaptionLbl: Label '%1:%2', Locked = true;
 }

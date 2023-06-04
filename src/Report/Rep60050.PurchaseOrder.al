@@ -205,7 +205,7 @@ report 60050 "TPP Purchase Order"
                     DataOFLine += 1;
                     IF DataOFLine >= 16 THEN BEGIN
                         Output := Output + 1;
-                        FixLength := 0;
+
                         DataOFLine := 1;
                     END;
 
@@ -215,6 +215,7 @@ report 60050 "TPP Purchase Order"
             trigger OnAfterGetRecord()
             var
                 PurchLine: Record "Purchase Line";
+                ltAmtLbl: Label '%1 (%2)', Locked = true;
             begin
                 LocalFunction."TPP PurchStatistic"("Document Type".AsInteger(), "No.", TotalAmt, VatText);
                 LocalFunction."TPP GetPurchaseComment"("Document Type".AsInteger(), "No.", CommentLine);
@@ -223,24 +224,22 @@ report 60050 "TPP Purchase Order"
                     VendFax := 'FAX. ' + Vendor."Fax No.";
                 END;
                 if not Purchaser.get("Purchaser Code") then
-                    Purchaser.init;
+                    Purchaser.init();
                 IF NOT PaymentTerm.GET("Payment Terms Code") THEN
-                    PaymentTerm.INIT;
+                    PaymentTerm.INIT();
 
 
                 IF Currency.Get("Currency Code") then;
-                IF "Currency Code" <> '' THEN BEGIN
-                    AmountTh := STRSUBSTNO('%1 (%2)', LocalFunction."TPP NumberEngText"(TotalAmt[5], "Currency Code"), Currency."ISO Code");
-                END
-                ELSE BEGIN
+                IF "Currency Code" <> '' THEN
+                    AmountTh := STRSUBSTNO(ltAmtLbl, LocalFunction."TPP NumberEngText"(TotalAmt[5], "Currency Code"), Currency."ISO Code")
+                ELSE
                     AmountTh := LocalFunction."TPP FormatNoThaiText"(TotalAmt[5]);
-                END;
 
-                PurchLine.RESET;
+                PurchLine.RESET();
                 PurchLine.SETRANGE("Document Type", "Document Type");
                 PurchLine.SETRANGE("Document No.", "No.");
                 PurchLine.SETFILTER("TPP Reference PR No.", '<>%1', '');
-                IF PurchLine.FIND('-') THEN
+                IF PurchLine.FindFirst() THEN
                     RefPRNo := PurchLine."TPP Reference PR No.";
 
 
@@ -258,16 +257,13 @@ report 60050 "TPP Purchase Order"
 
     trigger OnPreReport()
     begin
-        ComInfo.GET;
+        ComInfo.GET();
         ComInfo.CALCFIELDS(Picture);
     end;
 
     var
         ComInfo: Record "Company Information";
         deliveryAddress: Text[250];
-        FixLength: Integer;
-        VatBranchCode: Text[250];
-        NoOfCopies: Integer;
 
         LineNo: Integer;
         DataOFLine: Integer;
@@ -281,17 +277,17 @@ report 60050 "TPP Purchase Order"
         DocVATTxt: Text[50];
 
         TotalAmt: array[100] of Decimal;
-        VatText: Text[250];
+        VatText: Text[30];
         CommentLine: array[100] of text[250];
-        ColumnCurrency: Text[50];
-        Purchaser: Record "Salesperson/Purchaser";
-        RefPRNo: Code[20];
 
-        PurchaseComment: Text;
+        Purchaser: Record "Salesperson/Purchaser";
+        RefPRNo: Code[30];
+
+
         PaymentTerm: Record "Payment Terms";
         LocalFunction: Codeunit "TPP Localized Function";
 
-        AmountTh: Text[200];
+        AmountTh: Text;
 
         DimName1: Text[50];
 
@@ -300,7 +296,7 @@ report 60050 "TPP Purchase Order"
         GLSetup: Record "General Ledger Setup";
         DimValue: Record "Dimension Value";
 
-        PurchLine: Record "Purchase Line";
+
         Currency: Record Currency;
 }
 

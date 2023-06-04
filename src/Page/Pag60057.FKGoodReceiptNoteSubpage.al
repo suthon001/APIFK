@@ -21,7 +21,7 @@ page 60057 "FK Good ReceiptNote Subpage"
                     trigger OnValidate()
                     begin
                         IF xRec."No." <> '' THEN
-                            "TPP RedistributeTotalsOnAfterValidate";
+                            "TPP RedistributeTotalsOnAfterValidate"();
                     end;
 
                 }
@@ -32,7 +32,7 @@ page 60057 "FK Good ReceiptNote Subpage"
                     trigger OnValidate()
                     begin
                         IF xRec."No." <> '' THEN
-                            "TPP RedistributeTotalsOnAfterValidate";
+                            "TPP RedistributeTotalsOnAfterValidate"();
                     end;
 
                 }
@@ -57,7 +57,7 @@ page 60057 "FK Good ReceiptNote Subpage"
                     ToolTip = 'Specifies value of the field.';
                     trigger OnValidate()
                     begin
-                        "TPP RedistributeTotalsOnAfterValidate";
+                        "TPP RedistributeTotalsOnAfterValidate"();
                     end;
                 }
                 field("TPP Unit of Measure Code"; Rec."Unit of Measure Code")
@@ -121,11 +121,13 @@ page 60057 "FK Good ReceiptNote Subpage"
                     {
                         Caption = 'Invoice Discount Amount';
                         ApplicationArea = all;
+                        ToolTip = 'Specifies the total calculated invoice discount amount for the line.';
                     }
                     field("TPP Invoice Disc. Pct."; PurchCalcDiscByType.GetVendInvoiceDiscountPct(Rec))
                     {
                         Caption = 'Invoice Disc. Pct.';
                         ApplicationArea = all;
+                        ToolTip = 'Specifies the value of the Invoice Disc. Pct. field.';
                     }
                 }
                 group("TPP Control19")
@@ -135,16 +137,19 @@ page 60057 "FK Good ReceiptNote Subpage"
                     {
                         Caption = 'Total Amount Excl. VAT';
                         ApplicationArea = all;
+                        ToolTip = 'Specifies the sum of amounts in the Line Amount field on the purchase order lines.';
                     }
                     field("TPP Total VAT Amount"; VATAmount)
                     {
                         Caption = 'Total VAT Amount';
                         ApplicationArea = all;
+                        ToolTip = 'Specifies the value of the Total VAT Amount field.';
                     }
                     field("TPP Total Amount Incl. VAT"; TotalPurchaseLine."Amount Including VAT")
                     {
                         Caption = 'Total Amount Incl. VAT';
                         ApplicationArea = all;
+                        ToolTip = 'Specifies the value of the Total Amount Incl. VAT field.';
                     }
                 }
             }
@@ -158,6 +163,7 @@ page 60057 "FK Good ReceiptNote Subpage"
                     Caption = 'UpdateTotalsMessage';
                     Editable = false;
                     ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the UpdateTotalsMessage field.';
                     trigger OnValidate()
                     begin
                         MESSAGE(ManualUpdateHelpMsg);
@@ -168,6 +174,7 @@ page 60057 "FK Good ReceiptNote Subpage"
                     Caption = 'UpdateTotals';
                     Editable = false;
                     ApplicationArea = all;
+                    ToolTip = 'Specifies the value of the UpdateTotals field.';
                     trigger OnDrillDown()
                     begin
                         DocumentTotals.PurchaseRedistributeInvoiceDiscountAmounts(Rec, VATAmount, TotalPurchaseLine);
@@ -197,9 +204,10 @@ page 60057 "FK Good ReceiptNote Subpage"
                         Caption = 'Event';
                         Image = Event;
                         ApplicationArea = all;
+                        ToolTip = 'Executes the Event action.';
                         trigger OnAction()
                         begin
-                            ItemAvailFormsMgt.ShowItemAvailFromPurchLine(Rec, ItemAvailFormsMgt.ByEvent)
+                            ItemAvailFormsMgt.ShowItemAvailFromPurchLine(Rec, ItemAvailFormsMgt.ByEvent())
                         end;
                     }
                     action("TPP Period")
@@ -207,9 +215,10 @@ page 60057 "FK Good ReceiptNote Subpage"
                         Caption = 'Period';
                         Image = Period;
                         ApplicationArea = all;
+                        ToolTip = 'Executes the Period action.';
                         trigger OnAction()
                         begin
-                            ItemAvailFormsMgt.ShowItemAvailFromPurchLine(Rec, ItemAvailFormsMgt.ByPeriod);
+                            ItemAvailFormsMgt.ShowItemAvailFromPurchLine(Rec, ItemAvailFormsMgt.ByPeriod());
                         end;
                     }
                     action("TPP Variant")
@@ -217,9 +226,10 @@ page 60057 "FK Good ReceiptNote Subpage"
                         Caption = 'Variant';
                         Image = ItemVariant;
                         ApplicationArea = all;
+                        ToolTip = 'Executes the Variant action.';
                         trigger OnAction()
                         begin
-                            ItemAvailFormsMgt.ShowItemAvailFromPurchLine(Rec, ItemAvailFormsMgt.ByVariant);
+                            ItemAvailFormsMgt.ShowItemAvailFromPurchLine(Rec, ItemAvailFormsMgt.ByVariant());
                         end;
                     }
                     action("TPP Location")
@@ -227,6 +237,7 @@ page 60057 "FK Good ReceiptNote Subpage"
                         Caption = 'Location';
                         Image = Warehouse;
                         ApplicationArea = all;
+                        ToolTip = 'Executes the Location action.';
                         trigger OnAction()
                         begin
                             ItemAvailFormsMgt.ShowItemAvailFromPurchLine(Rec, ItemAvailFormsMgt.ByLocation());
@@ -237,6 +248,7 @@ page 60057 "FK Good ReceiptNote Subpage"
                         Caption = 'BOM Level';
                         Image = BOMLevel;
                         ApplicationArea = all;
+                        ToolTip = 'Executes the BOM Level action.';
                         trigger OnAction()
                         begin
                             ItemAvailFormsMgt.ShowItemAvailFromPurchLine(Rec, ItemAvailFormsMgt.ByBOM());
@@ -248,6 +260,7 @@ page 60057 "FK Good ReceiptNote Subpage"
                     Caption = 'Reservation Entries';
                     Image = ReservationLedger;
                     ApplicationArea = all;
+                    ToolTip = 'Executes the Reservation Entries action.';
                     trigger OnAction()
                     begin
                         Rec.ShowReservationEntries(TRUE);
@@ -258,6 +271,7 @@ page 60057 "FK Good ReceiptNote Subpage"
                     Caption = 'Item Tracking Lines';
                     Image = ItemTrackingLines;
                     ApplicationArea = all;
+                    ToolTip = 'Executes the Item Tracking Lines action.';
                     trigger OnAction()
                     begin
                         Rec.OpenItemTrackingLines();
@@ -269,9 +283,10 @@ page 60057 "FK Good ReceiptNote Subpage"
                     Caption = 'Dimensions';
                     ApplicationArea = all;
                     Image = Dimensions;
+                    ToolTip = 'Executes the Dimensions action.';
                     trigger OnAction()
                     begin
-                        Rec.ShowDimensions;
+                        Rec.ShowDimensions();
                     end;
                 }
                 action("TPP Co&mments")
@@ -279,9 +294,10 @@ page 60057 "FK Good ReceiptNote Subpage"
                     Caption = 'Comment';
                     Image = Comment;
                     ApplicationArea = all;
+                    ToolTip = 'Executes the Comment action.';
                     trigger OnAction()
                     begin
-                        Rec.ShowLineComments;
+                        Rec.ShowLineComments();
                     end;
                 }
                 action("TPP ItemChargeAssignment")
@@ -289,21 +305,14 @@ page 60057 "FK Good ReceiptNote Subpage"
                     Caption = 'Item Charge Assignment';
                     ApplicationArea = all;
                     Image = ItemCosts;
+                    ToolTip = 'Executes the Item Charge Assignment action.';
                     trigger OnAction()
                     begin
-                        Rec.ShowItemChargeAssgnt;
+                        Rec.ShowItemChargeAssgnt();
 
                     end;
                 }
-                action("TPP DocumentLineTracking")
-                {
-                    Caption = 'DOcument Line Tracking';
-                    ApplicationArea = all;
-                    trigger OnAction()
-                    begin
-                        //ShowDocumentLineTracking;
-                    end;
-                }
+
                 // action("TPP DeferralSchedule")
                 // {
                 //     Caption = 'Deferral Schedule';
@@ -320,6 +329,7 @@ page 60057 "FK Good ReceiptNote Subpage"
                     Caption = 'Doc. Attch';
                     ApplicationArea = all;
                     Image = Attach;
+                    ToolTip = 'Executes the Doc. Attch action.';
                     trigger OnAction()
                     var
                         DocumentAttachmentDetails: Page "Document Attachment Details";
@@ -327,7 +337,7 @@ page 60057 "FK Good ReceiptNote Subpage"
                     begin
                         RecRef.GETTABLE(Rec);
                         DocumentAttachmentDetails.OpenForRecRef(RecRef);
-                        DocumentAttachmentDetails.RUNMODAL;
+                        DocumentAttachmentDetails.RUNMODAL();
                     end;
                 }
             }
@@ -339,9 +349,10 @@ page 60057 "FK Good ReceiptNote Subpage"
                     Caption = 'Explode BOM';
                     Image = ExplodeBOM;
                     ApplicationArea = all;
+                    ToolTip = 'Executes the Explode BOM action.';
                     trigger OnAction()
                     begin
-                        ExplodeBOM;
+                        ExplodeBOM();
                     end;
                 }
                 action("TPP Insert Ext. Texts")
@@ -349,6 +360,7 @@ page 60057 "FK Good ReceiptNote Subpage"
                     Caption = 'Insert Ext. Texts';
                     Image = Text;
                     ApplicationArea = all;
+                    ToolTip = 'Executes the Insert Ext. Texts action.';
                     trigger OnAction()
                     begin
                         InsertExtendedText(TRUE);
@@ -360,10 +372,11 @@ page 60057 "FK Good ReceiptNote Subpage"
                     ApplicationArea = all;
                     Image = Reserve;
                     Ellipsis = true;
+                    ToolTip = 'Executes the Reserve action.';
                     trigger OnAction()
                     begin
-                        Rec.FIND;
-                        Rec.ShowReservation;
+                        Rec.FIND();
+                        Rec.ShowReservation();
                     end;
                 }
                 action("TPP OrderTracking")
@@ -371,59 +384,19 @@ page 60057 "FK Good ReceiptNote Subpage"
                     Caption = 'Order Tracking';
                     Image = OrderTracking;
                     ApplicationArea = all;
+                    ToolTip = 'Executes the Order Tracking action.';
                     trigger OnAction()
                     begin
-                        ShowTracking;
+                        ShowTracking();
                     end;
                 }
             }
-            group("TPP O&rder")
-            {
-                Caption = 'Order';
-                group("TPP Dr&op Shipment")
-                {
-                    Caption = 'Drop Shipment';
-                    action("TPP Sales &Order")
-                    {
-                        Caption = 'Sales Order';
-                        Image = Document;
-                        ApplicationArea = all;
-                        trigger OnAction()
-                        begin
 
-                        end;
-                    }
-                }
-                group("TPP Speci&al Order")
-                {
-                    Caption = 'Special Order';
-                    action("TPP Speci&al Sales &Order")
-                    {
-                        Caption = 'Sales Order';
-                        Image = Document;
-                        ApplicationArea = all;
-                        trigger OnAction()
-                        begin
-
-                        end;
-                    }
-                }
-                action("TPP BlanketOrder")
-                {
-                    Caption = 'Blanket Oorder';
-                    Image = BlanketOrder;
-                    ApplicationArea = all;
-                    trigger OnAction()
-                    begin
-
-                    end;
-                }
-            }
         }
     }
     trigger OnInit()
     begin
-        Currency.InitRoundingPrecision;
+        Currency.InitRoundingPrecision();
     end;
 
     trigger OnAfterGetCurrRecord()
@@ -433,7 +406,7 @@ page 60057 "FK Good ReceiptNote Subpage"
 
         DocumentTotals.PurchaseUpdateTotalsControls(Rec, TotalPurchaseHeader, TotalPurchaseLine, RefreshMessageEnabled,
           TotalAmountStyle, RefreshMessageText, InvDiscAmountEditable, VATAmount);
-        "TPP UpdateCurrency";
+        "TPP UpdateCurrency"();
         //DekDong 20220617++
 
         DocumentTotals.PurchaseRedistributeInvoiceDiscountAmounts(Rec, VATAmount, TotalPurchaseLine);
@@ -449,7 +422,7 @@ page 60057 "FK Good ReceiptNote Subpage"
         //IF PurchaseHeader.GET(Rec."Document Type", rec."Document No.") THEN;
         DocumentTotals.PurchaseUpdateTotalsControls(Rec, TotalPurchaseHeader, TotalPurchaseLine, RefreshMessageEnabled,
           TotalAmountStyle, RefreshMessageText, InvDiscAmountEditable, VATAmount);
-        "TPP UpdateCurrency";
+        "TPP UpdateCurrency"();
         //TPP.SSI 2022/08/08--
     end;
 
@@ -458,19 +431,19 @@ page 60057 "FK Good ReceiptNote Subpage"
         IF Currency.Code <> TotalPurchaseHeader."Currency Code" THEN
             IF NOT Currency.GET(TotalPurchaseHeader."Currency Code") THEN BEGIN
                 CLEAR(Currency);
-                Currency.InitRoundingPrecision;
+                Currency.InitRoundingPrecision();
             END
 
     end;
 
     local procedure "TPP RedistributeTotalsOnAfterValidate"()
     begin
-        CurrPage.SAVERECORD;
+        CurrPage.SAVERECORD();
 
         PurchaseHeader.GET(Rec."Document Type", rec."Document No.");
         IF DocumentTotals.PurchaseCheckNumberOfLinesLimit(PurchaseHeader) THEN
             DocumentTotals.PurchaseRedistributeInvoiceDiscountAmounts(Rec, VATAmount, TotalPurchaseLine);
-        CurrPage.UPDATE;
+        CurrPage.UPDATE();
     end;
 
     local procedure ExplodeBOM()
@@ -489,17 +462,17 @@ page 60057 "FK Good ReceiptNote Subpage"
         TrackingForm: Page "Order Tracking";
     begin
         TrackingForm.SetPurchLine(Rec);
-        TrackingForm.RUNMODAL;
+        TrackingForm.RUNMODAL();
     end;
 
     local procedure InsertExtendedText(Unconditionally: Boolean)
     begin
         OnBeforeInsertExtendedText(Rec);
         IF TransferExtendedText.PurchCheckIfAnyExtText(Rec, Unconditionally) THEN BEGIN
-            CurrPage.SAVERECORD;
+            CurrPage.SAVERECORD();
             TransferExtendedText.InsertPurchExtText(Rec);
         END;
-        IF TransferExtendedText.MakeUpdate THEN
+        IF TransferExtendedText.MakeUpdate() THEN
             UpdateForm(TRUE);
     end;
 
@@ -512,8 +485,6 @@ page 60057 "FK Good ReceiptNote Subpage"
     end;
 
     local procedure CheckSendLineInvoiceDiscountResetNotification()
-    var
-        IsHandled: Boolean;
     begin
 
 

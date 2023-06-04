@@ -13,7 +13,8 @@ pageextension 60050 "FK API Vendor Lists" extends "Vendor List"
                 Caption = 'Send API';
                 Promoted = true;
                 PromotedCategory = Process;
-                ApplicationArea = basic;
+                ApplicationArea = Basic, Suite;
+                ToolTip = 'Executes the Send API action.';
                 trigger OnAction()
                 var
                     ltVend: Record Vendor;

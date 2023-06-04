@@ -36,6 +36,7 @@ pageextension 60059 "FK Purchase Order" extends "Purchase Order"
                 PromotedCategory = report;
                 PromotedIsBig = true;
                 PromotedOnly = true;
+                ToolTip = 'Executes the Purchase Order action.';
                 trigger OnAction()
                 var
                     PurchaseHeader: Record "Purchase Header";

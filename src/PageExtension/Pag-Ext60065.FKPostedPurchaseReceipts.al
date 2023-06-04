@@ -15,11 +15,12 @@ pageextension 60065 "FK Posted Purchase Receipts" extends "Posted Purchase Recei
             {
                 Caption = 'Purchase Receipt';
                 Image = PrintReport;
-                ApplicationArea = all;
+                ApplicationArea = Basic, Suite;
                 Promoted = true;
                 PromotedCategory = report;
                 PromotedIsBig = true;
                 PromotedOnly = true;
+                ToolTip = 'Executes the Purchase Receipt action.';
                 trigger OnAction()
                 var
                     PurchaseHeader: Record "Purch. Rcpt. Header";

@@ -9,6 +9,7 @@ page 60056 "FK Good ReceiptNote Card"
     SourceTable = "Purchase Header";
     InsertAllowed = false;
     DeleteAllowed = false;
+    UsageCategory = None;
     SourceTableView = sorting("Document Type", "No.") where("Document Type" = filter(Order), Status = filter(Released | "Pending Prepayment"));
     layout
     {
@@ -398,6 +399,7 @@ page 60056 "FK Good ReceiptNote Card"
                 field("TPP Entry Point"; Rec."Entry Point")
                 {
                     ApplicationArea = all;
+                    ToolTip = 'Specifies the code of the port of entry where the items pass into your country/region, for reporting to Intrastat.';
                 }
                 field("TPP Area"; Rec.Area)
                 {
@@ -485,7 +487,7 @@ page 60056 "FK Good ReceiptNote Card"
                 Caption = 'Purchase Order';
                 Image = PrintReport;
                 ApplicationArea = all;
-
+                ToolTip = 'Executes the Purchase Order action.';
                 trigger OnAction()
                 var
                     PurchaseHeader: Record "Purchase Header";
@@ -657,9 +659,7 @@ page 60056 "FK Good ReceiptNote Card"
                     Image = ReceiptLines;
                     RunObject = Page "Whse. Receipt Lines";
                     RunPageLink = "Source Type" = CONST(39),
-#pragma warning disable
                                   "Source Subtype" = FIELD("Document Type"),
-#pragma warning restore
                                   "Source No." = FIELD("No.");
                     RunPageView = SORTING("Source Type", "Source Subtype", "Source No.", "Source Line No.");
                     ToolTip = 'View ongoing warehouse receipts for the document, in advanced warehouse configurations.';
@@ -1232,12 +1232,6 @@ page 60056 "FK Good ReceiptNote Card"
         end;
     end;
 
-    local procedure ShowPreview()
-    var
-        PurchPostYesNo: Codeunit "Purch.-Post (Yes/No)";
-    begin
-        PurchPostYesNo.Preview(Rec);
-    end;
 
     local procedure ShowPrepmtCrMemoPreview()
     var
@@ -1267,14 +1261,6 @@ page 60056 "FK Good ReceiptNote Card"
         ArchiveManagement: Codeunit ArchiveManagement;
         DocumentIsPosted: Boolean;
         ReportPrint: codeunit "Test Report-Print";
-        JobQueueActive: Boolean;
-
-        CanCancelApprovalForRecord: Boolean;
-        OpenApprovalEntriesExistForCurrUser: Boolean;
-        OpenApprovalEntriesExist: Boolean;
-        SkipLinesWithoutVAT: Boolean;
-        ReadyToPostQst: Label '%1 out of %2 selected orders are ready for post. \Do you want to continue and post them?';
         OpenPostedPurchaseOrderQst: Label 'The order is posted as number %1 and moved to the Posted Purchase Invoices window.\\Do you want to open the posted invoice?', Comment = '%1 = posted document number';
-        CanRequestApprovalForFlow: Boolean;
-        CanCancelApprovalForFlow: Boolean;
+
 }

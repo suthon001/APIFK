@@ -15,11 +15,12 @@ pageextension 60061 "FK Purchase Order List" extends "Purchase Order List"
             {
                 Caption = 'Purchase Order';
                 Image = PrintReport;
-                ApplicationArea = all;
+                ApplicationArea = Basic, Suite;
                 Promoted = true;
                 PromotedCategory = report;
                 PromotedIsBig = true;
                 PromotedOnly = true;
+                ToolTip = 'Executes the Purchase Order action.';
                 trigger OnAction()
                 var
                     PurchaseHeader: Record "Purchase Header";

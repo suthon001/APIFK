@@ -7,6 +7,7 @@ page 60051 "FK API Mapping Card"
     PageType = Document;
     SourceTable = "API Setup Header";
     RefreshOnActivate = true;
+    UsageCategory = None;
     layout
     {
         area(Content)
@@ -91,9 +92,9 @@ page 60051 "FK API Mapping Card"
                 Promoted = true;
                 PromotedCategory = Process;
                 ApplicationArea = Basic, Suite;
+                ToolTip = 'Executes the Generate Detail action.';
                 trigger OnAction()
-                var
-                    FKFunc: Codeunit "FK Func";
+
                 begin
                     rec.GenerateDetail();
                     CurrPage.Update();
@@ -106,29 +107,28 @@ page 60051 "FK API Mapping Card"
                 Promoted = true;
                 PromotedCategory = Process;
                 ApplicationArea = Basic, Suite;
+                ToolTip = 'Executes the Export Ex. Json String action.';
                 trigger OnAction()
                 var
                     FKFunc: Codeunit "FK Func";
-                    DocumentType: Enum "Sales Document Type";
+
                 begin
                     if rec.apisetuplineexists() then
                         Message('please generate detail befor export')
-                    else begin
+                    else
                         // if rec."Sub Table ID" = 0 then
                         FKFunc.ExportJsonFormat(rec."Page No.", rec."Table ID", rec."Serivce Name", rec."Page Name", documentNoFilter, false, false);
-                        // else begin
-                        // if rec."Page Name" = rec."Page Name"::"Purchase Order" then
-                        //     DocumentType := DocumentType::Order;
-                        // if rec."Page Name" = rec."Page Name"::"Purchase Return Order" then
-                        //     DocumentType := DocumentType::"Return Order";
-                        // if rec."Page Name" = rec."Page Name"::"Sales Invoice" then
-                        //     DocumentType := DocumentType::Invoice;
-                        // if rec."Page Name" = rec."Page Name"::"Sales Credit Memo" then
-                        //     DocumentType := DocumentType::"Credit Memo";
-
-                        // FKFunc.ExportJsonFormatMultitable(rec."Page No.", rec."Sub Page No.", DocumentType, rec."Serivce Name", rec."Page Name", rec."Table ID", rec."Sub Table ID", documentNoFilter, false);
-                        //  end;
-                    end;
+                    // else begin
+                    // if rec."Page Name" = rec."Page Name"::"Purchase Order" then
+                    //     DocumentType := DocumentType::Order;
+                    // if rec."Page Name" = rec."Page Name"::"Purchase Return Order" then
+                    //     DocumentType := DocumentType::"Return Order";
+                    // if rec."Page Name" = rec."Page Name"::"Sales Invoice" then
+                    //     DocumentType := DocumentType::Invoice;
+                    // if rec."Page Name" = rec."Page Name"::"Sales Credit Memo" then
+                    //     DocumentType := DocumentType::"Credit Memo";
+                    // FKFunc.ExportJsonFormatMultitable(rec."Page No.", rec."Sub Page No.", DocumentType, rec."Serivce Name", rec."Page Name", rec."Table ID", rec."Sub Table ID", documentNoFilter, false);
+                    //  end;
                 end;
             }
 
@@ -140,6 +140,7 @@ page 60051 "FK API Mapping Card"
                 Promoted = true;
                 PromotedCategory = Process;
                 ApplicationArea = Basic, Suite;
+                ToolTip = 'Executes the Export Ship-to Address action.';
                 trigger OnAction()
                 var
                     FKFunc: Codeunit "FK Func";
@@ -159,6 +160,7 @@ page 60051 "FK API Mapping Card"
                 Image = Log;
                 Promoted = true;
                 PromotedCategory = Process;
+                ToolTip = 'Executes the Log Entries action.';
                 trigger OnAction()
                 var
                     FKLogEntry: Record "FK API Log";
@@ -210,7 +212,7 @@ page 60051 "FK API Mapping Card"
     end;
 
     var
-        TESTSEND: BigText;
+
         documentNoFilter: Text;
         visableShiptoAddress: Boolean;
 

@@ -60,8 +60,6 @@ tableextension 60050 "FK API Vendor" extends Vendor
             end;
 
             trigger OnValidate()
-            var
-                IsHandled: Boolean;
             begin
 
                 PostCode.ValidateCity("Billing City", "Billing Post Code", County, "Billing Region Code", (CurrFieldNo <> 0) and GuiAllowed);
@@ -90,8 +88,6 @@ tableextension 60050 "FK API Vendor" extends Vendor
             end;
 
             trigger OnValidate()
-            var
-                IsHandled: Boolean;
             begin
 
                 PostCode.ValidatePostCode("Billing City", "Billing Post Code", County, "Billing Region Code", (CurrFieldNo <> 0) and GuiAllowed);

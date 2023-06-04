@@ -168,7 +168,7 @@ report 60052 "TPP Purchase Receipt"
                         LineNo += 1;
                     IF DataOFLine >= 20 THEN BEGIN
                         Output := Output + 1;
-                        FixLength := 0;
+
                         DataOFLine := 0;
                     END;
                     DataOFLine += 1;
@@ -188,22 +188,22 @@ report 60052 "TPP Purchase Receipt"
                     VendFax := 'โทรสาร ' + Vendor."Fax No.";
                 END;
                 IF NOT Purchaser.GET("Purchaser Code") THEN
-                    Purchaser.INIT;
+                    Purchaser.INIT();
 
 
                 IF NOT PaymentTerm.GET("Payment Terms Code") THEN
-                    PaymentTerm.INIT;
+                    PaymentTerm.INIT();
 
                 LocalFunction."TPP GetPurchaseComment"(6, "No.", PurchaseComment);
 
-                //tpp.rozn.20200303++
+
                 Clear(VendorInvNo);
                 PurchaseInvHeader.Reset();
                 PurchaseInvHeader.SetRange("No.", "Purch. Rcpt. Header"."No.");
                 PurchaseInvHeader.SetRange("No.");
                 if PurchaseInvHeader.FindFirst() then
                     VendorInvNo := PurchaseInvHeader."Vendor Invoice No.";
-                //tpp.rozn.20200303--
+
                 InserttoTempLine("No.");
             end;
         }
@@ -213,12 +213,12 @@ report 60052 "TPP Purchase Receipt"
 
     trigger OnPreReport()
     begin
-        ComInfo.GET;
+        ComInfo.GET();
         ComInfo.CALCFIELDS(Picture);
 
     end;
 
-    local procedure InserttoTempLine(pDocumentNo: code[30])
+    local procedure InserttoTempLine(pDocumentNo: code[20])
     var
         receiptline: Record "Purch. Rcpt. Line";
         ltItemLedger: Record "Item Ledger Entry";
@@ -229,7 +229,7 @@ report 60052 "TPP Purchase Receipt"
         receiptline.SetRange("Document No.", pDocumentNo);
         if receiptline.FindSet() then
             repeat
-                if not receiptline.Correction then begin
+                if not receiptline.Correction then
                     if (receiptline.Type <> receiptline.Type::" ") AND (receiptline.Quantity <> 0) then begin
                         TotalLot := '';
                         ltLineNo := ltLineNo + 1;
@@ -262,7 +262,7 @@ report 60052 "TPP Purchase Receipt"
                                 "Purch. Rcpt. Line".Insert();
                             end;
                         end;
-                    end else begin
+                    end else
                         if (receiptline.Type = receiptline.Type::" ") AND (receiptline.Description <> '') then begin
                             ltLineNo := ltLineNo + 1;
                             "Purch. Rcpt. Line".Init();
@@ -270,9 +270,7 @@ report 60052 "TPP Purchase Receipt"
                             "Purch. Rcpt. Line"."Document No." := pDocumentNo;
                             "Purch. Rcpt. Line"."Line No." := ltLineNo;
                             "Purch. Rcpt. Line".Insert();
-                        end
-                    end;
-                end;
+                        end;
 
             until receiptline.Next() = 0;
     end;
@@ -280,8 +278,6 @@ report 60052 "TPP Purchase Receipt"
     var
         ComInfo: Record "Company Information";
         Vendor: Record Vendor;
-        FixLength: Integer;
-        NoOfCopies: Integer;
 
         LineNo: Integer;
         DataOFLine: Integer;
@@ -302,19 +298,11 @@ report 60052 "TPP Purchase Receipt"
         PaymentTerm: Record "Payment Terms";
         LocalFunction: Codeunit "TPP Localized Function";
 
-        AmountTh: Text[200];
+        AmountTh: Text;
 
-
-        DimName1: Text[50];
-
-        DimName2: Text[50];
-        SumQty: Decimal;
-        PurhLine: Record "Purch. Rcpt. Line";
-
-        //tpp.rozn.20200303++
         PurchaseInvHeader: Record "Purch. Inv. Header";
         VendorInvNo: Text;
-    //tpp.rozn.20200303--
+
 }
 
 

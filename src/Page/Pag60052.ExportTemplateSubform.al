@@ -69,8 +69,9 @@ page 60052 "Export Template Subform"
             action(SetIncluded)
             {
                 Caption = 'Set Included';
-                ApplicationArea = basic;
+                ApplicationArea = Basic, Suite;
                 Image = Approve;
+                ToolTip = 'Executes the Set Included action.';
                 trigger OnAction()
                 var
                     apiline: Record "API Setup Line";
@@ -87,8 +88,9 @@ page 60052 "Export Template Subform"
             action(ClearIncluded)
             {
                 Caption = 'Clear Included';
-                ApplicationArea = basic;
+                ApplicationArea = Basic, Suite;
                 Image = Reject;
+                ToolTip = 'Executes the Clear Included action.';
                 trigger OnAction()
                 var
                     apiline: Record "API Setup Line";
