@@ -241,9 +241,13 @@ codeunit 60050 "FK Func"
             repeat
                 ltFieldRef := ltRecordRef.Field(pagecontrol.FieldNo);
                 ltFieldRefToTable := ltRecordRefToTable.Field(pagecontrol.FieldNo);
-                if (pTableID = Database::Item) and (pagecontrol.FieldNo in [8, 5425, 5426]) then
-                    BaseUnit.GET(format(ltFieldRef.Value));
-                ltFieldRefToTable.Validate(ltFieldRef.Value);
+                if (pTableID = Database::Item) and (pagecontrol.FieldNo in [8, 5425, 5426]) then begin
+                    if format(ltFieldRef.Value) <> '' then begin
+                        BaseUnit.GET(format(ltFieldRef.Value));
+                        ltFieldRefToTable.Validate(ltFieldRef.Value);
+                    end;
+                end else
+                    ltFieldRefToTable.Validate(ltFieldRef.Value);
             until pagecontrol.next() = 0;
             ltRecordRefToTable.Insert(true);
             ltRecordRefToTable.Close();
