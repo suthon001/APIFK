@@ -1,18 +1,16 @@
-page 60066 "FK Get Item API"
+page 60070 "FK Update Item API"
 {
     APIGroup = 'bc';
     APIPublisher = 'freshket';
     APIVersion = 'v1.0';
     ApplicationArea = All;
-    Caption = 'Item API';
+    Caption = 'Update Item API';
     DelayedInsert = true;
-    EntityName = 'item';
-    EntitySetName = 'items';
+    EntityName = 'updateitem';
+    EntitySetName = 'updateitems';
     PageType = API;
-    SourceTable = "item";
-    InsertAllowed = false;
+    SourceTable = "item buffer";
     DeleteAllowed = false;
-       ModifyAllowed = false;
     ODataKeyFields = "No.";
     layout
     {
@@ -75,4 +73,10 @@ page 60066 "FK Get Item API"
             }
         }
     }
+    trigger OnInsertRecord(BelowxRec: Boolean): Boolean
+    var
+        FKFunc: Codeunit "FK Func";
+    begin
+        FKFunc.APITempToTable(Database::item, page::"FK Item API", Rec, rec."No.", 1, 'ITEM');
+    end;
 }

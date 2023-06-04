@@ -5983,6 +5983,376 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FK Ship to Address API - Control vatRegistrationNo - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Page 3291412052 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Update Customer API</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Customer API - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3291412052 - Control 1762530770 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Address</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Customer API - Control address - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3291412052 - Control 1593193288 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Address 2</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Customer API - Control address2 - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3291412052 - Control 2754366897 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>City</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Customer API - Control city - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3291412052 - Control 4201047420 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Contact</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Customer API - Control contact - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3291412052 - Control 639513079 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Country/Region Code</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Customer API - Control countryRegionCode - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3291412052 - Control 3007705154 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Credit Limit (LCY)</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Customer API - Control creditLimitLCY - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3291412052 - Control 1808640270 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Currency Code</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Customer API - Control currencyCode - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3291412052 - Control 3020568349 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Customer Posting Group</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Customer API - Control customerPostingGroup - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3291412052 - Control 2977059376 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Email</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Customer API - Control eMail - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3291412052 - Control 94388817 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Gen. Bus. Posting Group</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Customer API - Control genBusPostingGroup - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3291412052 - Control 3009786607 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Mobile Phone No.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Customer API - Control mobilePhoneNo - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3291412052 - Control 3558812865 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Name</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Customer API - Control name - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3291412052 - Control 3591622255 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Name 2</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Customer API - Control name2 - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3291412052 - Control 3179096107 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>No.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Customer API - Control no - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3291412052 - Control 3493223734 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Payment Terms Code</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Customer API - Control paymentTermsCode - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3291412052 - Control 2359186199 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Phone No.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Customer API - Control phoneNo - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3291412052 - Control 2213755927 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Phone No.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Customer API - Control postCode - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3291412052 - Control 1892977100 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>VAT Bus. Posting Group</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Customer API - Control vatBusPostingGroup - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3291412052 - Control 42261909 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>VAT Registration No.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Customer API - Control vatRegistrationNo - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2290975803 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Update Item API</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Item API - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2290975803 - Control 2571795694 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Base Unit of Measure</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Item API - Control baseUnitOfMeasure - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2290975803 - Control 4232699882 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Description</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Item API - Control description - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2290975803 - Control 3639935038 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Expiration Calculation</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Item API - Control expirationCalculation - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2290975803 - Control 2078902558 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Gen. Prod. Posting Group</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Item API - Control genProdPostingGroup - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2290975803 - Control 953500447 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Inventory Posting Group</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Item API - Control inventoryPostingGroup - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2290975803 - Control 1024955636 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item Category Code</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Item API - Control itemCategoryCode - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2290975803 - Control 174124913 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item Tracking Code</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Item API - Control itemTrackingCode - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2290975803 - Control 3179096107 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>No.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Item API - Control no - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2290975803 - Control 2527347509 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Purch. Unit of Measure</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Item API - Control purchUnitOfMeasure - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2290975803 - Control 1183875681 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Sales Unit of Measure</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Item API - Control salesUnitOfMeasure - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2290975803 - Control 1267924332 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Search Description</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Item API - Control searchDescription - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2290975803 - Control 3175374588 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Type</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Item API - Control type - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2290975803 - Control 51237121 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>VAT Bus. Posting Gr. (Price)</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Item API - Control vatBusPostingGrPrice - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3539729845 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Update Ship To Address API</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Ship to Address API - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3539729845 - Control 1762530770 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Address</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Ship to Address API - Control address - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3539729845 - Control 1593193288 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Address 2</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Ship to Address API - Control address2 - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3539729845 - Control 2754366897 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>City</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Ship to Address API - Control city - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3539729845 - Control 707985127 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Code</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Ship to Address API - Control code - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3539729845 - Control 639513079 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Country/Region Code</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Ship to Address API - Control countryRegionCode - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3539729845 - Control 1108861191 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Customer No.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Ship to Address API - Control customerNo - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3539729845 - Control 2977059376 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Email</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Ship to Address API - Control eMail - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3539729845 - Control 3819638266 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Fax No.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Ship to Address API - Control faxNo - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3539729845 - Control 3558812865 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Name</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Ship to Address API - Control name - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3539729845 - Control 2359186199 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Phone No.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Ship to Address API - Control phoneNo - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3539729845 - Control 2213755927 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Post Code</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Ship to Address API - Control postCode - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 3539729845 - Control 42261909 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Vat Registration No.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Ship to Address API - Control vatRegistrationNo - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2172955884 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Vendor API</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Vendor API - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2172955884 - Control 1762530770 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Address</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Vendor API - Control address - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2172955884 - Control 1593193288 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Address 2</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Vendor API - Control address2 - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2172955884 - Control 2308186103 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Billing Address</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Vendor API - Control billingAddress - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2172955884 - Control 1081822681 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Billing Address 2</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Vendor API - Control billingAddress2 - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2172955884 - Control 738136208 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Billing City</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Vendor API - Control billingCity - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2172955884 - Control 1335220074 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Billing Post Code</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Vendor API - Control billingPostCode - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2172955884 - Control 2223450802 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Billing Country/Region Code</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Vendor API - Control billingRegionCode - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2172955884 - Control 2754366897 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>City</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Vendor API - Control city - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2172955884 - Control 3434459713 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Company Type</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Vendor API - Control companyType - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2172955884 - Control 639513079 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Country/Region Code</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Vendor API - Control countryRegionCode - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2172955884 - Control 94388817 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Gen. Bus. Posting Group</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Vendor API - Control genBusPostingGroup - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2172955884 - Control 3009786607 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Mobile Phone No.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Vendor API - Control mobilePhoneNo - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2172955884 - Control 3558812865 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Name</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Vendor API - Control name - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2172955884 - Control 3591622255 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Name 2</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Vendor API - Control name2 - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2172955884 - Control 3179096107 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>No.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Vendor API - Control no - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2172955884 - Control 2359186199 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Phone No.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Vendor API - Control phoneNo - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2172955884 - Control 2213755927 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Post Code</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Vendor API - Control postCode - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2172955884 - Control 950411123 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Search Name</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Vendor API - Control searchName - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2172955884 - Control 1028127937 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Supplier Eng Name</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Vendor API - Control supplierEngName - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2172955884 - Control 33021082 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>User_Name</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Vendor API - Control userName - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2172955884 - Control 1892977100 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>VAT Bus. Posting Group</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Vendor API - Control vatBusPostingGroup - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2172955884 - Control 42261909 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>VAT Registration No.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Vendor API - Control vatRegistrationNo - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2172955884 - Control 2221697866 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>VAT registration supplier</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Vendor API - Control vatRegistrationSupplier - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2172955884 - Control 1573094691 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Vendor Direct</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Vendor API - Control vendorDirect - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2172955884 - Control 1807047486 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Vendor No. Intranet</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Vendor API - Control vendorNoIntranet - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2172955884 - Control 1061200261 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Vendor Posting Group</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Vendor API - Control vendorPostingGroup - Property Caption</note>
+        </trans-unit>
         <trans-unit id="Page 2060396115 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Vendor API</source>
           <note from="Developer" annotates="general" priority="2"></note>

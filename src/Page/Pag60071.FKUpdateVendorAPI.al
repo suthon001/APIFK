@@ -1,4 +1,4 @@
-page 60067 "FK Get Vendor API"
+page 60071 "FK Update Vendor API"
 {
     APIGroup = 'bc';
     APIPublisher = 'freshket';
@@ -6,13 +6,11 @@ page 60067 "FK Get Vendor API"
     ApplicationArea = All;
     Caption = 'Vendor API';
     DelayedInsert = true;
-    EntityName = 'vendor';
-    EntitySetName = 'vendors';
+    EntityName = 'updatevendor';
+    EntitySetName = 'updatevendors';
     PageType = API;
-    SourceTable = "Vendor";
-    InsertAllowed = false;
+    SourceTable = "Vendor Buffer";
     DeleteAllowed = false;
-    ModifyAllowed = false;
     ODataKeyFields = "No.";
     layout
     {
@@ -128,4 +126,10 @@ page 60067 "FK Get Vendor API"
             }
         }
     }
+    trigger OnInsertRecord(BelowxRec: Boolean): Boolean
+    var
+        FKFunc: Codeunit "FK Func";
+    begin
+        FKFunc.APITempToTable(Database::vendor, page::"FK Vendor API", Rec, rec."No.", 1, 'VENDOR');
+    end;
 }

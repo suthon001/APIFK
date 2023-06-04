@@ -1,18 +1,16 @@
-page 60064 "FK Get Customer API"
+page 60068 "FK Update Customer API"
 {
     APIGroup = 'bc';
     APIPublisher = 'freshket';
     APIVersion = 'v1.0';
     ApplicationArea = All;
-    Caption = 'Customer API';
+    Caption = 'Update Customer API';
     DelayedInsert = true;
-    EntityName = 'customer';
-    EntitySetName = 'customers';
+    EntityName = 'updatecustomer';
+    EntitySetName = 'updatecustomers';
     PageType = API;
-    SourceTable = Customer;
-    InsertAllowed = false;
+    SourceTable = "Customer Buffer";
     DeleteAllowed = false;
-    ModifyAllowed = false;
     ODataKeyFields = "No.";
     layout
     {
@@ -99,4 +97,10 @@ page 60064 "FK Get Customer API"
             }
         }
     }
+    trigger OnInsertRecord(BelowxRec: Boolean): Boolean
+    var
+        FKFunc: Codeunit "FK Func";
+    begin
+        FKFunc.APITempToTable(Database::customer, page::"FK Update Customer API", Rec, rec."No.", 1, 'CUSTOMER');
+    end;
 }

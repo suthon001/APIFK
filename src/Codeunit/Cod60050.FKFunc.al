@@ -312,6 +312,7 @@ codeunit 60050 "FK Func"
         ltVendor: Record Vendor;
         ltCustomer: Record Customer;
         ltShiptoAddress: Record "Ship-to Address";
+        ltField: Record Field;
         ltCust, ltCode : code[20];
     begin
         ltRecordRef.GetTable(pVariant);
@@ -355,10 +356,14 @@ codeunit 60050 "FK Func"
             pagecontrol.SetFilter(FieldNo, '<>%1', 0);
             if pagecontrol.FindSet() then begin
                 repeat
-                    ltFieldRef := ltRecordRef.Field(pagecontrol.FieldNo);
-                    ltFieldRefToTable := ltRecordRefToTable.Field(pagecontrol.FieldNo);
-                    if format(ltFieldRef.Value) <> '' then
-                        ltFieldRefToTable.Validate(ltFieldRef.Value);
+
+                    if ltField.GET(pTableID, pagecontrol.FieldNo) then
+                        if not ltField.IsPartOfPrimaryKey then begin
+                            ltFieldRef := ltRecordRef.Field(pagecontrol.FieldNo);
+                            ltFieldRefToTable := ltRecordRefToTable.Field(pagecontrol.FieldNo);
+                            if format(ltFieldRef.Value) <> '' then
+                                ltFieldRefToTable.Validate(ltFieldRef.Value);
+                        end;
                 until pagecontrol.next() = 0;
                 ltRecordRefToTable.Modify();
                 ltRecordRefToTable.Close();

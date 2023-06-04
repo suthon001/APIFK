@@ -1,18 +1,16 @@
-page 60065 "FK Get Ship to Address API"
+page 60069 "FK Update Ship to Address API"
 {
     APIGroup = 'bc';
     APIPublisher = 'freshket';
     APIVersion = 'v1.0';
     ApplicationArea = All;
-    Caption = 'Ship To Address API';
+    Caption = 'Update Ship To Address API';
     DelayedInsert = true;
-    EntityName = 'shiptodetail';
-    EntitySetName = 'shiptoaddress';
+    EntityName = 'updateshiptodetail';
+    EntitySetName = 'updateshiptoaddress';
     PageType = API;
-    SourceTable = "Ship-to Address";
-    InsertAllowed = false;
+    SourceTable = "Ship-to Address Buffer";
     DeleteAllowed = false;
-    ModifyAllowed = false;
     ODataKeyFields = "Customer No.", Code;
     layout
     {
@@ -71,4 +69,10 @@ page 60065 "FK Get Ship to Address API"
             }
         }
     }
+    trigger OnInsertRecord(BelowxRec: Boolean): Boolean
+    var
+        FKFunc: Codeunit "FK Func";
+    begin
+        FKFunc.APITempToTable(Database::"Ship-to Address", page::"FK Ship to Address API", Rec, rec."Customer No." + ' : ' + rec.Code, 1, 'SHIP TO ADDRESS');
+    end;
 }
