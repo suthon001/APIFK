@@ -7,6 +7,7 @@ report 60050 "TPP Purchase Order"
     RDLCLayout = './LayoutReport/PurchaseOrder.rdl';
     Caption = 'Purcahse Order';
     PreviewMode = PrintLayout;
+    UsageCategory = None;
 
     dataset
     {

@@ -248,7 +248,7 @@ table 60050 "API Setup Header"
         if Pos > 0 then begin //Whether there is a separator
             SplitedString := COPYSTR(String, 1, Pos - 1);//Copy the string before the separator
             if Pos + 1 <= STRLEN(String) then //Is it all
-                String := COPYSTR(String, Pos + 1)//Copy the string after the separator
+                String := COPYSTR(COPYSTR(String, Pos + 1), 1, 50)//Copy the string after the separator
             else
                 Clear(String);
         end else begin

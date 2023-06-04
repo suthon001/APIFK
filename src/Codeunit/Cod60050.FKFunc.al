@@ -3,71 +3,85 @@
 /// </summary>
 codeunit 60050 "FK Func"
 {
-    procedure BCToFreshKetIntregation(pVendor: Record Vendor; pManual: Boolean)
+
+    procedure BCToFreshKetIntregationByJob()
     var
-        FreshketIntregation: Record "Freshket Intregation Setup";
-        ltJsonObject: JsonObject;
-        ltVendorNoIntranet: Integer;
-        beforsendMsg: Label 'The record no. %1 already send to intranet', Locked = true;
         ltVendor: Record Vendor;
+
     begin
-        CLEAR(ltJsonObject);
         FreshketIntregation.GET();
         FreshketIntregation.TestField("FK URL");
         FreshketIntregation.TestField("FK UserName");
         FreshketIntregation.TestField("FK Password");
 
+        ltVendor.reset();
+        ltVendor.SetRange("Vendor Direct", true);
+        ltVendor.SetRange("BC To INTRANET", false);
+        if ltVendor.FindSet() then
+            repeat
+                BCToFreshKetIntregation(ltVendor, false);
+            until ltVendor.Next() = 0;
+    end;
+
+    procedure BCToFreshKetIntregation(pVendor: Record Vendor; pManual: Boolean)
+    var
+        ltJsonObject: JsonObject;
+        ltVendorNoIntranet: Integer;
+        beforsendMsg: Label 'The record no. %1 already send to intranet', Locked = true;
+    begin
+        CLEAR(ltJsonObject);
         if pManual then begin
-            ltVendor.GET(pVendor."No.");
-            ltVendor.TestField("Vendor Direct", true);
-            if ltVendor."BC To INTRANET" then begin
-                message(beforsendMsg, ltVendor."No.");
+            FreshketIntregation.GET();
+            FreshketIntregation.TestField("FK URL");
+            FreshketIntregation.TestField("FK UserName");
+            FreshketIntregation.TestField("FK Password");
+            pVendor.TestField("Vendor Direct", true);
+            if pVendor."BC To INTRANET" then begin
+                message(beforsendMsg, pVendor."No.");
                 exit;
             end;
         end;
 
 
-        if Evaluate(ltVendorNoIntranet, ltVendor."Vendor No. Intranet") then;
+        if Evaluate(ltVendorNoIntranet, pVendor."Vendor No. Intranet") then;
 
-        ltJsonObject.Add('no', ltVendor."No.");
-        ltJsonObject.Add('name', ltVendor.Name);
-        ltJsonObject.Add('name2', ltVendor."Name 2");
-        ltJsonObject.Add('supplierengname', ltVendor."Supplier Eng Name");
-        ltJsonObject.Add('searchname', ltVendor."Search Name");
+        ltJsonObject.Add('no', pVendor."No.");
+        ltJsonObject.Add('name', pVendor.Name);
+        ltJsonObject.Add('name2', pVendor."Name 2");
+        ltJsonObject.Add('supplierengname', pVendor."Supplier Eng Name");
+        ltJsonObject.Add('searchname', pVendor."Search Name");
         ltJsonObject.Add('vendornointranet', ltVendorNoIntranet);
-        ltJsonObject.Add('address', ltVendor.Address);
-        ltJsonObject.Add('address2', ltVendor."Address 2");
-        ltJsonObject.Add('city', ltVendor.City);
-        ltJsonObject.Add('postcode', ltVendor."Post Code");
-        ltJsonObject.Add('country/regioncode', ltVendor."Country/Region Code");
-        ltJsonObject.Add('billingaddress1', ltVendor."Billing Address");
-        ltJsonObject.Add('billingaddress2', ltVendor."Billing Address 2");
-        ltJsonObject.Add('billingcity', ltVendor."Billing City");
-        ltJsonObject.Add('billingpostcode', ltVendor."Billing Post Code");
-        ltJsonObject.Add('billingcountrycode', ltVendor."Billing Region Code");
-        ltJsonObject.Add('phoneno', ltVendor."Phone No.");
-        ltJsonObject.Add('mobilephoneno', ltVendor."Mobile Phone No.");
-        ltJsonObject.Add('username', ltVendor.User_Name);
-        ltJsonObject.Add('vatregistrationno', ltVendor."VAT Registration No.");
-        ltJsonObject.Add('currencycode', ltVendor."Currency Code");
-        ltJsonObject.Add('contactname', ltVendor.Contact);
-        if ltVendor."VAT registration supplier" then
+        ltJsonObject.Add('address', pVendor.Address);
+        ltJsonObject.Add('address2', pVendor."Address 2");
+        ltJsonObject.Add('city', pVendor.City);
+        ltJsonObject.Add('postcode', pVendor."Post Code");
+        ltJsonObject.Add('country/regioncode', pVendor."Country/Region Code");
+        ltJsonObject.Add('billingaddress1', pVendor."Billing Address");
+        ltJsonObject.Add('billingaddress2', pVendor."Billing Address 2");
+        ltJsonObject.Add('billingcity', pVendor."Billing City");
+        ltJsonObject.Add('billingpostcode', pVendor."Billing Post Code");
+        ltJsonObject.Add('billingcountrycode', pVendor."Billing Region Code");
+        ltJsonObject.Add('phoneno', pVendor."Phone No.");
+        ltJsonObject.Add('mobilephoneno', pVendor."Mobile Phone No.");
+        ltJsonObject.Add('username', pVendor.User_Name);
+        ltJsonObject.Add('vatregistrationno', pVendor."VAT Registration No.");
+        ltJsonObject.Add('currencycode', pVendor."Currency Code");
+        ltJsonObject.Add('contactname', pVendor.Contact);
+        if pVendor."VAT registration supplier" then
             ltJsonObject.Add('vatregistrationsupplier', 1)
         else
             ltJsonObject.Add('vatregistrationsupplier', 0);
-        if ltVendor."Company Type" then
+        if pVendor."Company Type" then
             ltJsonObject.Add('companytype', 1)
         else
             ltJsonObject.Add('companytype', 0);
-        if ltVendor."Vendor Direct" then
+        if pVendor."Vendor Direct" then
             ltJsonObject.Add('vendordirect', 1)
         else
             ltJsonObject.Add('vendordirect', 0);
 
-        ConnectToWebService(ltJsonObject, FreshketIntregation."FK URL", FreshketIntregation."FK UserName", FreshketIntregation."FK Password", pManual, ltVendor."No.");
+        ConnectToWebService(ltJsonObject, FreshketIntregation."FK URL", FreshketIntregation."FK UserName", FreshketIntregation."FK Password", pManual, pVendor."No.");
     end;
-
-
 
 
     local procedure ConnectToWebService(pJsonObject: JsonObject; pBaseUrl: text; pUser: text; pPassword: text; pManual: Boolean; pNo: code[30])
@@ -551,7 +565,7 @@ codeunit 60050 "FK Func"
     end;
 
     [TryFunction]
-    local procedure updateOrder(ImportType: Option GRN,Return; var pPurchaseHeader: Record "Purchase Header" temporary; var pPurchaseLine: Record "Purchase Line" temporary; var pFileName: Text[100]; pIsManual: Boolean; var pCancel: Boolean)
+    local procedure updateOrder(ImportType: Option GRN,Return; var pPurchaseHeader: Record "Purchase Header" temporary; var pPurchaseLine: Record "Purchase Line" temporary; var pFileName: Text; pIsManual: Boolean; var pCancel: Boolean)
     var
         CSVBuffer, TempCSVBuffer : Record "CSV Buffer" temporary;
         ltPurchaseHeader: Record "Purchase Header" temporary;
@@ -603,7 +617,7 @@ codeunit 60050 "FK Func"
                                 if not ltPurchaseHeader.GET(ltPurchaseDocType, CSVBuffer.Value) then begin
                                     ltPurchaseHeader.Init();
                                     ltPurchaseHeader."Document Type" := ltPurchaseDocType;
-                                    ltPurchaseHeader."No." := CSVBuffer.Value;
+                                    ltPurchaseHeader."No." := COPYSTR(CSVBuffer.Value, 1, MaxStrLen(ltPurchaseHeader."No."));
                                     ltPurchaseHeader.Insert(true);
                                     ltPurchaseHeader."Buy-from Vendor No." := ltPurchaseHeaderUpdate."Buy-from Vendor No.";
                                 end else
@@ -642,14 +656,14 @@ codeunit 60050 "FK Func"
                                 ltPurchaseLine.Insert();
                                 //  ltPurchaseLine.Type := SelectoptionPurchase(CSVBuffer.Value);
                                 ltItem.GET(CSVBuffer.Value);
-                                ltPurchaseLine."No." := CSVBuffer.Value;
+                                ltPurchaseLine."No." := COPYSTR(CSVBuffer.Value, 1, MaxStrLen(ltPurchaseLine."No."));
 
                             end;
                         6:
                             begin
                                 if CSVBuffer.Value <> '' then
                                     ltLocation.get(CSVBuffer.Value);
-                                ltPurchaseLine."Location Code" := CSVBuffer.Value;
+                                ltPurchaseLine."Location Code" := COPYSTR(CSVBuffer.Value, 1, MaxStrLen(ltPurchaseLine."Location Code"));
 
                             end;
                         7:
@@ -658,7 +672,7 @@ codeunit 60050 "FK Func"
                                 ltPurchaseLine.Quantity := ltDicimal;
                         8:
                             begin
-                                ltPurchaseLine."Temp. Lot No." := CSVBuffer.Value;
+                                ltPurchaseLine."Temp. Lot No." := COPYSTR(CSVBuffer.Value, 1, MaxStrLen(ltPurchaseLine."Temp. Lot No."));
                                 CheckLot(ltPurchaseLine."No.", ltPurchaseLine."Temp. Lot No.");
 
                             end;
@@ -1989,11 +2003,11 @@ codeunit 60050 "FK Func"
         ltJsonArray := ltJsonToken.AsArray();
         foreach ltJsonToken2 in ltJsonArray do begin
             ltJsonObject2 := ltJsonToken2.AsObject();
-            if not InsertTotable(FKApiPageType::Customer, Database::Customer, ltJsonObject2) then begin
-                Insertlog(Database::Customer, ltPageName, ltJsonObject2, ltDateTime, GetLastErrorText(), 1, ltNoofAPI, GetLastErrorCode(), SelectJsonTokenText(ltJsonObject2, '$.no'), 0);
-                ClearError(Database::Customer, SelectJsonTokenText(ltJsonObject2, '$.no'));
+            if not InsertTotable(FKApiPageType::Customer, ltJsonObject2) then begin
+                Insertlog(Database::Customer, ltPageName, ltJsonObject2, ltDateTime, GetLastErrorText(), 1, ltNoofAPI, GetLastErrorCode(), COPYSTR(SelectJsonTokenText(ltJsonObject2, '$.no'), 1, 100), 0);
+                ClearError(Database::Customer, COPYSTR(SelectJsonTokenText(ltJsonObject2, '$.no'), 1, 30));
             end else
-                Insertlog(Database::Customer, ltPageName, ltJsonObject2, ltDateTime, '', 0, ltNoofAPI, '', SelectJsonTokenText(ltJsonObject2, '$.no'), 0);
+                Insertlog(Database::Customer, ltPageName, ltJsonObject2, ltDateTime, '', 0, ltNoofAPI, '', COPYSTR(SelectJsonTokenText(ltJsonObject2, '$.no'), 1, 100), 0);
 
         end;
         exit(ReuturnErrorAPI(ltPageName, ltNoofAPI));
@@ -2048,10 +2062,10 @@ codeunit 60050 "FK Func"
         ltJsonArray := ltJsonToken.AsArray();
         foreach ltJsonToken2 in ltJsonArray do begin
             ltJsonObject2 := ltJsonToken2.AsObject();
-            if not updateTotable(2, Database::Customer, ltJsonObject2) then
-                Insertlog(Database::Customer, ltPageName, ltJsonObject2, ltDateTime, GetLastErrorText(), 1, ltNoofAPI, GetLastErrorCode(), SelectJsonTokenText(ltJsonObject2, '$.no'), 1)
+            if not updateTotable(2, ltJsonObject2) then
+                Insertlog(Database::Customer, ltPageName, ltJsonObject2, ltDateTime, GetLastErrorText(), 1, ltNoofAPI, GetLastErrorCode(), COPYSTR(SelectJsonTokenText(ltJsonObject2, '$.no'), 1, 100), 1)
             else
-                Insertlog(Database::Customer, ltPageName, ltJsonObject2, ltDateTime, '', 0, ltNoofAPI, '', SelectJsonTokenText(ltJsonObject2, '$.no'), 1);
+                Insertlog(Database::Customer, ltPageName, ltJsonObject2, ltDateTime, '', 0, ltNoofAPI, '', COPYSTR(SelectJsonTokenText(ltJsonObject2, '$.no'), 1, 100), 1);
 
         end;
         exit(ReuturnErrorAPI(ltPageName, ltNoofAPI));
@@ -2078,11 +2092,11 @@ codeunit 60050 "FK Func"
         ltJsonArray := ltJsonToken.AsArray();
         foreach ltJsonToken2 in ltJsonArray do begin
             ltJsonObject2 := ltJsonToken2.AsObject();
-            if not InsertTotable(FKApiPageType::Item, Database::Item, ltJsonObject2) then
-                Insertlog(Database::Item, ltPageName, ltJsonObject2, ltDateTime, GetLastErrorText(), 1, ltNoofAPI, GetLastErrorCode(), SelectJsonTokenText(ltJsonObject2, '$.no'), 0)
+            if not InsertTotable(FKApiPageType::Item, ltJsonObject2) then
+                Insertlog(Database::Item, ltPageName, ltJsonObject2, ltDateTime, GetLastErrorText(), 1, ltNoofAPI, GetLastErrorCode(), COPYSTR(SelectJsonTokenText(ltJsonObject2, '$.no'), 1, 100), 0)
             //  ClearError(Database::Item, SelectJsonTokenText(ltJsonObject2, '$.no'));
             else
-                Insertlog(Database::Item, ltPageName, ltJsonObject2, ltDateTime, '', 0, ltNoofAPI, '', SelectJsonTokenText(ltJsonObject2, '$.no'), 0);
+                Insertlog(Database::Item, ltPageName, ltJsonObject2, ltDateTime, '', 0, ltNoofAPI, '', COPYSTR(SelectJsonTokenText(ltJsonObject2, '$.no'), 1, 100), 0);
         end;
         exit(ReuturnErrorAPI(ltPageName, ltNoofAPI));
     end;
@@ -2108,10 +2122,10 @@ codeunit 60050 "FK Func"
         ltJsonArray := ltJsonToken.AsArray();
         foreach ltJsonToken2 in ltJsonArray do begin
             ltJsonObject2 := ltJsonToken2.AsObject();
-            if not updateTotable(1, Database::Item, ltJsonObject2) then
-                Insertlog(Database::Item, ltPageName, ltJsonObject2, ltDateTime, GetLastErrorText(), 1, ltNoofAPI, GetLastErrorCode(), SelectJsonTokenText(ltJsonObject2, '$.no'), 1)
+            if not updateTotable(1, ltJsonObject2) then
+                Insertlog(Database::Item, ltPageName, ltJsonObject2, ltDateTime, GetLastErrorText(), 1, ltNoofAPI, GetLastErrorCode(), COPYSTR(SelectJsonTokenText(ltJsonObject2, '$.no'), 1, 100), 1)
             else
-                Insertlog(Database::Item, ltPageName, ltJsonObject2, ltDateTime, '', 0, ltNoofAPI, '', SelectJsonTokenText(ltJsonObject2, '$.no'), 1);
+                Insertlog(Database::Item, ltPageName, ltJsonObject2, ltDateTime, '', 0, ltNoofAPI, '', COPYSTR(SelectJsonTokenText(ltJsonObject2, '$.no'), 1, 100), 1);
         end;
         exit(ReuturnErrorAPI(ltPageName, ltNoofAPI));
     end;
@@ -2136,11 +2150,11 @@ codeunit 60050 "FK Func"
         ltJsonArray := ltJsonToken.AsArray();
         foreach ltJsonToken2 in ltJsonArray do begin
             ltJsonObject2 := ltJsonToken2.AsObject();
-            if not InsertTotable(FKApiPageType::Vendor, Database::vendor, ltJsonObject2) then begin
-                Insertlog(Database::Vendor, ltPageName, ltJsonObject2, ltDateTime, GetLastErrorText(), 1, ltNoofAPI, GetLastErrorCode(), SelectJsonTokenText(ltJsonObject2, '$.no'), 0);
-                ClearError(Database::Vendor, SelectJsonTokenText(ltJsonObject2, '$.no'));
+            if not InsertTotable(FKApiPageType::Vendor, ltJsonObject2) then begin
+                Insertlog(Database::Vendor, ltPageName, ltJsonObject2, ltDateTime, GetLastErrorText(), 1, ltNoofAPI, GetLastErrorCode(), COPYSTR(SelectJsonTokenText(ltJsonObject2, '$.no'), 1, 100), 0);
+                ClearError(Database::Vendor, COPYSTR(SelectJsonTokenText(ltJsonObject2, '$.no'), 1, 30));
             end else
-                Insertlog(Database::Vendor, ltPageName, ltJsonObject2, ltDateTime, '', 0, ltNoofAPI, '', SelectJsonTokenText(ltJsonObject2, '$.no'), 0);
+                Insertlog(Database::Vendor, ltPageName, ltJsonObject2, ltDateTime, '', 0, ltNoofAPI, '', COPYSTR(SelectJsonTokenText(ltJsonObject2, '$.no'), 1, 100), 0);
         end;
         exit(ReuturnErrorAPI(ltPageName, ltNoofAPI));
     end;
@@ -2166,28 +2180,15 @@ codeunit 60050 "FK Func"
         ltJsonArray := ltJsonToken.AsArray();
         foreach ltJsonToken2 in ltJsonArray do begin
             ltJsonObject2 := ltJsonToken2.AsObject();
-            if not UpdateTotable(3, Database::vendor, ltJsonObject2) then
-                Insertlog(Database::Vendor, ltPageName, ltJsonObject2, ltDateTime, GetLastErrorText(), 1, ltNoofAPI, GetLastErrorCode(), SelectJsonTokenText(ltJsonObject2, '$.no'), 1)
+            if not UpdateTotable(3, ltJsonObject2) then
+                Insertlog(Database::Vendor, ltPageName, ltJsonObject2, ltDateTime, GetLastErrorText(), 1, ltNoofAPI, GetLastErrorCode(), COPYSTR(SelectJsonTokenText(ltJsonObject2, '$.no'), 1, 100), 1)
             else
-                Insertlog(Database::Vendor, ltPageName, ltJsonObject2, ltDateTime, '', 0, ltNoofAPI, '', SelectJsonTokenText(ltJsonObject2, '$.no'), 1);
+                Insertlog(Database::Vendor, ltPageName, ltJsonObject2, ltDateTime, '', 0, ltNoofAPI, '', COPYSTR(SelectJsonTokenText(ltJsonObject2, '$.no'), 1, 100), 1);
         end;
         exit(ReuturnErrorAPI(ltPageName, ltNoofAPI));
     end;
 
-    /// <summary>
-    /// callandsendvendor.
-    /// </summary>
-    procedure callandsendvendorbyJob()
-    var
-        ltDateTime: DateTime;
-        ltNoofAPI: Integer;
-    begin
-        ltDateTime := CurrentDateTime();
-        ltNoofAPI := GetNoOfAPI('Vendor');
-        // sendtointranet(Database::Vendor);
-        // if not sendvendor() then
-        //     Insertlog(Database::Vendor, 'Vendor', ltJsonObject2, ltDateTime, GetLastErrorText(), 1, ltNoofAPI)
-    end;
+
 
     /// <summary>
     /// callandsendvendorManual.
@@ -2410,10 +2411,10 @@ codeunit 60050 "FK Func"
         ltJsonArray := ltJsonToken.AsArray();
         foreach ltJsonToken2 in ltJsonArray do begin
             ltJsonObject2 := ltJsonToken2.AsObject();
-            if not updateqtypurchase(ltDocumentType::Order, SelectJsonTokenText(ltJsonObject2, '$.documentno'), SelectJsonTokenText(ltJsonObject2, '$.no'), 1, true) then
-                Insertlog(Database::"Purchase Line", ltPageName, ltJsonObject2, ltDateTime, GetLastErrorText(), 1, ltNoofAPI, GetLastErrorCode(), SelectJsonTokenText(ltJsonObject2, '$.documentno'), 1)
+            if not updateqtypurchase(ltDocumentType::Order, COPYSTR(SelectJsonTokenText(ltJsonObject2, '$.documentNo'), 1, 30), COPYSTR(SelectJsonTokenText(ltJsonObject2, '$.no'), 1, 30), 1, true) then
+                Insertlog(Database::"Purchase Line", ltPageName, ltJsonObject2, ltDateTime, GetLastErrorText(), 1, ltNoofAPI, GetLastErrorCode(), COPYSTR(SelectJsonTokenText(ltJsonObject2, '$.documentNo'), 1, 100), 1)
             else
-                Insertlog(Database::"Purchase Line", ltPageName, ltJsonObject2, ltDateTime, '', 0, ltNoofAPI, '', SelectJsonTokenText(ltJsonObject2, '$.documentno'), 1);
+                Insertlog(Database::"Purchase Line", ltPageName, ltJsonObject2, ltDateTime, '', 0, ltNoofAPI, '', COPYSTR(SelectJsonTokenText(ltJsonObject2, '$.documentNo'), 1, 100), 1);
         end;
         exit(ReuturnErrorAPI(ltPageName, ltNoofAPI));
     end;
@@ -2440,10 +2441,10 @@ codeunit 60050 "FK Func"
         ltJsonArray := ltJsonToken.AsArray();
         foreach ltJsonToken2 in ltJsonArray do begin
             ltJsonObject2 := ltJsonToken2.AsObject();
-            if not updateqtypurchase(ltDocumentType::"Return Order", SelectJsonTokenText(ltJsonObject2, '$.documentno'), SelectJsonTokenText(ltJsonObject2, '$.no'), 1, false) then
-                Insertlog(Database::"Purchase Line", ltPageName, ltJsonObject2, ltDateTime, GetLastErrorText(), 1, ltNoofAPI, GetLastErrorCode(), SelectJsonTokenText(ltJsonObject2, '$.documentno'), 1)
+            if not updateqtypurchase(ltDocumentType::"Return Order", COPYSTR(SelectJsonTokenText(ltJsonObject2, '$.documentNo'), 1, 30), COPYSTR(SelectJsonTokenText(ltJsonObject2, '$.no'), 1, 30), 1, false) then
+                Insertlog(Database::"Purchase Line", ltPageName, ltJsonObject2, ltDateTime, GetLastErrorText(), 1, ltNoofAPI, GetLastErrorCode(), COPYSTR(SelectJsonTokenText(ltJsonObject2, '$.documentNo'), 1, 100), 1)
             else
-                Insertlog(Database::"Purchase Line", ltPageName, ltJsonObject2, ltDateTime, '', 0, ltNoofAPI, '', SelectJsonTokenText(ltJsonObject2, '$.documentno'), 1);
+                Insertlog(Database::"Purchase Line", ltPageName, ltJsonObject2, ltDateTime, '', 0, ltNoofAPI, '', COPYSTR(SelectJsonTokenText(ltJsonObject2, '$.documentNo'), 1, 100), 1);
         end;
         exit(ReuturnErrorAPI(ltPageName, ltNoofAPI));
     end;
@@ -2538,28 +2539,28 @@ codeunit 60050 "FK Func"
     end;
 
 
-    local procedure UpdatePurchaseStatusToRelease(pDocumentType: Enum "Purchase Document Type"; pDocumentNo: code[30])
-    var
-        PurchaseHeader: record "Purchase Header";
-    begin
-        if PurchaseHeader.GET(pDocumentType, pDocumentNo) then begin
-            PurchaseHeader.Status := PurchaseHeader.Status::Released;
-            PurchaseHeader.Modify();
-        end;
-    end;
+    // local procedure UpdatePurchaseStatusToRelease(pDocumentType: Enum "Purchase Document Type"; pDocumentNo: code[30])
+    // var
+    //     PurchaseHeader: record "Purchase Header";
+    // begin
+    //     if PurchaseHeader.GET(pDocumentType, pDocumentNo) then begin
+    //         PurchaseHeader.Status := PurchaseHeader.Status::Released;
+    //         PurchaseHeader.Modify();
+    //     end;
+    // end;
 
-    local procedure UpdateSalesStatusToRelease(pDocumentType: Enum "Sales Document Type"; pDocumentNo: code[30])
-    var
-        SalesHeader: record "Sales Header";
-    begin
-        if SalesHeader.GET(pDocumentType, pDocumentNo) then begin
-            SalesHeader.Status := SalesHeader.Status::Released;
-            SalesHeader.Modify();
-        end;
-    end;
+    // local procedure UpdateSalesStatusToRelease(pDocumentType: Enum "Sales Document Type"; pDocumentNo: code[30])
+    // var
+    //     SalesHeader: record "Sales Header";
+    // begin
+    //     if SalesHeader.GET(pDocumentType, pDocumentNo) then begin
+    //         SalesHeader.Status := SalesHeader.Status::Released;
+    //         SalesHeader.Modify();
+    //     end;
+    // end;
 
     [TryFunction]
-    local procedure UpdateTotable(pPageName: Option; pTableID: Integer; pJsonObject: JsonObject)
+    local procedure UpdateTotable(pPageName: Option; pJsonObject: JsonObject)
     var
         APIMappingHeader: Record "API Setup Header";
         APIMappingLine: Record "API Setup Line";
@@ -2579,7 +2580,7 @@ codeunit 60050 "FK Func"
         APIMappingLine.SetFilter("Service Name 2", '<>%1', '');
         APIMappingLine.SetRange("Is Primary", true);
         if APIMappingLine.FindSet() then begin
-            ltDocNo := SelectJsonTokenText(pJsonObject, '$.' + APIMappingLine."Service Name 2");
+            ltDocNo := COPYSTR(SelectJsonTokenText(pJsonObject, '$.' + APIMappingLine."Service Name 2"), 1, 30);
             ltRecordRef.Open(APIMappingHeader."Table ID");
             ltFieldRef := ltRecordRef.Field(APIMappingLine."Field No.");
             ltFieldRef.SetFilter(ltDocNo);
@@ -2626,7 +2627,7 @@ codeunit 60050 "FK Func"
 
 
     [TryFunction]
-    local procedure InsertTotable(pPageName: Enum "FK Api Page Type"; pTableID: Integer; pJsonObject: JsonObject)
+    local procedure InsertTotable(pPageName: Enum "FK Api Page Type"; pJsonObject: JsonObject)
     var
         APIMappingHeader: Record "API Setup Header";
         APIMappingLine: Record "API Setup Line";
@@ -2635,11 +2636,8 @@ codeunit 60050 "FK Func"
         ltIndexofDetail: Integer;
         ltDate: Date;
         ltDocNo: Code[30];
-        HasAlready: Boolean;
         CheckJsonToken: JsonToken;
     begin
-        HasAlready := false;
-
         APIMappingHeader.GET(pPageName);
         ltRecordRef.Open(APIMappingHeader."Table ID");
         ltRecordRef.Init();
@@ -2651,7 +2649,7 @@ codeunit 60050 "FK Func"
         APIMappingLine.SetFilter("Service Name 2", '<>%1', '');
         APIMappingLine.SetRange("Is Primary", true);
         if APIMappingLine.FindSet() then
-            ltDocNo := SelectJsonTokenText(pJsonObject, '$.' + APIMappingLine."Service Name 2");
+            ltDocNo := COPYSTR(SelectJsonTokenText(pJsonObject, '$.' + APIMappingLine."Service Name 2"), 1, 30);
 
         ltFieldRef := ltRecordRef.FieldIndex(1);
         ltFieldRef.Validate(ltDocNo);
@@ -2780,7 +2778,7 @@ codeunit 60050 "FK Func"
                 if SelectJsonTokenText(ltJsonObjectDetail, '$.code') <> '' then begin
                     ltRecordRef.Open(Database::"Ship-to Address");
                     ltRecordRef.Init();
-                    ShiptoCode := SelectJsonTokenText(ltJsonObjectDetail, '$.code');
+                    ShiptoCode := COPYSTR(SelectJsonTokenText(ltJsonObjectDetail, '$.code'), 1, 10);
                     ltFieldRef := ltRecordRef.FieldIndex(1);
                     ltFieldRef.Validate(pCustomerCode);
                     ltFieldRef := ltRecordRef.FieldIndex(2);
@@ -2823,100 +2821,100 @@ codeunit 60050 "FK Func"
             end;
     end;
 
-    local procedure InsertTotableLine(pJsonObject: JsonObject; subtableID: Integer; pPageID: Enum "FK Api Page Type"; pSubPageID: Integer;
-                                                                                                 pDocumentType: Integer;
-                                                                                                 pDocumentNo: code[30])
-    var
-        ltJsonObjectDetail: JsonObject;
-        APIMappingLine: Record "API Setup Line";
-        ltJsonToken: JsonToken;
-        ltJsonArray: JsonArray;
-        ltJsonTokenDetail, ltJsonTokenReserve : JsonToken;
-        ltFieldRef: FieldRef;
-        ltRecordRef: RecordRef;
-        ltLineNo: Integer;
-        ltDate: Date;
-        ltCheckLine: JsonToken;
-    begin
-        if pJsonObject.SelectToken('$.detaillines', ltJsonToken) then begin
-            ltJsonArray := ltJsonToken.AsArray();
-            foreach ltJsonTokenDetail in ltJsonArray do begin
-                ltJsonObjectDetail := ltJsonTokenDetail.AsObject();
-                ltRecordRef.Open(subtableID);
-                ltRecordRef.Init();
-                ltFieldRef := ltRecordRef.FieldIndex(1);
-                ltFieldRef.validate(pDocumentType);
-                ltFieldRef := ltRecordRef.FieldIndex(2);
-                ltFieldRef.validate(pDocumentNo);
-                ltFieldRef := ltRecordRef.FieldIndex(3);
-                if ltJsonObjectDetail.SelectToken('$.lineno', ltCheckLine) then
-                    ltFieldRef.validate(SelectJsonTokenInterger(ltJsonObjectDetail, '$.lineno'))
-                else
-                    ltFieldRef.validate(GetLastLine(subtableID, pDocumentType, pDocumentNo));
-                ltLineNo := ltFieldRef.Value;
-                ltRecordRef.Insert(true);
+    // local procedure InsertTotableLine(pJsonObject: JsonObject; subtableID: Integer; pPageID: Enum "FK Api Page Type"; pSubPageID: Integer;
+    //                                                                                              pDocumentType: Integer;
+    //                                                                                              pDocumentNo: code[30])
+    // var
+    //     ltJsonObjectDetail: JsonObject;
+    //     APIMappingLine: Record "API Setup Line";
+    //     ltJsonToken: JsonToken;
+    //     ltJsonArray: JsonArray;
+    //     ltJsonTokenDetail, ltJsonTokenReserve : JsonToken;
+    //     ltFieldRef: FieldRef;
+    //     ltRecordRef: RecordRef;
+    //     ltLineNo: Integer;
+    //     ltDate: Date;
+    //     ltCheckLine: JsonToken;
+    // begin
+    //     if pJsonObject.SelectToken('$.detaillines', ltJsonToken) then begin
+    //         ltJsonArray := ltJsonToken.AsArray();
+    //         foreach ltJsonTokenDetail in ltJsonArray do begin
+    //             ltJsonObjectDetail := ltJsonTokenDetail.AsObject();
+    //             ltRecordRef.Open(subtableID);
+    //             ltRecordRef.Init();
+    //             ltFieldRef := ltRecordRef.FieldIndex(1);
+    //             ltFieldRef.validate(pDocumentType);
+    //             ltFieldRef := ltRecordRef.FieldIndex(2);
+    //             ltFieldRef.validate(pDocumentNo);
+    //             ltFieldRef := ltRecordRef.FieldIndex(3);
+    //             if ltJsonObjectDetail.SelectToken('$.lineno', ltCheckLine) then
+    //                 ltFieldRef.validate(SelectJsonTokenInterger(ltJsonObjectDetail, '$.lineno'))
+    //             else
+    //                 ltFieldRef.validate(GetLastLine(subtableID, pDocumentType, pDocumentNo));
+    //             ltLineNo := ltFieldRef.Value;
+    //             ltRecordRef.Insert(true);
 
-                APIMappingLine.reset();
-                APIMappingLine.SetCurrentKey("Page Name", "Line Type", "Field No.");
-                APIMappingLine.SetRange("Page Name", pPageID);
-                APIMappingLine.SetRange("Line Type", APIMappingLine."Line Type"::Line);
-                APIMappingLine.SetRange(Include, true);
-                APIMappingLine.SetFilter("Service Name 2", '<>%1', '');
-                APIMappingLine.SetRange("Is Primary", false);
-                if APIMappingLine.FindSet() then
-                    repeat
-                        ltFieldRef := ltRecordRef.FIELD(APIMappingLine."Field No.");
-                        if ltFieldRef.Type IN [ltFieldRef.Type::Integer, ltFieldRef.Type::Decimal, ltFieldRef.Type::Option] then begin
-                            if ltFieldRef.Type = ltFieldRef.Type::Option then
-                                ltFieldRef.validate(SelectOption(ltFieldRef.OptionCaption, SelectJsonTokenText(ltJsonObjectDetail, '$.' + APIMappingLine."Service Name 2")))
-                            else
-                                if SelectJsonTokenInterger(ltJsonObjectDetail, '$.' + APIMappingLine."Service Name 2") <> 0 then
-                                    ltFieldRef.validate(SelectJsonTokenInterger(ltJsonObjectDetail, '$.' + APIMappingLine."Service Name 2"));
-                        end else
-                            if ltFieldRef.Type = ltFieldRef.Type::Date then begin
-                                if SelectJsonTokenText(ltJsonObjectDetail, '$.' + APIMappingLine."Service Name 2") <> '' then begin
-                                    Evaluate(ltDate, SelectJsonTokenText(ltJsonObjectDetail, '$.' + APIMappingLine."Service Name 2"));
-                                    ltFieldRef.Validate(ltDate);
-                                end;
-                            end else
-                                if SelectJsonTokenText(ltJsonObjectDetail, '$.' + APIMappingLine."Service Name 2") <> '' then
-                                    ltFieldRef.Validate(SelectJsonTokenText(ltJsonObjectDetail, '$.' + APIMappingLine."Service Name 2"));
-                    until APIMappingLine.Next() = 0;
-                ltRecordRef.Modify();
-                if ltJsonObjectDetail.SelectToken('$.reservelines', ltJsonTokenReserve) then
-                    if subtableID = Database::"Purchase Line" then
-                        PurchaseInsertReserveLine(pDocumentType, pDocumentNo, ltLineNo, ltJsonTokenReserve)
-                    else
-                        SalesInsertReserveLine(pDocumentType, pDocumentNo, ltLineNo, ltJsonTokenReserve);
+    //             APIMappingLine.reset();
+    //             APIMappingLine.SetCurrentKey("Page Name", "Line Type", "Field No.");
+    //             APIMappingLine.SetRange("Page Name", pPageID);
+    //             APIMappingLine.SetRange("Line Type", APIMappingLine."Line Type"::Line);
+    //             APIMappingLine.SetRange(Include, true);
+    //             APIMappingLine.SetFilter("Service Name 2", '<>%1', '');
+    //             APIMappingLine.SetRange("Is Primary", false);
+    //             if APIMappingLine.FindSet() then
+    //                 repeat
+    //                     ltFieldRef := ltRecordRef.FIELD(APIMappingLine."Field No.");
+    //                     if ltFieldRef.Type IN [ltFieldRef.Type::Integer, ltFieldRef.Type::Decimal, ltFieldRef.Type::Option] then begin
+    //                         if ltFieldRef.Type = ltFieldRef.Type::Option then
+    //                             ltFieldRef.validate(SelectOption(ltFieldRef.OptionCaption, SelectJsonTokenText(ltJsonObjectDetail, '$.' + APIMappingLine."Service Name 2")))
+    //                         else
+    //                             if SelectJsonTokenInterger(ltJsonObjectDetail, '$.' + APIMappingLine."Service Name 2") <> 0 then
+    //                                 ltFieldRef.validate(SelectJsonTokenInterger(ltJsonObjectDetail, '$.' + APIMappingLine."Service Name 2"));
+    //                     end else
+    //                         if ltFieldRef.Type = ltFieldRef.Type::Date then begin
+    //                             if SelectJsonTokenText(ltJsonObjectDetail, '$.' + APIMappingLine."Service Name 2") <> '' then begin
+    //                                 Evaluate(ltDate, SelectJsonTokenText(ltJsonObjectDetail, '$.' + APIMappingLine."Service Name 2"));
+    //                                 ltFieldRef.Validate(ltDate);
+    //                             end;
+    //                         end else
+    //                             if SelectJsonTokenText(ltJsonObjectDetail, '$.' + APIMappingLine."Service Name 2") <> '' then
+    //                                 ltFieldRef.Validate(SelectJsonTokenText(ltJsonObjectDetail, '$.' + APIMappingLine."Service Name 2"));
+    //                 until APIMappingLine.Next() = 0;
+    //             ltRecordRef.Modify();
+    //             if ltJsonObjectDetail.SelectToken('$.reservelines', ltJsonTokenReserve) then
+    //                 if subtableID = Database::"Purchase Line" then
+    //                     PurchaseInsertReserveLine(pDocumentType, pDocumentNo, ltLineNo, ltJsonTokenReserve)
+    //                 else
+    //                     SalesInsertReserveLine(pDocumentType, pDocumentNo, ltLineNo, ltJsonTokenReserve);
 
-                ltRecordRef.Close();
-            end;
-        end;
-    end;
+    //             ltRecordRef.Close();
+    //         end;
+    //     end;
+    // end;
 
 
 
-    local procedure GetLastLine(subTableID: Integer; pDocumentType: Integer; pDocumentNo: Code[30]): Integer
-    var
-        SalesLine: Record "Sales Line";
-        PurchaseLine: Record "Purchase Line";
-    begin
-        if subTableID = 37 then begin
-            SalesLine.reset();
-            SalesLine.SetRange("Document Type", pDocumentType);
-            SalesLine.SetRange("Document No.", pDocumentNo);
-            if SalesLine.FindLast() then
-                exit(SalesLine."Line No." + 10000);
-            exiT(10000);
-        end else begin
-            PurchaseLine.reset();
-            PurchaseLine.SetRange("Document Type", pDocumentType);
-            PurchaseLine.SetRange("Document No.", pDocumentNo);
-            if PurchaseLine.FindLast() then
-                exit(PurchaseLine."Line No." + 10000);
-            exiT(10000);
-        end;
-    end;
+    // local procedure GetLastLine(subTableID: Integer; pDocumentType: Integer; pDocumentNo: Code[30]): Integer
+    // var
+    //     SalesLine: Record "Sales Line";
+    //     PurchaseLine: Record "Purchase Line";
+    // begin
+    //     if subTableID = 37 then begin
+    //         SalesLine.reset();
+    //         SalesLine.SetRange("Document Type", pDocumentType);
+    //         SalesLine.SetRange("Document No.", pDocumentNo);
+    //         if SalesLine.FindLast() then
+    //             exit(SalesLine."Line No." + 10000);
+    //         exiT(10000);
+    //     end else begin
+    //         PurchaseLine.reset();
+    //         PurchaseLine.SetRange("Document Type", pDocumentType);
+    //         PurchaseLine.SetRange("Document No.", pDocumentNo);
+    //         if PurchaseLine.FindLast() then
+    //             exit(PurchaseLine."Line No." + 10000);
+    //         exiT(10000);
+    //     end;
+    // end;
 
     local procedure SelectOption(pOptionCaption: Text; pValue: Text): integer
     var
@@ -2928,127 +2926,127 @@ codeunit 60050 "FK Func"
                 exit(ltLoopOption - 1);
     end;
 
-    local procedure InsertTOTempReserve(var pTempReservEntry: Record "Reservation Entry" temporary; pJsonToken: JsonToken)
-    var
-        ltJsonTokenReserve: JsonToken;
-        ltJsonArray: JsonArray;
-        ltJsonObject: JsonObject;
-        ltLineNo: Integer;
-    begin
-        CLEAR(ltJsonObject);
-        Clear(ltJsonTokenReserve);
-        CLEAR(ltJsonArray);
-        pTempReservEntry.reset();
-        pTempReservEntry.DeleteAll();
-        ltJsonArray := pJsonToken.AsArray();
-        foreach ltJsonTokenReserve in ltJsonArray do begin
-            ltJsonObject := ltJsonTokenReserve.AsObject();
-            ltLineNo := ltLineNo + 1;
-            pTempReservEntry.init();
-            pTempReservEntry."Entry No." := ltLineNo;
-            pTempReservEntry.Quantity := SelectJsonTokenInterger(ltJsonObject, '$.quantity');
-            pTempReservEntry."Lot No." := SelectJsonTokenText(ltJsonObject, '$.lotno');
-            pTempReservEntry."Serial No." := SelectJsonTokenText(ltJsonObject, '$.serialno');
-            pTempReservEntry."Expiration Date" := Today();
-            pTempReservEntry.Insert();
-        end;
-    end;
+    // local procedure InsertTOTempReserve(var pTempReservEntry: Record "Reservation Entry" temporary; pJsonToken: JsonToken)
+    // var
+    //     ltJsonTokenReserve: JsonToken;
+    //     ltJsonArray: JsonArray;
+    //     ltJsonObject: JsonObject;
+    //     ltLineNo: Integer;
+    // begin
+    //     CLEAR(ltJsonObject);
+    //     Clear(ltJsonTokenReserve);
+    //     CLEAR(ltJsonArray);
+    //     pTempReservEntry.reset();
+    //     pTempReservEntry.DeleteAll();
+    //     ltJsonArray := pJsonToken.AsArray();
+    //     foreach ltJsonTokenReserve in ltJsonArray do begin
+    //         ltJsonObject := ltJsonTokenReserve.AsObject();
+    //         ltLineNo := ltLineNo + 1;
+    //         pTempReservEntry.init();
+    //         pTempReservEntry."Entry No." := ltLineNo;
+    //         pTempReservEntry.Quantity := SelectJsonTokenInterger(ltJsonObject, '$.quantity');
+    //         pTempReservEntry."Lot No." := SelectJsonTokenText(ltJsonObject, '$.lotno');
+    //         pTempReservEntry."Serial No." := SelectJsonTokenText(ltJsonObject, '$.serialno');
+    //         pTempReservEntry."Expiration Date" := Today();
+    //         pTempReservEntry.Insert();
+    //     end;
+    // end;
 
-    local procedure PurchaseInsertReserveLine(pDocumentType: Integer; pDocumentNo: Code[30];
-                                                                 pLineNo: Integer;
-                                                                 pJsonToken: JsonToken)
-    var
-        ltItem: Record Item;
-        TempReservEntry: Record "Reservation Entry" temporary;
-        PurchLine: Record "Purchase Line";
-        CreateReservEntry: Codeunit "Create Reserv. Entry";
-        ReservStatus: Enum "Reservation Status";
-    begin
-        PurchLine.GET(pDocumentType, pDocumentNo, pLineNo);
-        if (PurchLine."No." <> '') and (PurchLine.Type = PurchLine.Type::Item) then begin
-            ltItem.GET(PurchLine."No.");
-            if ltItem."Item Tracking Code" <> '' then begin
-                InsertTOTempReserve(TempReservEntry, pJsonToken);
-                TempReservEntry.reset();
-                if TempReservEntry.FindSet() then
-                    repeat
-                        CreateReservEntry.SetDates(0D, TempReservEntry."Expiration Date");
-                        CreateReservEntry.CreateReservEntryFor(
-                          Database::"Purchase Line", PurchLine."Document Type".AsInteger(),
-                          PurchLine."Document No.", '', 0, PurchLine."Line No.", PurchLine."Qty. per Unit of Measure",
-                          TempReservEntry.Quantity, TempReservEntry.Quantity * PurchLine."Qty. per Unit of Measure", TempReservEntry);
-                        CreateReservEntry.CreateEntry(
-                          PurchLine."No.", PurchLine."Variant Code", PurchLine."Location Code", '', PurchLine."Expected Receipt Date", 0D, 0, ReservStatus::Surplus);
-                    until TempReservEntry.Next() = 0;
-            end;
-        end;
-    end;
+    // local procedure PurchaseInsertReserveLine(pDocumentType: Integer; pDocumentNo: Code[30];
+    //                                                              pLineNo: Integer;
+    //                                                              pJsonToken: JsonToken)
+    // var
+    //     ltItem: Record Item;
+    //     TempReservEntry: Record "Reservation Entry" temporary;
+    //     PurchLine: Record "Purchase Line";
+    //     CreateReservEntry: Codeunit "Create Reserv. Entry";
+    //     ReservStatus: Enum "Reservation Status";
+    // begin
+    //     PurchLine.GET(pDocumentType, pDocumentNo, pLineNo);
+    //     if (PurchLine."No." <> '') and (PurchLine.Type = PurchLine.Type::Item) then begin
+    //         ltItem.GET(PurchLine."No.");
+    //         if ltItem."Item Tracking Code" <> '' then begin
+    //             InsertTOTempReserve(TempReservEntry, pJsonToken);
+    //             TempReservEntry.reset();
+    //             if TempReservEntry.FindSet() then
+    //                 repeat
+    //                     CreateReservEntry.SetDates(0D, TempReservEntry."Expiration Date");
+    //                     CreateReservEntry.CreateReservEntryFor(
+    //                       Database::"Purchase Line", PurchLine."Document Type".AsInteger(),
+    //                       PurchLine."Document No.", '', 0, PurchLine."Line No.", PurchLine."Qty. per Unit of Measure",
+    //                       TempReservEntry.Quantity, TempReservEntry.Quantity * PurchLine."Qty. per Unit of Measure", TempReservEntry);
+    //                     CreateReservEntry.CreateEntry(
+    //                       PurchLine."No.", PurchLine."Variant Code", PurchLine."Location Code", '', PurchLine."Expected Receipt Date", 0D, 0, ReservStatus::Surplus);
+    //                 until TempReservEntry.Next() = 0;
+    //         end;
+    //     end;
+    // end;
 
-    local procedure SalesInsertReserveLine(pDocumentType: Integer; pDocumentNo: Code[30];
-                                                              pLineNo: Integer;
-                                                              pJsonToken: JsonToken)
-    var
-        ltItem: Record Item;
-        TempReservEntry: Record "Reservation Entry" temporary;
-        SalesLine: Record "Sales Line";
-        CreateReservEntry: Codeunit "Create Reserv. Entry";
-        ReservStatus: Enum "Reservation Status";
-    begin
-        TempReservEntry.reset();
-        TempReservEntry.DeleteAll();
-        SalesLine.GET(pDocumentType, pDocumentNo, pLineNo);
-        if (SalesLine."No." <> '') and (SalesLine.Type = SalesLine.Type::Item) then begin
-            ltItem.GET(SalesLine."No.");
-            if ltItem."Item Tracking Code" <> '' then begin
-                InsertTOTempReserve(TempReservEntry, pJsonToken);
-                TempReservEntry.reset();
-                if TempReservEntry.FindSet() then
-                    repeat
-                        CreateReservEntry.SetDates(0D, TempReservEntry."Expiration Date");
-                        CreateReservEntry.CreateReservEntryFor(
-                          Database::"Sales Line", SalesLine."Document Type".AsInteger(),
-                          SalesLine."Document No.", '', 0, SalesLine."Line No.", SalesLine."Qty. per Unit of Measure",
-                          TempReservEntry.Quantity, TempReservEntry.Quantity * SalesLine."Qty. per Unit of Measure", TempReservEntry);
-                        CreateReservEntry.CreateEntry(
-                          SalesLine."No.", SalesLine."Variant Code", SalesLine."Location Code", '', 0D, 0D, 0, ReservStatus::Surplus);
-                    until TempReservEntry.Next() = 0;
-            end;
-        end;
-    end;
+    // local procedure SalesInsertReserveLine(pDocumentType: Integer; pDocumentNo: Code[30];
+    //                                                           pLineNo: Integer;
+    //                                                           pJsonToken: JsonToken)
+    // var
+    //     ltItem: Record Item;
+    //     TempReservEntry: Record "Reservation Entry" temporary;
+    //     SalesLine: Record "Sales Line";
+    //     CreateReservEntry: Codeunit "Create Reserv. Entry";
+    //     ReservStatus: Enum "Reservation Status";
+    // begin
+    //     TempReservEntry.reset();
+    //     TempReservEntry.DeleteAll();
+    //     SalesLine.GET(pDocumentType, pDocumentNo, pLineNo);
+    //     if (SalesLine."No." <> '') and (SalesLine.Type = SalesLine.Type::Item) then begin
+    //         ltItem.GET(SalesLine."No.");
+    //         if ltItem."Item Tracking Code" <> '' then begin
+    //             InsertTOTempReserve(TempReservEntry, pJsonToken);
+    //             TempReservEntry.reset();
+    //             if TempReservEntry.FindSet() then
+    //                 repeat
+    //                     CreateReservEntry.SetDates(0D, TempReservEntry."Expiration Date");
+    //                     CreateReservEntry.CreateReservEntryFor(
+    //                       Database::"Sales Line", SalesLine."Document Type".AsInteger(),
+    //                       SalesLine."Document No.", '', 0, SalesLine."Line No.", SalesLine."Qty. per Unit of Measure",
+    //                       TempReservEntry.Quantity, TempReservEntry.Quantity * SalesLine."Qty. per Unit of Measure", TempReservEntry);
+    //                     CreateReservEntry.CreateEntry(
+    //                       SalesLine."No.", SalesLine."Variant Code", SalesLine."Location Code", '', 0D, 0D, 0, ReservStatus::Surplus);
+    //                 until TempReservEntry.Next() = 0;
+    //         end;
+    //     end;
+    // end;
 
 
-    local procedure ItemJournalInsertReserveLine(pJournalTemplate: Code[30]; pBatchName: Code[30]; pLineNo: Integer; pJsonToken: JsonToken)
-    var
-        ltItem: Record Item;
-        TempReservEntry: Record "Reservation Entry" temporary;
-        itemJournal: Record "Item Journal Line";
-        CreateReservEntry: Codeunit "Create Reserv. Entry";
-        ReservStatus: Enum "Reservation Status";
+    // local procedure ItemJournalInsertReserveLine(pJournalTemplate: Code[30]; pBatchName: Code[30]; pLineNo: Integer; pJsonToken: JsonToken)
+    // var
+    //     ltItem: Record Item;
+    //     TempReservEntry: Record "Reservation Entry" temporary;
+    //     itemJournal: Record "Item Journal Line";
+    //     CreateReservEntry: Codeunit "Create Reserv. Entry";
+    //     ReservStatus: Enum "Reservation Status";
 
-    begin
-        TempReservEntry.reset();
-        TempReservEntry.DeleteAll();
-        itemJournal.GET(pJournalTemplate, pBatchName, pLineNo);
-        if (itemJournal."Item No." <> '') then begin
-            ltItem.GET(itemJournal."Item No.");
-            if ltItem."Item Tracking Code" <> '' then begin
-                InsertTOTempReserve(TempReservEntry, pJsonToken);
-                TempReservEntry.reset();
-                if TempReservEntry.FindSet() then
-                    repeat
-                        CreateReservEntry.SetDates(0D, TempReservEntry."Expiration Date");
-                        //If itemJournal."Entry Type" = itemJournal."Entry Type"::Transfer then //movement
-                        //   CreateReservEntry.SetNewSerialLotNo(TempReservEntry."Serial No.", TempReservEntry."Lot No.");
-                        CreateReservEntry.CreateReservEntryFor(
-                          Database::"Item Journal Line", itemJournal."Entry Type".AsInteger(),
-                          itemJournal."Journal Template Name", itemJournal."Journal Batch Name", 0, itemJournal."Line No.", itemJournal."Qty. per Unit of Measure",
-                          TempReservEntry.Quantity, TempReservEntry.Quantity * itemJournal."Qty. per Unit of Measure", TempReservEntry);
-                        CreateReservEntry.CreateEntry(
-                          itemJournal."Item No.", itemJournal."Variant Code", itemJournal."Location Code", '', 0D, 0D, 0, ReservStatus::Surplus);
-                    until TempReservEntry.Next() = 0;
-            end;
-        end;
-    end;
+    // begin
+    //     TempReservEntry.reset();
+    //     TempReservEntry.DeleteAll();
+    //     itemJournal.GET(pJournalTemplate, pBatchName, pLineNo);
+    //     if (itemJournal."Item No." <> '') then begin
+    //         ltItem.GET(itemJournal."Item No.");
+    //         if ltItem."Item Tracking Code" <> '' then begin
+    //             InsertTOTempReserve(TempReservEntry, pJsonToken);
+    //             TempReservEntry.reset();
+    //             if TempReservEntry.FindSet() then
+    //                 repeat
+    //                     CreateReservEntry.SetDates(0D, TempReservEntry."Expiration Date");
+    //                     //If itemJournal."Entry Type" = itemJournal."Entry Type"::Transfer then //movement
+    //                     //   CreateReservEntry.SetNewSerialLotNo(TempReservEntry."Serial No.", TempReservEntry."Lot No.");
+    //                     CreateReservEntry.CreateReservEntryFor(
+    //                       Database::"Item Journal Line", itemJournal."Entry Type".AsInteger(),
+    //                       itemJournal."Journal Template Name", itemJournal."Journal Batch Name", 0, itemJournal."Line No.", itemJournal."Qty. per Unit of Measure",
+    //                       TempReservEntry.Quantity, TempReservEntry.Quantity * itemJournal."Qty. per Unit of Measure", TempReservEntry);
+    //                     CreateReservEntry.CreateEntry(
+    //                       itemJournal."Item No.", itemJournal."Variant Code", itemJournal."Location Code", '', 0D, 0D, 0, ReservStatus::Surplus);
+    //                 until TempReservEntry.Next() = 0;
+    //         end;
+    //     end;
+    // end;
 
     local procedure GetNoOfAPI(pPageName: Text): Integer;
     var
@@ -3072,7 +3070,7 @@ codeunit 60050 "FK Func"
         pjsonObject.WriteTo(JsonText);
         apiLog.Init();
         apiLog."Entry No." := GetLastEntryLog();
-        apiLog."Page Name" := PageName;
+        apiLog."Page Name" := COPYSTR(PageName, 1, 50);
         apiLog."No." := pTableID;
         apiLog."Date Time" := pDateTime;
         apiLog.Status := pStatus;
@@ -3080,12 +3078,12 @@ codeunit 60050 "FK Func"
         apiLog."Method Type" := pMethodType;
         apiLog."Interface By" := CopyStr(USERID(), 1, 100);
         apiLog.Insert(true);
-        apiLog."Last Error Code" := pMsgErrorCode;
+        apiLog."Last Error Code" := COPYSTR(pMsgErrorCode, 1, 2047);
         apiLog."Document No." := pDocumentNo;
         apiLog."Json Msg.".CreateOutStream(ltOutStream, TEXTENCODING::UTF8);
         ltOutStream.WriteText(JsonText);
         if pMsgError <> '' then
-            apiLog."Last Error" := pMsgError
+            apiLog."Last Error" := COPYSTR(pMsgError, 1, 2047)
         else begin
             apiLog.Response.CreateOutStream(ltOutStream2, TEXTENCODING::UTF8);
             ltOutStream2.WriteText(JsonText);
@@ -3104,7 +3102,7 @@ codeunit 60050 "FK Func"
         pjsonObject.WriteTo(JsonText);
         apiLog.Init();
         apiLog."Entry No." := GetLastEntryLog();
-        apiLog."Page Name" := PageName;
+        apiLog."Page Name" := COPYSTR(PageName, 1, 50);
         apiLog."No." := pTableID;
         apiLog."Date Time" := pDateTime;
         apiLog.Status := pStatus;
@@ -3112,13 +3110,13 @@ codeunit 60050 "FK Func"
         apiLog."Method Type" := pMethodType;
         apiLog."Interface By" := CopyStr(USERID(), 1, 100);
         apiLog.Insert(true);
-        apiLog."Last Error Code" := pMsgErrorCode;
+        apiLog."Last Error Code" := COPYSTR(pMsgErrorCode, 1, 2047);
         apiLog."Document No." := pDocumentNo;
         apiLog."Is Manual" := pIsManual;
         apiLog."Json Msg.".CreateOutStream(ltOutStream, TEXTENCODING::UTF8);
         ltOutStream.WriteText(JsonText);
         if pMsgError <> '' then
-            apiLog."Last Error" := pMsgError
+            apiLog."Last Error" := COPYSTR(pMsgError, 1, 2047)
         else begin
             apiLog.Response.CreateOutStream(ltOutStream2, TEXTENCODING::UTF8);
             ltOutStream2.WriteText(pRespones);
@@ -3507,6 +3505,7 @@ codeunit 60050 "FK Func"
 
 
     var
+        FreshketIntregation: Record "Freshket Intregation Setup";
         gvNo: Text;
         FKApiPageType: Enum "FK Api Page Type";
 

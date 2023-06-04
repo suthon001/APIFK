@@ -8,6 +8,7 @@ report 60052 "TPP Purchase Receipt"
     Caption = 'Purchase Receipt';
     PreviewMode = PrintLayout;
     Permissions = tabledata "Purch. Rcpt. Line" = rimd;
+    UsageCategory = None;
     dataset
     {
         dataitem("Purch. Rcpt. Header"; "Purch. Rcpt. Header")

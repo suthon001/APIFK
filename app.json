@@ -10,7 +10,8 @@
   "help": "",
   "url": "",
   "logo": "",
-  "dependencies": [{
+  "dependencies": [
+    {
     "id": "178095c4-e347-4167-9a3e-21a02215bf85",
     "name": "Tax localization for Thailand (VAT & WHT)",
     "publisher": "Triple P Application Co., Ltd.",
@@ -33,6 +34,7 @@
   },
   "runtime": "10.0",
   "features": [
-    "NoImplicitWith"
+    "NoImplicitWith",
+    "TranslationFile"
   ]
 }

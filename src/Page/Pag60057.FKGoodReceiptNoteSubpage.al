@@ -426,7 +426,7 @@ page 60057 "FK Good ReceiptNote Subpage"
         //TPP.SSI 2022/08/08--
     end;
 
-    local procedure "TPP UpdateCurrency"()
+    procedure "TPP UpdateCurrency"()
     begin
         IF Currency.Code <> TotalPurchaseHeader."Currency Code" THEN
             IF NOT Currency.GET(TotalPurchaseHeader."Currency Code") THEN BEGIN
@@ -436,7 +436,7 @@ page 60057 "FK Good ReceiptNote Subpage"
 
     end;
 
-    local procedure "TPP RedistributeTotalsOnAfterValidate"()
+    procedure "TPP RedistributeTotalsOnAfterValidate"()
     begin
         CurrPage.SAVERECORD();
 
@@ -484,7 +484,7 @@ page 60057 "FK Good ReceiptNote Subpage"
         DocumentTotals.PurchaseDocTotalsNotUpToDate();
     end;
 
-    local procedure CheckSendLineInvoiceDiscountResetNotification()
+    procedure CheckSendLineInvoiceDiscountResetNotification()
     begin
 
 

@@ -9,7 +9,7 @@ report 60051 "TPP Purchase Quote"
     RDLCLayout = './LayoutReport/PurchaseQuote.rdl';
     Caption = 'Purcahse Quote';
     PreviewMode = PrintLayout;
-
+    UsageCategory = None;
     dataset
     {
         dataitem("Purchase Header"; "Purchase Header")

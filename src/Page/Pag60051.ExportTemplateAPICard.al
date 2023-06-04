@@ -89,8 +89,7 @@ page 60051 "FK API Mapping Card"
             {
                 Caption = 'Generate Detail';
                 Image = GetEntries;
-                Promoted = true;
-                PromotedCategory = Process;
+
                 ApplicationArea = Basic, Suite;
                 ToolTip = 'Executes the Generate Detail action.';
                 trigger OnAction()
@@ -104,8 +103,7 @@ page 60051 "FK API Mapping Card"
             {
                 Caption = 'Export Ex. Json String';
                 Image = Export;
-                Promoted = true;
-                PromotedCategory = Process;
+
                 ApplicationArea = Basic, Suite;
                 ToolTip = 'Executes the Export Ex. Json String action.';
                 trigger OnAction()
@@ -137,8 +135,6 @@ page 60051 "FK API Mapping Card"
                 Caption = 'Export Ship-to Address';
                 Visible = visableShiptoAddress;
                 Image = Export;
-                Promoted = true;
-                PromotedCategory = Process;
                 ApplicationArea = Basic, Suite;
                 ToolTip = 'Executes the Export Ship-to Address action.';
                 trigger OnAction()
@@ -158,8 +154,7 @@ page 60051 "FK API Mapping Card"
                 Caption = 'Log Entries';
                 ApplicationArea = Basic, Suite;
                 Image = Log;
-                Promoted = true;
-                PromotedCategory = Process;
+
                 ToolTip = 'Executes the Log Entries action.';
                 trigger OnAction()
                 var
@@ -205,7 +200,19 @@ page 60051 "FK API Mapping Card"
 
             // }
         }
+        area(Promoted)
+        {
+            group(Category_Process)
+            {
+                Caption = 'Process';
+                actionref(generateDetail_promote; GeneralDeteil) { }
+                actionref(Export_promote; ExportTemplateString) { }
+                actionref(ExportShiptoAddress_promote; ExportTemplateStringShiptoAddress) { }
+                actionref(Showlog_promote; ShowLog) { }
+            }
+        }
     }
+
     trigger OnOpenPage()
     begin
         visableShiptoAddress := rec."Page Name" = rec."Page Name"::Customer;

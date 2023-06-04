@@ -7,7 +7,7 @@ report 60053 "TPP Purchase Return Order"
     RDLCLayout = './LayoutReport/PurchaseReturnOrder.rdl';
     Caption = 'Purcahse Return Order';
     PreviewMode = PrintLayout;
-
+    UsageCategory = None;
     dataset
     {
         dataitem("Purchase Header"; "Purchase Header")

@@ -52,10 +52,14 @@ tableextension 60050 "FK API Vendor" extends Vendor
             DataClassification = CustomerContent;
 
             trigger OnLookup()
+            var
+                ltBillingCity, ltCounty : text;
             begin
-
-                PostCode.LookupPostCode("Billing City", "Billing Post Code", County, "Billing Region Code");
-
+                ltBillingCity := rec."Billing City";
+                ltCounty := rec.County;
+                PostCode.LookupPostCode(ltBillingCity, "Billing Post Code", ltCounty, "Billing Region Code");
+                rec."Billing City" := CopyStr(ltBillingCity, 1, 30);
+                rec.County := CopyStr(ltCounty, 1, 30);
 
             end;
 
@@ -79,11 +83,15 @@ tableextension 60050 "FK API Vendor" extends Vendor
             DataClassification = CustomerContent;
 
             trigger OnLookup()
+            var
+                ltBillingCity, ltCounty : text;
             begin
+                ltBillingCity := rec."Billing City";
+                ltCounty := rec.County;
 
-
-                PostCode.LookupPostCode("Billing City", "Billing Post Code", County, "Billing Region Code");
-
+                PostCode.LookupPostCode(ltBillingCity, "Billing Post Code", ltCounty, "Billing Region Code");
+                rec."Billing City" := CopyStr(ltBillingCity, 1, 30);
+                rec.County := CopyStr(ltCounty, 1, 30);
 
             end;
 
@@ -101,8 +109,14 @@ tableextension 60050 "FK API Vendor" extends Vendor
             DataClassification = CustomerContent;
 
             trigger OnValidate()
+            var
+                ltBillingCity, ltCounty : text;
             begin
-                PostCode.CheckClearPostCodeCityCounty("Billing City", "Billing Post Code", County, "Billing Region Code", xRec."Billing Region Code");
+                ltBillingCity := rec."Billing City";
+                ltCounty := rec.County;
+                PostCode.CheckClearPostCodeCityCounty(ltBillingCity, "Billing Post Code", ltCounty, "Billing Region Code", xRec."Billing Region Code");
+                rec."Billing City" := CopyStr(ltBillingCity, 1, 30);
+                rec.County := CopyStr(ltCounty, 1, 30);
             end;
         }
         field(60057; "User_Name"; text[50])

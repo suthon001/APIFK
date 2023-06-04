@@ -659,7 +659,7 @@ page 60056 "FK Good ReceiptNote Card"
                     Image = ReceiptLines;
                     RunObject = Page "Whse. Receipt Lines";
                     RunPageLink = "Source Type" = CONST(39),
-                                  "Source Subtype" = FIELD("Document Type"),
+                                  "Source Subtype" = CONST(1),
                                   "Source No." = FIELD("No.");
                     RunPageView = SORTING("Source Type", "Source Subtype", "Source No.", "Source Line No.");
                     ToolTip = 'View ongoing warehouse receipts for the document, in advanced warehouse configurations.';
