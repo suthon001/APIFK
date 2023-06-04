@@ -95,7 +95,11 @@ page 60054 "FK APi Log Card"
         }
     }
 
-
+    trigger OnAfterGetRecord()
+    begin
+        ltJsonLog := rec.GetJsonLog();
+        ltResponse := rec.GetResponse();
+    end;
 
 
     var

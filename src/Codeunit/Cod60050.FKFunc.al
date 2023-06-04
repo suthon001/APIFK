@@ -193,33 +193,34 @@ codeunit 60050 "FK Func"
                         ltJsonObject.Add(pagecontrol.ControlName, format(ltFieldRef.Value));
             until pagecontrol.next() = 0;
             ltJsonObject.WriteTo(JsonLogText);
-            apiLog.Init();
-            apiLog."Entry No." := GetLastEntryLog();
-            apiLog."Page Name" := Uppercase(pPageName);
-            apiLog."No." := pTableID;
-            apiLog."Date Time" := CurrentDateTime();
-            apiLog."Method Type" := pMethodType;
-            apiLog."Interface By" := CopyStr(USERID(), 1, 100);
-            apiLog."Document No." := pNo;
-            apiLog.Insert(true);
-            apiLog."Json Msg.".CreateOutStream(ltOutStream, TEXTENCODING::UTF8);
-            ltOutStream.WriteText(JsonLogText);
         end;
+        apiLog.Init();
+        apiLog."Entry No." := GetLastEntryLog();
+        apiLog."Page Name" := Uppercase(pPageName);
+        apiLog."No." := pTableID;
+        apiLog."Date Time" := CurrentDateTime();
+        apiLog."Method Type" := pMethodType;
+        apiLog."Interface By" := CopyStr(USERID(), 1, 100);
+        apiLog."Document No." := pNo;
+        apiLog."Json Msg.".CreateOutStream(ltOutStream, TEXTENCODING::UTF8);
+        ltOutStream.WriteText(JsonLogText);
         if InsertToTableWithTryFunction(pTableID, pPageNo, pVariant) then begin
             ltJsonObjectRespones.WriteTo(JsonLogTextRespones);
             CLEAR(ltOutStream);
             apiLog.Status := apiLog.Status::Successfully;
             apiLog.Response.CreateOutStream(ltOutStream, TEXTENCODING::UTF8);
             ltOutStream.WriteText(JsonLogTextRespones);
+            apiLog.Insert(true);
+            Commit();
         end else begin
             apiLog."Last Error" := COPYSTR(GetLastErrorText(), 1, MaxStrLen(apiLog."Last Error Code"));
             apiLog."Last Error Code" := COPYSTR(GetLastErrorCode(), 1, MaxStrLen(apiLog."Last Error Code"));
             apiLog.Status := apiLog.Status::Error;
-        end;
-        apiLog.Modify();
-        Commit();
-        if GetLastErrorText() <> '' then
+            apiLog.Insert(true);
+            Commit();
             ERROR(GetLastErrorText());
+        end;
+
     end;
 
     [TryFunction]
@@ -229,8 +230,37 @@ codeunit 60050 "FK Func"
         ltRecordRef, ltRecordRefToTable : RecordRef;
         ltFieldRef, ltFieldRefToTable : FieldRef;
         BaseUnit: Record "Unit of Measure";
+        ltItem: Record Item;
+        ltVendor: Record Vendor;
+        ltCustomer: Record Customer;
+        ltShiptoAddress: Record "Ship-to Address";
+        ltCust, ltCode : code[20];
     begin
         ltRecordRef.GetTable(pVariant);
+        if pTableID = Database::Item then begin
+            ltFieldRef := ltRecordRef.FieldIndex(1);
+            if ltItem.get(format(ltFieldRef.Value)) then
+                ERROR('The record in table Item already exists. Identification fields and values: No.=' + format(ltFieldRef.Value));
+        end;
+        if pTableID = Database::Vendor then begin
+            ltFieldRef := ltRecordRef.FieldIndex(1);
+            if ltVendor.get(format(ltFieldRef.Value)) then
+                ERROR('The record in table Vendor already exists. Identification fields and values: No.=' + format(ltFieldRef.Value));
+        end;
+        if pTableID = Database::Customer then begin
+            ltFieldRef := ltRecordRef.FieldIndex(1);
+            if ltCustomer.get(format(ltFieldRef.Value)) then
+                ERROR('The record in table Customer already exists. Identification fields and values: No.=' + format(ltFieldRef.Value));
+        end;
+        if pTableID = Database::"Ship-to Address" then begin
+            ltFieldRef := ltRecordRef.FieldIndex(1);
+            ltCust := format(ltFieldRef.Value);
+            ltFieldRef := ltRecordRef.FieldIndex(2);
+            ltCode := format(ltFieldRef.Value);
+            if ltShiptoAddress.get(ltCust, ltCode) then
+                ERROR('The record in table Ship-to Address already exists. Identification fields and values: Customer No.=' + ltCust + ',Code =' + ltCode);
+        end;
+
         pagecontrol.reset();
         pagecontrol.SetCurrentKey(PageNo, FieldNo);
         pagecontrol.SetRange(PageNo, pPageNo);
