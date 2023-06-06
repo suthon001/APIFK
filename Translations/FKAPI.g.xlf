@@ -3868,10 +3868,10 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FK Get Item API - Control type - Property Caption</note>
         </trans-unit>
-        <trans-unit id="Page 793527370 - Control 1683323943 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+        <trans-unit id="Page 793527370 - Control 3165707847 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>VAT Prod. Posting Group</source>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page FK Get Item API - Control vatrodPostingGroup - Property Caption</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Get Item API - Control vatProdPostingGroup - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 1017494904 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Ship To Address API</source>
@@ -5923,10 +5923,10 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FK Item API - Control type - Property Caption</note>
         </trans-unit>
-        <trans-unit id="Page 1013047684 - Control 1683323943 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+        <trans-unit id="Page 1013047684 - Control 3165707847 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>VAT Prod. Posting Group</source>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page FK Item API - Control vatrodPostingGroup - Property Caption</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Item API - Control vatProdPostingGroup - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 563354070 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Ship To Address API</source>
@@ -6158,10 +6158,10 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Item API - Control type - Property Caption</note>
         </trans-unit>
-        <trans-unit id="Page 2290975803 - Control 1683323943 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+        <trans-unit id="Page 2290975803 - Control 3165707847 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>VAT Prod. Posting Group</source>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Item API - Control vatrodPostingGroup - Property Caption</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Item API - Control vatProdPostingGroup - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 3539729845 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Update Ship To Address API</source>

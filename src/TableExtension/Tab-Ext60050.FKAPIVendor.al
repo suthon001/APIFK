@@ -128,7 +128,7 @@ tableextension 60050 "FK API Vendor" extends Vendor
                 ltVend: Record Vendor;
                 MailManagement: Codeunit "Mail Management";
             begin
-
+                rec.TestField("BC To INTRANET", false);
                 if xrec."User_Name" <> rec."User_Name" then
                     if rec."User_Name" <> '' then begin
                         MailManagement.CheckValidEmailAddresses("User_Name");

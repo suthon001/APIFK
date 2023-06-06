@@ -48,7 +48,7 @@ page 60066 "FK Get Item API"
                 {
                     Caption = 'Gen. Prod. Posting Group';
                 }
-                field("vatrodPostingGroup"; Rec."VAT Prod. Posting Group")
+                field(vatProdPostingGroup; Rec."VAT Prod. Posting Group")
                 {
                     Caption = 'VAT Prod. Posting Group';
                 }
