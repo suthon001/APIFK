@@ -6563,16 +6563,6 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Report TPP Purchase Return Order - Property Caption</note>
         </trans-unit>
-        <trans-unit id="PageExtension 1648490500 - Action 3123812172 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 4194195770">
-          <source>Executes the Send API action.</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">PageExtension FK API Vendor Lists - Action SendVendor - Property ToolTip</note>
-        </trans-unit>
-        <trans-unit id="PageExtension 1648490500 - Action 3123812172 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 4194195770">
-          <source>Send API</source>
-          <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">PageExtension FK API Vendor Lists - Action SendVendor - Property Caption</note>
-        </trans-unit>
         <trans-unit id="PageExtension 3956175935 - Action 2154275969 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2458191494">
           <source>Good ReceiptNote List</source>
           <note from="Developer" annotates="general" priority="2"></note>

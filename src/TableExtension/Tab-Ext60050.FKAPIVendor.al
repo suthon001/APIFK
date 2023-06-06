@@ -119,7 +119,7 @@ tableextension 60050 "FK API Vendor" extends Vendor
                 rec.County := CopyStr(ltCounty, 1, 30);
             end;
         }
-        field(60057; "User_Name"; text[50])
+        field(60057; "User_Name"; text[100])
         {
             Caption = 'User_Name';
             DataClassification = CustomerContent;
