@@ -78,6 +78,14 @@ page 60071 "FK Update Vendor API"
                 {
                     Caption = 'VAT Registration No.';
                 }
+                field(currencyCode; Rec."Currency Code")
+                {
+                    Caption = 'Currency Code';
+                }
+                field(contactName; Rec.Contact)
+                {
+                    Caption = 'Contact Name';
+                }
                 field(billingAddress; Rec."Billing Address")
                 {
                     Caption = 'Billing Address';

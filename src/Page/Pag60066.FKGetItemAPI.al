@@ -12,7 +12,7 @@ page 60066 "FK Get Item API"
     SourceTable = "item";
     InsertAllowed = false;
     DeleteAllowed = false;
-       ModifyAllowed = false;
+    ModifyAllowed = false;
     ODataKeyFields = "No.";
     layout
     {
@@ -48,9 +48,9 @@ page 60066 "FK Get Item API"
                 {
                     Caption = 'Gen. Prod. Posting Group';
                 }
-                field(vatBusPostingGrPrice; Rec."VAT Bus. Posting Gr. (Price)")
+                field("vatrodPostingGroup"; Rec."VAT Prod. Posting Group")
                 {
-                    Caption = 'VAT Bus. Posting Gr. (Price)';
+                    Caption = 'VAT Prod. Posting Group';
                 }
                 field(salesUnitOfMeasure; Rec."Sales Unit of Measure")
                 {

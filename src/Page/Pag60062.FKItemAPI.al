@@ -46,9 +46,9 @@ page 60062 "FK Item API"
                 {
                     Caption = 'Gen. Prod. Posting Group';
                 }
-                field(vatBusPostingGrPrice; Rec."VAT Bus. Posting Gr. (Price)")
+                field("vatrodPostingGroup"; Rec."VAT Prod. Posting Group")
                 {
-                    Caption = 'VAT Bus. Posting Gr. (Price)';
+                    Caption = 'VAT Prod. Posting Group';
                 }
                 field(salesUnitOfMeasure; Rec."Sales Unit of Measure")
                 {
