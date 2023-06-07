@@ -192,6 +192,12 @@ tableextension 60050 "FK API Vendor" extends Vendor
             DataClassification = CustomerContent;
             Editable = false;
         }
+        field(70001; "Is API"; Boolean)
+        {
+            Caption = 'Is API';
+            DataClassification = CustomerContent;
+            Editable = false;
+        }
 
     }
     trigger OnInsert()

@@ -154,6 +154,7 @@ codeunit 60050 "FK Func"
         ltOutStream: OutStream;
         ltDecimal: Decimal;
         ltInteger: Integer;
+        ltItem: Record Item;
     begin
         CLEAR(ltOutStream);
         CLEAR(ltJsonObject);
@@ -235,6 +236,14 @@ codeunit 60050 "FK Func"
                 apiLog."Last Error Code" := COPYSTR(GetLastErrorCode(), 1, MaxStrLen(apiLog."Last Error Code"));
                 apiLog.Status := apiLog.Status::Error;
                 apiLog.Insert(true);
+                if pTableID = Database::Item then begin
+                    ltItem.reset();
+                    ltItem.SetRange("No.", pNo);
+                    ltItem.SetRange("Is API", true);
+                    ltItem.SetRange("Is Successfully", false);
+                    if ltItem.FindFirst() then
+                        ltItem.Delete();
+                end;
                 Commit();
                 ERROR(GetLastErrorText());
             end;
@@ -285,6 +294,8 @@ codeunit 60050 "FK Func"
         if pagecontrol.FindSet() then begin
             ltRecordRefToTable.Open(pTableID);
             ltRecordRefToTable.Init();
+            ltFieldRefToTable := ltRecordRefToTable.Field(70001);
+            ltFieldRefToTable.Validate(true);
             repeat
                 ltFieldRef := ltRecordRef.Field(pagecontrol.FieldNo);
                 ltFieldRefToTable := ltRecordRefToTable.Field(pagecontrol.FieldNo);
@@ -296,7 +307,9 @@ codeunit 60050 "FK Func"
                 end else
                     ltFieldRefToTable.Validate(ltFieldRef.Value);
             until pagecontrol.next() = 0;
-            ltRecordRefToTable.Insert(true);
+            ltFieldRefToTable := ltRecordRefToTable.Field(69999);
+            ltFieldRefToTable.Validate(true);
+            ltRecordRefToTable.Insert();
             ltRecordRefToTable.Close();
             ltRecordRef.Close();
         end;

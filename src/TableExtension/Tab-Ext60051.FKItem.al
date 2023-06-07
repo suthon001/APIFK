@@ -5,18 +5,26 @@ tableextension 60051 "FK Item" extends Item
 {
     fields
     {
-        field(70000; "Already Send"; Boolean)
-        {
-            Caption = 'Already Send';
-            DataClassification = CustomerContent;
-            Editable = false;
-        }
+
         field(69999; "Is Successfully"; Boolean)
         {
             Caption = 'Is Successfully';
             DataClassification = CustomerContent;
             Editable = false;
         }
+        field(70000; "Already Send"; Boolean)
+        {
+            Caption = 'Already Send';
+            DataClassification = CustomerContent;
+            Editable = false;
+        }
+        field(70001; "Is API"; Boolean)
+        {
+            Caption = 'Is API';
+            DataClassification = CustomerContent;
+            Editable = false;
+        }
+
     }
 
     trigger OnInsert()

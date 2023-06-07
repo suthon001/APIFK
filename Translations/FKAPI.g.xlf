@@ -6838,6 +6838,11 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension FK API Vendor - Field Company Type - Property Caption</note>
         </trans-unit>
+        <trans-unit id="TableExtension 2864313379 - Field 1373424206 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 1936001480">
+          <source>Is API</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension FK API Vendor - Field Is API - Property Caption</note>
+        </trans-unit>
         <trans-unit id="TableExtension 2864313379 - Field 2514352533 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 1936001480">
           <source>Is Successfully</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -6878,6 +6883,11 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension FK Customer - Field Already Send - Property Caption</note>
         </trans-unit>
+        <trans-unit id="TableExtension 3363666211 - Field 1373424206 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 1994964448">
+          <source>Is API</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension FK Customer - Field Is API - Property Caption</note>
+        </trans-unit>
         <trans-unit id="TableExtension 3363666211 - Field 2514352533 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 1994964448">
           <source>Is Successfully</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -6887,6 +6897,11 @@
           <source>Already Send</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension FK Item - Field Already Send - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 36959228 - Field 1373424206 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3276313895">
+          <source>Is API</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension FK Item - Field Is API - Property Caption</note>
         </trans-unit>
         <trans-unit id="TableExtension 36959228 - Field 2514352533 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3276313895">
           <source>Is Successfully</source>

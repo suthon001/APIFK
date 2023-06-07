@@ -5,6 +5,7 @@ tableextension 60052 "FK Customer" extends Customer
 {
     fields
     {
+
         field(69999; "Is Successfully"; Boolean)
         {
             Caption = 'Is Successfully';
@@ -14,6 +15,12 @@ tableextension 60052 "FK Customer" extends Customer
         field(70000; "Already Send"; Boolean)
         {
             Caption = 'Already Send';
+            DataClassification = CustomerContent;
+            Editable = false;
+        }
+        field(70001; "Is API"; Boolean)
+        {
+            Caption = 'Is API';
             DataClassification = CustomerContent;
             Editable = false;
         }
