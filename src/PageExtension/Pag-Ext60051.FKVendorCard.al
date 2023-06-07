@@ -101,4 +101,11 @@ pageextension 60051 "FK Vendor Card" extends "Vendor Card"
             }
         }
     }
+    trigger OnQueryClosePage(CloseAction: Action): Boolean
+    begin
+        if CloseAction in [CloseAction::OK, CloseAction::Yes] then
+            if rec."No." <> '' then
+                rec.TestField(User_Name);
+
+    end;
 }
