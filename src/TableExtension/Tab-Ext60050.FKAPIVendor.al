@@ -7,7 +7,7 @@ tableextension 60050 "FK API Vendor" extends Vendor
     {
         field(60050; "Supplier Eng Name"; Text[100])
         {
-            Caption = 'Supplier Eng Name';
+            Caption = 'Search name (EN)';
             DataClassification = CustomerContent;
         }
         field(60051; "Vendor No. Intranet"; Code[20])

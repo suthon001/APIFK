@@ -30,9 +30,9 @@ page 60063 "FK Vendor API"
                 {
                     Caption = 'Name 2';
                 }
-                field(supplierEngName; Rec."Supplier Eng Name")
+                field(searchNameEn; Rec."Supplier Eng Name")
                 {
-                    Caption = 'Supplier Eng Name';
+                    Caption = 'Search Name (EN)';
                 }
                 field(searchName; Rec."Search Name")
                 {

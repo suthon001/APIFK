@@ -4043,10 +4043,10 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FK Get Vendor API - Control searchName - Property Caption</note>
         </trans-unit>
-        <trans-unit id="Page 3932664985 - Control 1028127937 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Supplier Eng Name</source>
+        <trans-unit id="Page 3932664985 - Control 1175065550 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Search Name (EN)</source>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page FK Get Vendor API - Control supplierEngName - Property Caption</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Get Vendor API - Control searchNameEn - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 3932664985 - Control 33021082 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>User_Name</source>
@@ -6333,10 +6333,10 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Vendor API - Control searchName - Property Caption</note>
         </trans-unit>
-        <trans-unit id="Page 2172955884 - Control 1028127937 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Supplier Eng Name</source>
+        <trans-unit id="Page 2172955884 - Control 1175065550 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Search Name (EN)</source>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Vendor API - Control supplierEngName - Property Caption</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Update Vendor API - Control searchNameEn - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 2172955884 - Control 33021082 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>User_Name</source>
@@ -6478,10 +6478,10 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FK Vendor API - Control searchName - Property Caption</note>
         </trans-unit>
-        <trans-unit id="Page 2060396115 - Control 1028127937 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Supplier Eng Name</source>
+        <trans-unit id="Page 2060396115 - Control 1175065550 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Search Name (EN)</source>
           <note from="Developer" annotates="general" priority="2"></note>
-          <note from="Xliff Generator" annotates="general" priority="3">Page FK Vendor API - Control supplierEngName - Property Caption</note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Vendor API - Control searchNameEn - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 2060396115 - Control 33021082 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>User_Name</source>
@@ -6844,7 +6844,7 @@
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension FK API Vendor - Field Is Successfully - Property Caption</note>
         </trans-unit>
         <trans-unit id="TableExtension 2864313379 - Field 2690592193 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 1936001480">
-          <source>Supplier Eng Name</source>
+          <source>Search name (EN)</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension FK API Vendor - Field Supplier Eng Name - Property Caption</note>
         </trans-unit>
