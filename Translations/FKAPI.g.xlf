@@ -6998,6 +6998,11 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension FK Ship-to Address - Field Already Send - Property Caption</note>
         </trans-unit>
+        <trans-unit id="TableExtension 2091925497 - Field 1373424206 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 1187003046">
+          <source>Is API</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension FK Ship-to Address - Field Is API - Property Caption</note>
+        </trans-unit>
         <trans-unit id="TableExtension 2091925497 - Field 2514352533 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 1187003046">
           <source>Is Successfully</source>
           <note from="Developer" annotates="general" priority="2"></note>

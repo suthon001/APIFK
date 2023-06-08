@@ -22,5 +22,17 @@ tableextension 60061 "FK Ship-to Address" extends "Ship-to Address"
             DataClassification = CustomerContent;
             Editable = false;
         }
+        field(70001; "Is API"; Boolean)
+        {
+            Caption = 'Is API';
+            DataClassification = CustomerContent;
+            Editable = false;
+        }
     }
+
+    trigger OnInsert()
+    begin
+        if not (CurrentClientType in [CurrentClientType::Api, CurrentClientType::OData, CurrentClientType::ODataV4]) then
+            rec."Is Successfully" := true;
+    end;
 }

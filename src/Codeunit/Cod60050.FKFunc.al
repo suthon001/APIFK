@@ -295,7 +295,7 @@ codeunit 60050 "FK Func"
             ltRecordRefToTable.Open(pTableID);
             ltRecordRefToTable.Init();
             ltFieldRefToTable := ltRecordRefToTable.Field(70001);
-            ltFieldRefToTable.Validate(true);
+            ltFieldRefToTable.Value := true;
             repeat
                 ltFieldRef := ltRecordRef.Field(pagecontrol.FieldNo);
                 ltFieldRefToTable := ltRecordRefToTable.Field(pagecontrol.FieldNo);
@@ -308,8 +308,11 @@ codeunit 60050 "FK Func"
                     ltFieldRefToTable.Validate(ltFieldRef.Value);
             until pagecontrol.next() = 0;
             ltFieldRefToTable := ltRecordRefToTable.Field(69999);
-            ltFieldRefToTable.Validate(true);
-            ltRecordRefToTable.Insert();
+            ltFieldRefToTable.Value := true;
+            if (pTableID = Database::Item) then
+                ltRecordRefToTable.Modify()
+            else
+                ltRecordRefToTable.Insert();
             ltRecordRefToTable.Close();
             ltRecordRef.Close();
         end;
