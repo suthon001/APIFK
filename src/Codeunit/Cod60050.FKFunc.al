@@ -27,7 +27,6 @@ codeunit 60050 "FK Func"
     var
         ltJsonObject: JsonObject;
         ltVendorNoIntranet: Integer;
-        beforsendMsg: Label 'The record no. %1 already send to intranet', Locked = true;
     begin
         CLEAR(ltJsonObject);
         if pManual then begin
@@ -36,10 +35,6 @@ codeunit 60050 "FK Func"
             FreshketIntregation.TestField("FK UserName");
             FreshketIntregation.TestField("FK Password");
             pVendor.TestField("Vendor Direct", true);
-            if pVendor."BC To INTRANET" then begin
-                message(beforsendMsg, pVendor."No.");
-                exit;
-            end;
         end;
 
 
@@ -143,30 +138,31 @@ codeunit 60050 "FK Func"
 
 
 
-    procedure APITempToTable(pTableID: Integer; pPageNo: Integer; pVariant: Variant; pNo: Code[100]; pMethodType: Option Insert,Update,Delete; pPageName: text[50])
+    procedure APITempToTable(pTableID: Integer; pPageNo: Integer; pVariant: Variant; pNo: Code[100]; pMethodType: Option Insert,Update,Delete; pPageName: text[50]; pJsonObject: JsonObject)
     var
         ltRecordRef: RecordRef;
         ltFieldRef: FieldRef;
         pagecontrol: Record "Page Control Field";
         ltJsonObject, ltJsonObjectRespones : JsonObject;
         apiLog: Record "FK API Log";
-        JsonLogText, JsonLogTextRespones : Text;
+        JsonLogTextRespones: Text;
         ltOutStream: OutStream;
         ltDecimal: Decimal;
         ltInteger: Integer;
         ltItem: Record Item;
+        ltJsonText: Text;
     begin
         CLEAR(ltOutStream);
         CLEAR(ltJsonObject);
         Clear(ltJsonObjectRespones);
-        JsonLogText := '';
+        ltJsonText := '';
         JsonLogTextRespones := '';
         ltRecordRef.GetTable(pVariant);
         pagecontrol.reset();
         pagecontrol.SetCurrentKey(PageNo, FieldNo);
         pagecontrol.SetRange(PageNo, pPageNo);
         pagecontrol.SetFilter(FieldNo, '<>%1', 0);
-        if pagecontrol.FindSet() then begin
+        if pagecontrol.FindSet() then
             repeat
                 ltFieldRef := ltRecordRef.Field(pagecontrol.FieldNo);
                 if ltFieldRef.Type IN [ltFieldRef.Type::Integer, ltFieldRef.Type::Decimal] then begin
@@ -179,22 +175,9 @@ codeunit 60050 "FK Func"
                     end;
                 end else
                     ltJsonObjectRespones.Add(pagecontrol.ControlName, format(ltFieldRef.Value));
-
-
-                if Format(ltFieldRef.Value) <> '' then
-                    if ltFieldRef.Type IN [ltFieldRef.Type::Integer, ltFieldRef.Type::Decimal] then begin
-                        if ltFieldRef.Type = ltFieldRef.Type::Integer then begin
-                            Evaluate(ltInteger, format(ltFieldRef.Value));
-                            ltJsonObject.Add(pagecontrol.ControlName, ltInteger);
-                        end else begin
-                            Evaluate(ltDecimal, format(ltFieldRef.Value));
-                            ltJsonObject.Add(pagecontrol.ControlName, ltDecimal);
-                        end;
-                    end else
-                        ltJsonObject.Add(pagecontrol.ControlName, format(ltFieldRef.Value));
             until pagecontrol.next() = 0;
-            ltJsonObject.WriteTo(JsonLogText);
-        end;
+
+        pJsonObject.WriteTo(ltJsonText);
         apiLog.Init();
         apiLog."Entry No." := GetLastEntryLog();
         apiLog."Page Name" := Uppercase(pPageName);
@@ -204,7 +187,7 @@ codeunit 60050 "FK Func"
         apiLog."Interface By" := CopyStr(USERID(), 1, 100);
         apiLog."Document No." := pNo;
         apiLog."Json Msg.".CreateOutStream(ltOutStream, TEXTENCODING::UTF8);
-        ltOutStream.WriteText(JsonLogText);
+        ltOutStream.WriteText(ltJsonText);
         if pMethodType = pMethodType::Insert then
             if InsertToTableWithTryFunction(pTableID, pPageNo, pVariant) then begin
                 ltJsonObjectRespones.WriteTo(JsonLogTextRespones);
@@ -223,7 +206,7 @@ codeunit 60050 "FK Func"
                 ERROR(GetLastErrorText());
             end;
         if pMethodType = pMethodType::Update then
-            if UpdateToTableWithTryFunction(pTableID, pPageNo, pVariant) then begin
+            if UpdateToTableWithTryFunction(pTableID, pPageNo, pVariant, pJsonObject) then begin
                 ltJsonObjectRespones.WriteTo(JsonLogTextRespones);
                 CLEAR(ltOutStream);
                 apiLog.Status := apiLog.Status::Successfully;
@@ -319,7 +302,7 @@ codeunit 60050 "FK Func"
     end;
 
     [TryFunction]
-    local procedure UpdateToTableWithTryFunction(pTableID: Integer; pPageNo: Integer; pVariant: Variant)
+    local procedure UpdateToTableWithTryFunction(pTableID: Integer; pPageNo: Integer; pVariant: Variant; pJsonObject: JsonObject)
     var
         pagecontrol: Record "Page Control Field";
         ltRecordRef, ltRecordRefToTable : RecordRef;
@@ -330,6 +313,8 @@ codeunit 60050 "FK Func"
         ltShiptoAddress: Record "Ship-to Address";
         ltField: Record Field;
         ltCust, ltCode : code[20];
+        CheckJsonToken: JsonToken;
+        ltIndexofDetail: integer;
     begin
         ltRecordRef.GetTable(pVariant);
         if pTableID = Database::Item then begin
@@ -372,14 +357,27 @@ codeunit 60050 "FK Func"
             pagecontrol.SetFilter(FieldNo, '<>%1', 0);
             if pagecontrol.FindSet() then begin
                 repeat
-
                     if ltField.GET(pTableID, pagecontrol.FieldNo) then
                         if not ltField.IsPartOfPrimaryKey then begin
                             ltFieldRef := ltRecordRef.Field(pagecontrol.FieldNo);
                             ltFieldRefToTable := ltRecordRefToTable.Field(pagecontrol.FieldNo);
-                            if format(ltFieldRef.Value) <> '' then
-                                ltFieldRefToTable.Validate(ltFieldRef.Value);
+                            if pJsonObject.SelectToken('$.' + pagecontrol.ControlName, CheckJsonToken) then
+                                if ltField.Type IN [ltField.Type::Integer, ltField.Type::Decimal, ltField.Type::Option] then begin
+                                    if ltField.Type = ltField.Type::Option then begin
+                                        ltIndexofDetail := SelectOption(ltField.OptionString, SelectJsonTokenText(pJsonObject, '$.' + pagecontrol.ControlName));
+                                        ltFieldRefToTable.validate(ltIndexofDetail);
+                                    end else
+                                        ltFieldRefToTable.validate(SelectJsonTokenInterger(pJsonObject, '$.' + pagecontrol.ControlName))
+                                end else
+                                    if ltField.Type = ltField.Type::Boolean then begin
+                                        if uppercase(SelectJsonTokenText(pJsonObject, '$.' + pagecontrol.ControlName)) = 'NO' then
+                                            ltFieldRefToTable.Validate(false)
+                                        else
+                                            ltFieldRefToTable.Validate(true);
+                                    end else
+                                        ltFieldRefToTable.Validate(SelectJsonTokenText(pJsonObject, '$.' + pagecontrol.ControlName));
                         end;
+
                 until pagecontrol.next() = 0;
                 ltRecordRefToTable.Modify();
                 ltRecordRefToTable.Close();
@@ -3508,7 +3506,8 @@ codeunit 60050 "FK Func"
                 pApiName: Text;
                 pPageName: Enum "FK Api Page Type";
                                pDocumentNo: Text;
-                               pJsonFormat: Boolean; pShiptoAddress: Boolean)
+                               pJsonFormat: Boolean;
+                               pShiptoAddress: Boolean)
     var
 
         APIMappingLine: Record "API Setup Line";
