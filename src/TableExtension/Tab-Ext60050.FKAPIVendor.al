@@ -139,6 +139,7 @@ tableextension 60050 "FK API Vendor" extends Vendor
                         if ltVend.FindFirst() then
                             ltVend.FieldError("User_Name", 'already exists');
                     end;
+                rec."E-Mail" := COPYSTR(rec.User_Name, 1, 80);
             end;
         }
         field(60058; "VAT registration supplier"; Boolean)

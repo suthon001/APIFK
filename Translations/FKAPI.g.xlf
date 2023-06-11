@@ -6798,6 +6798,11 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension FK Vendor Card - Control Vendor No. Intranet - Property ToolTip</note>
         </trans-unit>
+        <trans-unit id="PageExtension 1258159813 - Control 2677762267 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 72501842">
+          <source>Specifies value of the field.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension FK Vendor Templ. Card - Control Vendor Direct - Property ToolTip</note>
+        </trans-unit>
         <trans-unit id="TableExtension 2864313379 - Field 2937662366 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 1936001480">
           <source>Already Send</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -7012,6 +7017,11 @@
           <source>Vat Registration No.</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension FK Ship-to Address - Field Vat Registration No. - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 3430995929 - Field 2677762267 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4020539926">
+          <source>Vendor Direct</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension FK Vendor Templ. - Field Vendor Direct - Property Caption</note>
         </trans-unit>
         <trans-unit id="Enum 1824646858 - EnumValue 1371923692 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source> </source>
