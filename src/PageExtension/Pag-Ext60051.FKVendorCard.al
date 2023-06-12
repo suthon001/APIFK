@@ -15,27 +15,32 @@ pageextension 60051 "FK Vendor Card" extends "Vendor Card"
                 {
                     ApplicationArea = all;
                     ToolTip = 'Specifies value of the field.';
+                    ShowMandatory = true;
 
                 }
                 field("Vendor No. Intranet"; Rec."Vendor No. Intranet")
                 {
                     ApplicationArea = all;
                     ToolTip = 'Specifies value of the field.';
+                    ShowMandatory = true;
                 }
                 field(User_Name; Rec.User_Name)
                 {
                     ApplicationArea = all;
                     ToolTip = 'Specifies value of the field.';
+                    ShowMandatory = true;
                 }
                 field("VAT registration supplier"; Rec."VAT registration supplier")
                 {
                     ApplicationArea = all;
                     ToolTip = 'Specifies value of the field.';
+                    ShowMandatory = true;
                 }
                 field("Company Type"; Rec."Company Type")
                 {
                     ApplicationArea = all;
                     ToolTip = 'Specifies value of the field.';
+                    ShowMandatory = true;
                 }
                 field("Vendor Direct"; Rec."Vendor Direct")
                 {
@@ -51,6 +56,7 @@ pageextension 60051 "FK Vendor Card" extends "Vendor Card"
                 {
                     ApplicationArea = all;
                     ToolTip = 'Specifies value of the field.';
+                    ShowMandatory = true;
                 }
                 field("Billing Address 2"; Rec."Billing Address 2")
                 {
@@ -73,6 +79,31 @@ pageextension 60051 "FK Vendor Card" extends "Vendor Card"
                     ToolTip = 'Specifies value of the field.';
                 }
             }
+
+        }
+        modify("No.")
+        {
+            ShowMandatory = true;
+        }
+        modify(Name)
+        {
+            ShowMandatory = true;
+        }
+        modify("Search Name")
+        {
+            ShowMandatory = true;
+        }
+        modify("VAT Registration No.")
+        {
+            ShowMandatory = true;
+        }
+        modify(Control16)
+        {
+            ShowMandatory = true;
+        }
+        modify("Phone No.")
+        {
+            ShowMandatory = true;
         }
     }
     actions

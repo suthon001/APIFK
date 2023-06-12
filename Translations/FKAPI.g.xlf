@@ -3873,6 +3873,81 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FK Get Item API - Control vatProdPostingGroup - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Page 1235846783 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Get PR. Line</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Get RR Line - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 1235846783 - Control 3461834954 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies value of the field.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Get RR Line - Control Description - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1235846783 - Control 47657272 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies value of the field.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Get RR Line - Control Description 2 - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1235846783 - Control 4187992892 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the cost of one unit of the selected item or resource.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Get RR Line - Control Direct Unit Cost - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1235846783 - Control 486908828 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the document number.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Get RR Line - Control Document No. - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1235846783 - Control 3469770434 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the date you expect the items to be available in your warehouse.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Get RR Line - Control Expected Receipt Date - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1235846783 - Control 3582421358 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies value of the field.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Get RR Line - Control Line Amount - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1235846783 - Control 2702998682 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies value of the field.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Get RR Line - Control Line Discount % - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1235846783 - Control 2161572060 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies value of the field.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Get RR Line - Control Location Code - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1235846783 - Control 4200184881 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies value of the field.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Get RR Line - Control No. - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1235846783 - Control 780898661 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the value of the OutStanding PR Quantity field.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Get RR Line - Control OutStanding PR Quantity - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1235846783 - Control 1080470936 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the value of the Qty. on PO field.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Get RR Line - Control Qty. on PO - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1235846783 - Control 2704404533 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies value of the field.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Get RR Line - Control Quantity - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1235846783 - Control 1878130204 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies value of the field.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Get RR Line - Control Type - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1235846783 - Control 2385270358 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies value of the field.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Get RR Line - Control Unit of Measure Code - Property ToolTip</note>
+        </trans-unit>
         <trans-unit id="Page 1017494904 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Ship To Address API</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -6563,6 +6638,11 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Report TPP Purchase Return Order - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Query 2369073906 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Group Get PR. Line</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Query FK Grouping Get PR - Property Caption</note>
+        </trans-unit>
         <trans-unit id="PageExtension 3956175935 - Action 2154275969 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2458191494">
           <source>Good ReceiptNote List</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -6667,6 +6747,16 @@
           <source>Purchase Order</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension FK Purchase Order List - Action Purchase Order - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="PageExtension 2476750102 - Action 1562506330 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 526152577">
+          <source>Executes the Get PR Line action.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension FK Purchase Order Subform - Action TPP Get PR Line - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="PageExtension 2476750102 - Action 1562506330 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 526152577">
+          <source>Get PR Line</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension FK Purchase Order Subform - Action TPP Get PR Line - Property Caption</note>
         </trans-unit>
         <trans-unit id="PageExtension 10421784 - Action 1819353702 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3321822267">
           <source>Executes the Purchase Quote action.</source>
