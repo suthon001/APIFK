@@ -105,6 +105,10 @@ pageextension 60051 "FK Vendor Card" extends "Vendor Card"
         {
             ShowMandatory = true;
         }
+        modify("Address")
+        {
+            ShowMandatory = true;
+        }
     }
     actions
     {
