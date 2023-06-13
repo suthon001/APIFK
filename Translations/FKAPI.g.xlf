@@ -2518,6 +2518,501 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Table Ship-to Address Buffer - Field Vat Registration No. - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Table 2358534803 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Billing - Receipt Header</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Header - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2358534803 - Field 985328067 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>E-mail</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Header - Field E-mail - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2358534803 - Field 1188329300 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Advertise Amount (LCY)</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Header - Field TPP Advertise Amount (LCY) - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2358534803 - Field 2089491028 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Advertise Amount Acc.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Header - Field TPP Advertise Amount Acc. - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2358534803 - Field 135903309 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Bank Branch Code</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Header - Field TPP Bank Branch Code - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2358534803 - Field 1739936579 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Bank Branch Name</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Header - Field TPP Bank Branch Name - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2358534803 - Field 2173657761 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Bank Code</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Header - Field TPP Bank Code - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2358534803 - Field 4202376581 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Bank Fee Acc.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Header - Field TPP Bank Fee Acc. - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2358534803 - Field 608040377 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Bank Fee Amount (LCY)</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Header - Field TPP Bank Fee Amount (LCY) - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2358534803 - Field 1338796743 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Bank Name</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Header - Field TPP Bank Name - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2358534803 - Field 3808751961 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Batch Name</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Header - Field TPP Batch Name - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2358534803 - Field 1145137327 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Branch Code</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Header - Field TPP Branch Code - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2358534803 - Field 770561337 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Cheque Date</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Header - Field TPP Cheque Date - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2358534803 - Field 812913184 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Cheque No.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Header - Field TPP Cheque No. - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2358534803 - Field 4130824197 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>City</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Header - Field TPP City - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2358534803 - Field 3142996611 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Commit Date</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Header - Field TPP Commit Date - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2358534803 - Field 3174570602 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Currency Code</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Header - Field TPP Currency Code - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2358534803 - Field 22790090 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Customer Address</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Header - Field TPP Customer Address - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2358534803 - Field 1804204088 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Customer Address 2</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Header - Field TPP Customer Address 2 - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2358534803 - Field 4146845113 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Customer Name</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Header - Field TPP Customer Name - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2358534803 - Field 1573222871 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Customer Name 2</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Header - Field TPP Customer Name 2 - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2358534803 - Field 1339575193 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Customer No.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Header - Field TPP Customer No. - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2358534803 - Field 1697343182 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Diff Amount (LCY)</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Header - Field TPP Diff Amount (LCY) - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2358534803 - Field 1095680686 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Diff Amount Acc.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Header - Field TPP Diff Amount Acc. - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2358534803 - Field 2281053118 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Discount Amount (LCY)</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Header - Field TPP Discount Amount (LCY) - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2358534803 - Field 3731209406 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Discount Amount Acc.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Header - Field TPP Discount Amount Acc. - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2358534803 - Field 1140607057 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Document Date</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Header - Field TPP Document Date - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2358534803 - Field 393944221 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Document Type</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Header - Field TPP Document Type - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2358534803 - Field 4277340344 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Due Date</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Header - Field TPP Due Date - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2358534803 - Field 312195192 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Head Office</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Header - Field TPP Head Office - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2358534803 - Field 1233425607 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Journal Document No.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Header - Field TPP Journal Document No. - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2358534803 - Field 1087688517 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>No.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Header - Field TPP No. - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2358534803 - Field 1679848004 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>No. Series</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Header - Field TPP No. Series - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2358534803 - Field 1732652635 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Payment Method</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Header - Field TPP Payment Method - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2358534803 - Field 1152260383 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Payment Option</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Header - Field TPP Payment Option - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2358534803 - Field 1152260383 - Property 62802879" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Cash,Cheque,Transfer,Credit Card</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Header - Field TPP Payment Option - Property OptionCaption</note>
+        </trans-unit>
+        <trans-unit id="Table 2358534803 - Field 2318957503 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Billing Term Code</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Header - Field TPP Payment Term Code - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2358534803 - Field 3691282179 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Post Code</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Header - Field TPP Post Code - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2358534803 - Field 249972279 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Posted Document No.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Header - Field TPP Posted Document No. - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2358534803 - Field 3166113229 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Prepaid WHT Acc.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Header - Field TPP Prepaid WHT Acc. - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2358534803 - Field 1621292545 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Prepaid WHT Amount (LCY)</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Header - Field TPP Prepaid WHT Amount (LCY) - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2358534803 - Field 1709705692 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Prepaid WHT Date</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Header - Field TPP Prepaid WHT Date - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2358534803 - Field 320950077 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Prepaid WHT No.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Header - Field TPP Prepaid WHT No. - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2358534803 - Field 4242141259 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Receive Account No.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Header - Field TPP Receive Account No. - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2358534803 - Field 4258735061 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Receive Amount</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Header - Field TPP Receive Amount - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2358534803 - Field 1542716205 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Receive Date</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Header - Field TPP Receive Date - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2358534803 - Field 2861303877 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Receive Status</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Header - Field TPP Receive Status - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2358534803 - Field 2861303877 - Property 62802879" size-unit="char" translate="yes" xml:space="preserve">
+          <source> ,In used,Used</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Header - Field TPP Receive Status - Property OptionCaption</note>
+        </trans-unit>
+        <trans-unit id="Table 2358534803 - Field 2289379041 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Receive Type</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Header - Field TPP Receive Type - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2358534803 - Field 2289379041 - Property 62802879" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Bank Account,G/L Account</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Header - Field TPP Receive Type - Property OptionCaption</note>
+        </trans-unit>
+        <trans-unit id="Table 2358534803 - Field 1170146892 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Receive Voucher No.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Header - Field TPP Receive Voucher No. - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2358534803 - Field 1812487914 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Remark</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Header - Field TPP Remark - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2358534803 - Field 1524678792 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>RV No. Series</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Header - Field TPP RV No. Series - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2358534803 - Field 3846968984 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Salesperson Code</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Header - Field TPP Salesperson Code - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2358534803 - Field 821107756 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Status</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Header - Field TPP Status - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2358534803 - Field 1776266549 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Template Name</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Header - Field TPP Template Name - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2358534803 - Field 3819376334 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Total Amount</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Header - Field TPP Total Amount - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2358534803 - Field 2008614439 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Total Amount (LCY)</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Header - Field TPP Total Amount (LCY) - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2358534803 - Field 10187880 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Transport Amount (LCY)</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Header - Field TPP Transport Amount (LCY) - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2358534803 - Field 840777208 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Transport Amount Acc.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Header - Field TPP Transport Amount Acc. - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2358534803 - Field 2839159826 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Vendor Address</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Header - Field TPP Vendor Address - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2358534803 - Field 140269824 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Vendor Address 2</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Header - Field TPP Vendor Address 2 - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2358534803 - Field 1788895601 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Vendor City</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Header - Field TPP Vendor City - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2358534803 - Field 2593341569 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Vendor Name</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Header - Field TPP Vendor Name - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2358534803 - Field 3490398271 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Vendor Name 2</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Header - Field TPP Vendor Name 2 - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2358534803 - Field 3129151377 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Vendor No.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Header - Field TPP Vendor No. - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2358534803 - Field 1812954543 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Vendor Post Code</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Header - Field TPP Vendor Post Code - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 2358534803 - Field 617267791 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>VAT Registration No.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Header - Field VAT Registration No. - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 1125915084 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Billing - Receipt Lines</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Line - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 1125915084 - Field 2520674348 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Amount</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Line - Field TPP Amount - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 1125915084 - Field 2834275529 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Amount (LCY)</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Line - Field TPP Amount (LCY) - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 1125915084 - Field 2314110203 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Cust. Doc. Date</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Line - Field TPP Cust. Doc. Date - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 1125915084 - Field 2966620758 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Cust. Doc. No.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Line - Field TPP Cust. Doc. No. - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 1125915084 - Field 3288996559 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Cust. Doc. Type</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Line - Field TPP Cust. Doc. Type - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 1125915084 - Field 3288996559 - Property 62802879" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Invoice,Credit Memo</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Line - Field TPP Cust. Doc. Type - Property OptionCaption</note>
+        </trans-unit>
+        <trans-unit id="Table 1125915084 - Field 4186181757 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Cust. Due Date</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Line - Field TPP Cust. Due Date - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 1125915084 - Field 411762684 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Cust. Entry No.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Line - Field TPP Cust. Entry No. - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 1125915084 - Field 1708848519 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Cust. Ext. Doc. No.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Line - Field TPP Cust. Ext. Doc. No. - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 1125915084 - Field 3585657713 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Descreiption</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Line - Field TPP Descreiption - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 1125915084 - Field 3127208200 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Document No.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Line - Field TPP Document No. - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 1125915084 - Field 393944221 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Document Type</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Line - Field TPP Document Type - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 1125915084 - Field 1292673758 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Temp. Inv. Discount Amount</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Line - Field TPP Inv. Discount Amount - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 1125915084 - Field 2121233210 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Temp. Line Amount</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Line - Field TPP Line Amount - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 1125915084 - Field 4195078926 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Temp. ine Discount %</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Line - Field TPP Line Discount % - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 1125915084 - Field 3413163469 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Temp. Quantity</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Line - Field TPP Line Discount Amount - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 1125915084 - Field 1072841023 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Line No.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Line - Field TPP Line No. - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 1125915084 - Field 1087688517 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Temp. No.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Line - Field TPP No. - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 1125915084 - Field 3307212619 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Original Amount</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Line - Field TPP Original Amount - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 1125915084 - Field 3096607674 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Original Amount (LCY)</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Line - Field TPP Original Amount (LCY) - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 1125915084 - Field 1174472833 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Temp. Quantity</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Line - Field TPP Quantity - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 1125915084 - Field 1925257184 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Remaining Amount</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Line - Field TPP Remaining Amount - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 1125915084 - Field 838205733 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Remaining Amount (LCY)</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Line - Field TPP Remaining Amount (LCY) - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 1125915084 - Field 139063913 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Temp. Unit Price</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Line - Field TPP Unit Price - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 1125915084 - Field 2924699389 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Temp. UOM</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Line - Field TPP UOM - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 1125915084 - Field 1690584198 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Vendor Doc. Date</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Line - Field TPP Vendor Doc. Date - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 1125915084 - Field 2793079651 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Vendor Doc. No.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Line - Field TPP Vendor Doc. No. - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 1125915084 - Field 3220697388 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Vendor Due Date</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Line - Field TPP Vendor Due Date - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 1125915084 - Field 3538863829 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Vendor Entry No.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Line - Field TPP Vendor Entry No. - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Table 1125915084 - Field 3113211506 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Vendor Ext. Doc. No.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table TPP Billing - Receipt Line - Field TPP Vendor Ext. Doc. No. - Property Caption</note>
+        </trans-unit>
         <trans-unit id="Table 4068009704 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Vendor Buffer</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -6003,6 +6498,256 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FK Item API - Control vatProdPostingGroup - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Page 2173093404 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Purchase Billing Card</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Purch. Billing Card - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2173093404 - Control 2204547446 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>General</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Purch. Billing Card - Control TPP General - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2173093404 - Control 4130824197 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the value of the City field.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Purch. Billing Card - Control TPP City - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2173093404 - Control 3174570602 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the value of the Currency Code field.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Purch. Billing Card - Control TPP Currency Code - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2173093404 - Control 1140607057 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the value of the Document Date field.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Purch. Billing Card - Control TPP Document Date - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2173093404 - Control 4277340344 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the value of the Due Date field.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Purch. Billing Card - Control TPP Due Date - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2173093404 - Control 1087688517 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the value of the No. field.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Purch. Billing Card - Control TPP No. - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2173093404 - Control 1732652635 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the value of the Payment Method field.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Purch. Billing Card - Control TPP Payment Method - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2173093404 - Control 2318957503 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the value of the Billing Term Code field.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Purch. Billing Card - Control TPP Payment Term Code - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2173093404 - Control 3691282179 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the value of the Post Code field.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Purch. Billing Card - Control TPP Post Code - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2173093404 - Control 1812487914 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the value of the Remark field.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Purch. Billing Card - Control TPP Remark - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2173093404 - Control 821107756 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the value of the Status field.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Purch. Billing Card - Control TPP Status - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2173093404 - Control 2008614439 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the value of the Total Amount (LCY) field.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Purch. Billing Card - Control TPP Total Amount (LCY) - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2173093404 - Control 2839159826 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the value of the Vendor Address field.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Purch. Billing Card - Control TPP Vendor Address - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2173093404 - Control 140269824 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the value of the Vendor Address 2 field.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Purch. Billing Card - Control TPP Vendor Address 2 - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2173093404 - Control 2593341569 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the value of the Vendor Name field.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Purch. Billing Card - Control TPP Vendor Name - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2173093404 - Control 3490398271 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the value of the Vendor Name 2 field.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Purch. Billing Card - Control TPP Vendor Name 2 - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2173093404 - Control 3129151377 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the value of the Vendor No. field.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Purch. Billing Card - Control TPP Vendor No. - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2173093404 - Control 2444461039 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Lines</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Purch. Billing Card - Control TPP MyPurchBillingSubform - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2173093404 - Action 1191338004 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Executes the Open action.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Purch. Billing Card - Action TPP Open - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2173093404 - Action 1191338004 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Open</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Purch. Billing Card - Action TPP Open - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2173093404 - Action 967413839 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Executes the Release action.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Purch. Billing Card - Action TPP Release - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2173093404 - Action 967413839 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Release</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Purch. Billing Card - Action TPP Release - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2173093404 - Action 855121758 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Report</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Purch. Billing Card - Action TPP Report - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2173093404 - Action 1838713232 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Executes the Purchase Billing action.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Purch. Billing Card - Action TPP Purchase Billing - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2173093404 - Action 1838713232 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Purchase Billing</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Purch. Billing Card - Action TPP Purchase Billing - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 1610677242 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Purch. Billing List</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Purch. Billing List - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 1610677242 - Control 3174570602 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the value of the Currency Code field.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Purch. Billing List - Control TPP Currency Code - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1610677242 - Control 1140607057 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the value of the Document Date field.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Purch. Billing List - Control TPP Document Date - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1610677242 - Control 4277340344 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the value of the Due Date field.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Purch. Billing List - Control TPP Due Date - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1610677242 - Control 1087688517 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the value of the No. field.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Purch. Billing List - Control TPP No. - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1610677242 - Control 821107756 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the value of the Status field.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Purch. Billing List - Control TPP Status - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1610677242 - Control 2008614439 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the value of the Total Amount (LCY) field.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Purch. Billing List - Control TPP Total Amount (LCY) - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1610677242 - Control 2839159826 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the value of the Vendor Address field.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Purch. Billing List - Control TPP Vendor Address - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1610677242 - Control 140269824 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the value of the Vendor Address 2 field.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Purch. Billing List - Control TPP Vendor Address 2 - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1610677242 - Control 2593341569 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the value of the Vendor Name field.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Purch. Billing List - Control TPP Vendor Name - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1610677242 - Control 3490398271 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the value of the Vendor Name 2 field.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Purch. Billing List - Control TPP Vendor Name 2 - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 1610677242 - Control 3129151377 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the value of the Vendor No. field.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Purch. Billing List - Control TPP Vendor No. - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2365823378 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Purch. Billing Subform</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Purch. Billing Subform - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2365823378 - Control 2834275529 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the value of the Amount (LCY) field.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Purch. Billing Subform - Control TPP Amount (LCY) - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2365823378 - Control 3096607674 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the value of the Original Amount (LCY) field.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Purch. Billing Subform - Control TPP Original Amount (LCY) - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2365823378 - Control 838205733 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the value of the Remaining Amount (LCY) field.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Purch. Billing Subform - Control TPP Remaining Amount (LCY) - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2365823378 - Control 1690584198 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the value of the Vendor Doc. Date field.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Purch. Billing Subform - Control TPP Vendor Doc. Date - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2365823378 - Control 2793079651 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the value of the Vendor Doc. No. field.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Purch. Billing Subform - Control TPP Vendor Doc. No. - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2365823378 - Control 207366234 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the value of the Cust. Doc. Type field.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Purch. Billing Subform - Control TPP Vendor Doc. Type - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2365823378 - Control 207366234 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Vendor Doc. Type</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Purch. Billing Subform - Control TPP Vendor Doc. Type - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2365823378 - Control 3538863829 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the value of the Vendor Entry No. field.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Purch. Billing Subform - Control TPP Vendor Entry No. - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2365823378 - Control 3113211506 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the value of the Vendor Ext. Doc. No. field.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Purch. Billing Subform - Control TPP Vendor Ext. Doc. No. - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2365823378 - Action 3594684779 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Executes the Get Vendor Ledger Entries action.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Purch. Billing Subform - Action TPP Get Vendor Ledger Entries - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2365823378 - Action 3594684779 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Get Vendor Ledger Entries</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Purch. Billing Subform - Action TPP Get Vendor Ledger Entries - Property Caption</note>
+        </trans-unit>
         <trans-unit id="Page 563354070 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Ship To Address API</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -6593,6 +7338,91 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page FK Vendor API - Control vendorPostingGroup - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Page 2302491017 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Vendor Ledger Page</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Vendor Ledger Page - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2302491017 - Control 3130779868 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the value of the Document Date field.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Vendor Ledger Page - Control TPP  Date - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2302491017 - Control 430738974 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies a description of the vendor entry.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Vendor Ledger Page - Control TPP Description - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2302491017 - Control 3127208200 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the vendor entry's document number.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Vendor Ledger Page - Control TPP Document No. - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2302491017 - Control 393944221 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the document type that the vendor entry belongs to.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Vendor Ledger Page - Control TPP Document Type - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2302491017 - Control 527220065 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the number of the entry, as assigned from the specified number series when the entry was created.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Vendor Ledger Page - Control TPP Entry No. - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2302491017 - Control 3307212619 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the value of the Original Amount field.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Vendor Ledger Page - Control TPP Original Amount - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2302491017 - Control 3307212619 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Original Amoun</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Vendor Ledger Page - Control TPP Original Amount - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2302491017 - Control 1648200932 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the vendor entry's posting date.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Vendor Ledger Page - Control TPP Posting Date - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2302491017 - Control 1925257184 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the value of the Remaining Amount field.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Vendor Ledger Page - Control TPP Remaining Amount - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2302491017 - Control 1925257184 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Remaining Amount</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Vendor Ledger Page - Control TPP Remaining Amount - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2302491017 - Control 3745379623 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the value of the TPP Vend. Bill. Amount (LCY) field.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Vendor Ledger Page - Control TPP Vend. Bill. Amount (LCY) - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2302491017 - Control 3745379623 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Vend. Bill. Amount (LCY)</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Vendor Ledger Page - Control TPP Vend. Bill. Amount (LCY) - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2302491017 - Control 24735557 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the value of the TPP Vend. Bill. Rem. Amt.(LCY) field.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Vendor Ledger Page - Control TPP Vend. Bill. Rem. Amt.(LCY) - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2302491017 - Control 24735557 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Vend. Bill. Rem. Amt.(LCY)</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Vendor Ledger Page - Control TPP Vend. Bill. Rem. Amt.(LCY) - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2302491017 - Control 3386745768 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the value of the Vend. Billing Open field.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Vendor Ledger Page - Control TPP Vend. Billing Open - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2302491017 - Control 3129151377 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the number of the vendor account that the entry is linked to.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page FK Vendor Ledger Page - Control TPP Vendor No. - Property ToolTip</note>
+        </trans-unit>
         <trans-unit id="Page 2228178931 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Freshket Intregation Setup</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -6617,6 +7447,11 @@
           <source>Specifies the value of the UserName field.</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page Freshket Intregation Setup - Control FK UserName - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Report 4087349775 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Purchase Billing</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Report FK Purchase Billing - Property Caption</note>
         </trans-unit>
         <trans-unit id="Report 469949147 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Purcahse Order</source>
@@ -6672,6 +7507,11 @@
           <source>Good Receipt Note</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension FK Order Processor Role Center - Action GoodReceiptNote - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="PageExtension 1305798988 - Control 1152260383 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2805771090">
+          <source>Specifies the value of the Payment Option field.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension FK Payment Method - Control TPP Payment Option - Property ToolTip</note>
         </trans-unit>
         <trans-unit id="PageExtension 1635911234 - Control 2812209798 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 2406989597">
           <source>Specifies value of the field.</source>
@@ -6797,6 +7637,11 @@
           <source>Purchase Return Order</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">PageExtension FK Purchase Return Order List - Action Purchase Return Order - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="PageExtension 430160615 - Control 4191629260 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 3921990236">
+          <source>Specifies the value of the Purchase Billing Nos. field.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">PageExtension FK Purchases &amp; Payables Setup - Control TPP Purchase Billing Nos. - Property ToolTip</note>
         </trans-unit>
         <trans-unit id="PageExtension 2091925497 - Control 2681495375 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Page 1187003046">
           <source>Specifies value of the field.</source>
@@ -6973,6 +7818,36 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension FK API Vendor - Field Vendor No. Intranet - Property Caption</note>
         </trans-unit>
+        <trans-unit id="TableExtension 1122288909 - Field 3625235101 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 2733917450">
+          <source>Cust. Billing Rem. Amt. (LCY)</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension FK Cust. Ledger Entry - Field TPP Cust. Bill. Rem. Amt.(LCY) - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 1122288909 - Field 167807725 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 2733917450">
+          <source>Cust. Billing Amount (LCY)</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension FK Cust. Ledger Entry - Field TPP Cust. Billing Amount (LCY) - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 1122288909 - Field 1568499504 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 2733917450">
+          <source>Cust. Billing Open</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension FK Cust. Ledger Entry - Field TPP Cust. Billing Open - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 1122288909 - Field 73953422 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 2733917450">
+          <source>Cust. Rec. Amount (LCY)</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension FK Cust. Ledger Entry - Field TPP Cust. Rec. Amount (LCY) - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 1122288909 - Field 17071599 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 2733917450">
+          <source>Cust. Rec. Open</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension FK Cust. Ledger Entry - Field TPP Cust. Rec. Open - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 1122288909 - Field 712694912 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 2733917450">
+          <source>Cust. Rec. Rem. Amt. (LCY)</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension FK Cust. Ledger Entry - Field TPP Cust. Rec. Rem. Amt. (LCY) - Property Caption</note>
+        </trans-unit>
         <trans-unit id="TableExtension 3363666211 - Field 2937662366 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 1994964448">
           <source>Already Send</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -6987,6 +7862,11 @@
           <source>Is Successfully</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension FK Customer - Field Is Successfully - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 3315082874 - Field 2995739640 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 1806786327">
+          <source>Ref.RV No.</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension FK GenJournal Line - Field Ref.RV No. - Property Caption</note>
         </trans-unit>
         <trans-unit id="TableExtension 36959228 - Field 2937662366 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3276313895">
           <source>Already Send</source>
@@ -7027,6 +7907,16 @@
           <source>Temp. New Lot No.</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension FK Item Journal Line - Field Temp. New Lot No. - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 1305798988 - Field 1152260383 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3566004263">
+          <source>Payment Option</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension FK Payment Method - Field TPP Payment Option - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 1305798988 - Field 1152260383 - Property 62802879" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 3566004263">
+          <source>Cash,Cheque,Transfer,Online</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension FK Payment Method - Field TPP Payment Option - Property OptionCaption</note>
         </trans-unit>
         <trans-unit id="TableExtension 1150502977 - Field 2812209798 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 1592379974">
           <source>Ref. GR No. Intranet</source>
@@ -7108,6 +7998,21 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension FK Ship-to Address - Field Vat Registration No. - Property Caption</note>
         </trans-unit>
+        <trans-unit id="TableExtension 1543557700 - Field 3745379623 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 406314583">
+          <source>Vend. Bill. Amount (LCY)</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension FK Vendor Ledger Entry - Field TPP Vend. Bill. Amount (LCY) - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 1543557700 - Field 24735557 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 406314583">
+          <source>Vend. Bill. Rem. Amt. (LCY)</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension FK Vendor Ledger Entry - Field TPP Vend. Bill. Rem. Amt.(LCY) - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="TableExtension 1543557700 - Field 3386745768 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 406314583">
+          <source>Vend. Billing Open</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">TableExtension FK Vendor Ledger Entry - Field TPP Vend. Billing Open - Property Caption</note>
+        </trans-unit>
         <trans-unit id="TableExtension 3430995929 - Field 2677762267 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve" al-object-target="Table 4020539926">
           <source>Vendor Direct</source>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -7132,6 +8037,36 @@
           <source>Vendor</source>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Enum FK Api Page Type - EnumValue Vendor - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 393944221 - EnumValue 823174853 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Billing</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Enum TPP Document Type - EnumValue Billing - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 393944221 - EnumValue 4002195663 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>P. Billing</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Enum TPP Document Type - EnumValue P. Billing - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 393944221 - EnumValue 3081714176 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Receipt</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Enum TPP Document Type - EnumValue Receipt - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 821107756 - EnumValue 889642028 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Create RV</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Enum TPP Status - EnumValue Create RV - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 821107756 - EnumValue 4259830144 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Open</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Enum TPP Status - EnumValue Open - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Enum 821107756 - EnumValue 4020758431 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Released</source>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Enum TPP Status - EnumValue Released - Property Caption</note>
         </trans-unit>
         <trans-unit id="PermissionSet 479809322 - Property 2879900210" maxwidth="30" size-unit="char" translate="yes" xml:space="preserve">
           <source>API FK Permiss</source>

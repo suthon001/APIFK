@@ -3,6 +3,49 @@
 /// </summary>
 codeunit 60050 "FK Func"
 {
+    /// <summary>
+    /// SetData1stInsert.
+    /// </summary>
+    /// <param name="var1st">Boolean.</param>
+    procedure SetData1stInsert(var1st: Boolean)
+    begin
+        Data1stInsert := var1st; //ตอน insert ไม่ต้องทำ OnBeforeVendLedgerEntry
+    end;
+
+    [EventSubscriber(ObjectType::Table, Database::"Vendor Ledger Entry", 'OnAfterInsertEvent', '', false, false)]
+    local procedure OnAfterVendLedgerEntry(var Rec: Record "Vendor Ledger Entry")
+    begin
+        if not rec.IsTemporary() then
+            IF rec."Remaining Amt. (LCY)" <> 0 THEN BEGIN
+                rec."TPP Vend. Bill. Rem. Amt.(LCY)" := rec."Remaining Amt. (LCY)";
+                rec."TPP Vend. Billing Open" := TRUE;
+                Data1stInsert := true; //สำหรับ ดาต้า ตอน insert ไม่ต้องทำ OnBeforeVendLedgerEntry
+                rec.Modify();
+                Data1stInsert := false;
+            end;
+    end;
+
+    procedure GETCustRecRemAmt(CustEntryNo: Integer): Decimal //TPP.SSI 2022/06/01
+    var
+        CustLedgEntry: Record "Cust. Ledger Entry";
+        DetailCusLedger: Record "Detailed Cust. Ledg. Entry";
+        RecRemAmount: Decimal;
+    begin
+        Clear(RecRemAmount);
+        CustLedgEntry.Reset();
+        CustLedgEntry.SetRange("Entry No.", CustEntryNo);
+        if not CustLedgEntry.IsEmpty() then begin
+            DetailCusLedger.Reset();
+            DetailCusLedger.SetRange("Cust. Ledger Entry No.", CustEntryNo);
+            DetailCusLedger.SetFilter("Source Code", '%1', 'SALES');
+            if DetailCusLedger.FindSet() then begin
+                DetailCusLedger.CalcSums("Amount (LCY)");
+                RecRemAmount := DetailCusLedger."Amount (LCY)";
+                exit(RecRemAmount);
+            end;
+        end;
+        exit(RecRemAmount);
+    end;
 
     procedure BCToFreshKetIntregationByJob()
     var
@@ -3644,5 +3687,6 @@ codeunit 60050 "FK Func"
         FreshketIntregation: Record "Freshket Intregation Setup";
         gvNo: Text;
         FKApiPageType: Enum "FK Api Page Type";
+        Data1stInsert: boolean;
 
 }
