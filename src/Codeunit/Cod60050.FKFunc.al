@@ -108,15 +108,15 @@ codeunit 60050 "FK Func"
         if pVendor."VAT registration supplier" then
             ltJsonObject.Add('vatregistrationsupplier', 1)
         else
-            ltJsonObject.Add('vatregistrationsupplier', 0);
+            ltJsonObject.Add('vatregistrationsupplier', 2);
         if pVendor."Company Type" then
             ltJsonObject.Add('companytype', 1)
         else
-            ltJsonObject.Add('companytype', 0);
+            ltJsonObject.Add('companytype', 2);
         if pVendor."Vendor Direct" then
             ltJsonObject.Add('vendordirect', 1)
         else
-            ltJsonObject.Add('vendordirect', 0);
+            ltJsonObject.Add('vendordirect', 2);
 
         ConnectToWebService(ltJsonObject, FreshketIntregation."FK URL", FreshketIntregation."FK UserName", FreshketIntregation."FK Password", pManual, pVendor."No.");
     end;
