@@ -1078,6 +1078,18 @@ table 60055 "Vendor Buffer"
         field(60051; "Vendor No. Intranet"; Code[20])
         {
             Caption = 'Vendor No. Intranet';
+            trigger OnValidate()
+            var
+                ltVend: Record Vendor;
+            begin
+                if rec."Vendor No. Intranet" <> '' then begin
+                    ltVend.reset();
+                    ltVend.SetRange("No.", '<>%1', rec."No.");
+                    ltVend.SetRange("Vendor No. Intranet", rec."Vendor No. Intranet");
+                    if ltVend.FindFirst() then
+                        ltVend.FieldError("Vendor No. Intranet", 'already exists');
+                end;
+            end;
 
         }
         field(60052; "Billing Address"; Text[100])
@@ -1110,6 +1122,24 @@ table 60055 "Vendor Buffer"
         {
             Caption = 'User_Name';
             DataClassification = CustomerContent;
+            trigger OnValidate()
+            var
+                ltVend, ltVend2 : Record Vendor;
+                MailManagement: Codeunit "Mail Management";
+            begin
+                if rec."User_Name" <> '' then begin
+                    if ltVend2.GET(rec."No.") then
+                        ltVend2.TestField("BC To INTRANET", false);
+                    MailManagement.CheckValidEmailAddresses("User_Name");
+                    ltVend.reset();
+                    ltVend.SetRange("No.", '<>%1', rec."No.");
+                    ltVend.SetRange("User_Name", rec."User_Name");
+                    if ltVend.FindFirst() then
+                        ltVend.FieldError("User_Name", 'already exists');
+                    rec."E-Mail" := COPYSTR(rec.User_Name, 1, 80);
+                end;
+
+            end;
 
         }
         field(60058; "VAT registration supplier"; Boolean)
